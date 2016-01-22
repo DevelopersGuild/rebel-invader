@@ -5,6 +5,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.PewPew;
 import com.developersguild.pewpew.systems.AnimationSystem;
@@ -12,6 +14,7 @@ import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
 import com.developersguild.pewpew.systems.CameraSystem;
 import com.developersguild.pewpew.systems.MovementSystem;
+import com.developersguild.pewpew.systems.PhysicsSystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.RenderingSystem;
 import com.developersguild.pewpew.systems.StateSystem;
@@ -27,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
     PewPew game;
     Level level;
     PooledEngine engine;
+    World world;
 
     private int state;
 
@@ -40,6 +44,8 @@ public class GameScreen extends ScreenAdapter {
 
         level = new Level(engine);
 
+        world = new World(new Vector2(0, 0), true);
+
         engine.addSystem(new PlayerSystem(level));
         engine.addSystem(new CameraSystem());
         engine.addSystem(new BackgroundSystem());
@@ -49,10 +55,11 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new StructureSystem());
         engine.addSystem(new RenderingSystem(game.batch));
+        engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
 
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
 
-        level.create();
+        level.create(world);
 
         // TODO: Change to pauseSystems() once first state is READY
         resumeSystems();

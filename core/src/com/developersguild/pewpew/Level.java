@@ -2,8 +2,16 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.developersguild.pewpew.components.AnimationComponent;
 import com.developersguild.pewpew.components.BackgroundComponent;
+import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.CameraComponent;
 import com.developersguild.pewpew.components.MovementComponent;
@@ -32,11 +40,12 @@ public class Level {
         this.engine = engine;
     }
 
-    public void create() {
-        Entity player = createPlayer();
+    public void create(World world) {
+        Entity player = createPlayer(world);
         createCamera(player);
         createBackground();
         generateLevel();
+
 
         this.heightSoFar = 0;
         this.state = WORLD_STATE_RUNNING;
@@ -61,7 +70,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private Entity createPlayer() {
+    private Entity createPlayer(World world) {
         Entity entity = engine.createEntity();
 
         AnimationComponent animation = engine.createComponent(AnimationComponent.class);
@@ -69,6 +78,7 @@ public class Level {
         MovementComponent movement = engine.createComponent(MovementComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         PlayerComponent player = engine.createComponent(PlayerComponent.class);
+        BodyComponent body = engine.createComponent(BodyComponent.class);
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
@@ -80,6 +90,26 @@ public class Level {
         position.pos.set(5.0f, 2.5f, 0.0f);
         position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
 
+        // Create player body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.pos.x, position.pos.y);
+        body.body = world.createBody(bodyDef);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
         state.set(PlayerComponent.STATE_NORMAL);
 
         entity.add(animation);
@@ -87,6 +117,7 @@ public class Level {
         entity.add(movement);
         entity.add(position);
         entity.add(player);
+        entity.add(body);
         entity.add(state);
         entity.add(texture);
 

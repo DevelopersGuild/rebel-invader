@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
@@ -15,12 +16,15 @@ import com.developersguild.pewpew.components.TransformComponent;
 public class StructureSystem extends IteratingSystem {
     private static final Family family = Family.all(StructureComponent.class,
             StateComponent.class,
-            TransformComponent.class).get();
+            TransformComponent.class,
+            BodyComponent.class).get();
+
     private Engine engine;
 
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<StructureComponent> rm;
     private ComponentMapper<StateComponent> sm;
+    private ComponentMapper<BodyComponent> bm;
 
     public StructureSystem() {
         super(Family.all(StructureComponent.class).get());
@@ -28,6 +32,7 @@ public class StructureSystem extends IteratingSystem {
         tm = ComponentMapper.getFor(TransformComponent.class);
         rm = ComponentMapper.getFor(StructureComponent.class);
         sm = ComponentMapper.getFor(StateComponent.class);
+        bm = ComponentMapper.getFor(BodyComponent.class);
     }
 
     @Override
