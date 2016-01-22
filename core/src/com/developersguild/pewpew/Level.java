@@ -44,7 +44,7 @@ public class Level {
         Entity player = createPlayer(world);
         createCamera(player);
         createBackground();
-        generateLevel();
+        generateLevel(world);
 
 
         this.heightSoFar = 0;
@@ -52,9 +52,9 @@ public class Level {
         this.score = 0;
     }
 
-    private void generateLevel() {
+    private void generateLevel(World world) {
         // create obstacles
-        createStructure(StructureComponent.SIZE_SMALL, 3.0f, 10.0f);
+        createStructure(StructureComponent.SIZE_SMALL, 3.0f, 10.0f, world);
         // create enemies
     }
 
@@ -126,7 +126,7 @@ public class Level {
         return entity;
     }
 
-    private void createStructure(int size, float x, float y) {
+    private void createStructure(int size, float x, float y, World world) {
         Entity entity = new Entity();
 
         StructureComponent structure = engine.createComponent(StructureComponent.class);
@@ -134,6 +134,7 @@ public class Level {
         TransformComponent position = engine.createComponent(TransformComponent.class);
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
+        BodyComponent body = engine.createComponent(BodyComponent.class);
 
         bounds.bounds.width = StructureComponent.WIDTH;
         bounds.bounds.height = StructureComponent.HEIGHT;
@@ -152,11 +153,32 @@ public class Level {
             // large structure
         }
 
+        // Create body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.pos.x, position.pos.y);
+        body.body = world.createBody(bodyDef);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
         entity.add(structure);
         entity.add(bounds);
         entity.add(position);
         entity.add(state);
         entity.add(texture);
+        entity.add(body);
 
         engine.addEntity(entity);
     }
