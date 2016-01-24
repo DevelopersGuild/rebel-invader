@@ -5,5 +5,7 @@ import com.badlogic.ashley.core.Component;
  */
 public class HealthComponent implements Component {
     public final int MAX_HEALTH = 100;
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 1;
     public int currentHealth;
 }

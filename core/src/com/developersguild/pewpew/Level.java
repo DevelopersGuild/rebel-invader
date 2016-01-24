@@ -14,6 +14,7 @@ import com.developersguild.pewpew.components.BackgroundComponent;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.CameraComponent;
+import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
@@ -45,6 +46,7 @@ public class Level {
         createCamera(player);
         createBackground();
         generateLevel(world);
+        createHealthBar();
 
 
         this.heightSoFar = 0;
@@ -124,6 +126,29 @@ public class Level {
         engine.addEntity(entity);
 
         return entity;
+    }
+
+    private void createHealthBar()
+    {
+        Entity entity = engine.createEntity();
+
+        HealthComponent health = engine.createComponent(HealthComponent.class);
+        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+
+        bounds.bounds.width = HealthComponent.WIDTH;
+        bounds.bounds.height = HealthComponent.HEIGHT;
+
+        position.pos.set(5.0f, 5.0f, 1.0f);
+
+        texture.region = Assets.healthRegion;
+
+        entity.add(health);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
     }
 
     private void createStructure(int size, float x, float y, World world) {

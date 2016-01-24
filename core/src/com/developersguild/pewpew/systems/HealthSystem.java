@@ -13,7 +13,7 @@ public class HealthSystem extends IteratingSystem {
     private ComponentMapper<HealthComponent> hm;
     public HealthSystem()
     {
-        super(Family.all(HealthComponent.class).get());
+        super(Family.all(TransformComponent.class, HealthComponent.class).get());
         tm = ComponentMapper.getFor(TransformComponent.class);
         hm = ComponentMapper.getFor(HealthComponent.class);
     }
