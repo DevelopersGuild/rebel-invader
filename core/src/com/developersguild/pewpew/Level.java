@@ -98,7 +98,7 @@ public class Level {
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
+        polygon.setAsBox(PlayerComponent.WIDTH / 2.f, PlayerComponent.HEIGHT / 2.f);
 
         // Create a fixture with the shape
         FixtureDef fixtureDef = new FixtureDef();
@@ -109,6 +109,9 @@ public class Level {
 
         // Assign shape to body
         body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
 
         state.set(PlayerComponent.STATE_NORMAL);
 
@@ -180,23 +183,19 @@ public class Level {
 
         // Create body
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(position.pos.x, position.pos.y);
         body.body = world.createBody(bodyDef);
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
-
-        // Create a fixture with the shape
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygon;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
+        polygon.setAsBox(StructureComponent.WIDTH / 2.f, StructureComponent.HEIGHT / 2.f);
 
         // Assign shape to body
-        body.body.createFixture(fixtureDef);
+        body.body.createFixture(polygon, 0.0f);
+
+        // Clean up
+        polygon.dispose();
 
         entity.add(structure);
         entity.add(bounds);
