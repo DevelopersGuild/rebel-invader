@@ -1,13 +1,14 @@
 package com.developersguild.pewpew.systems;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Vector2;
 import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
+
 /**
  * Created by Thomas on 1/23/2016.
  */
@@ -20,7 +21,6 @@ public class HealthSystem extends IteratingSystem {
     private ComponentMapper<StructureComponent> rm;
 
     private Engine engine;
-    private Vector2 tmp = new Vector2();
 
     public HealthSystem()
     {
@@ -28,14 +28,12 @@ public class HealthSystem extends IteratingSystem {
         tm = ComponentMapper.getFor(TransformComponent.class);
         hm = ComponentMapper.getFor(HealthComponent.class);
         rm = ComponentMapper.getFor(StructureComponent.class);
-
-        // TODO: Set currentHealth in constructor
-        // currentHealth = STARTING_HEALTH * healthMultiplier;
     }
 
     @Override
     public void addedToEngine(Engine engine)
     {
+        super.addedToEngine(engine);
         this.engine = engine;
     }
 
@@ -46,7 +44,6 @@ public class HealthSystem extends IteratingSystem {
 
         TransformComponent pos = tm.get(entity);
         HealthComponent health = hm.get(entity);
-        StructureComponent structure = rm.get(entity);
 
         if (health.currentHealth == 0)
         {
@@ -54,12 +51,14 @@ public class HealthSystem extends IteratingSystem {
             structureSystem.die(entity);    // For testing purposes
         }
 
-        // TODO: Have healthBar follow entity
+        // Healthbar follows target
+        pos.pos.x = health.target.x;
+        pos.pos.y = health.target.y + 1.5f;
     }
 
     public void takeDamage(Entity entity, int damageValue)
     {
-        if (!family.matches(entity)) return;
+        if (family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
 
@@ -69,11 +68,13 @@ public class HealthSystem extends IteratingSystem {
         {
             health.currentHealth = 0;
         }
+
+        // TODO: update health size on takeDamage
     }
 
     public void recoverHealth(Entity entity, int recoverValue)
     {
-        if (!family.matches(entity)) return;
+        if (family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
 
@@ -83,12 +84,17 @@ public class HealthSystem extends IteratingSystem {
         {
             health.currentHealth = health.maxHealth;
         }
+
+        // TODO: update health size on recoverHealth
     }
 
     public void nextLevel(Entity entity)
     {
+        if (family.matches(entity)) return;
+
         HealthComponent health = hm.get(entity);
 
         health.healthMultiplier += health.LEVEL_INC;
+        health.currentLvl++;
     }
 }

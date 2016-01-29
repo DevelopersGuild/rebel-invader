@@ -2,7 +2,6 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -46,7 +45,6 @@ public class Level {
         createCamera(player);
         createBackground();
         generateLevel(world);
-        createHealthBar();
 
 
         this.heightSoFar = 0;
@@ -125,22 +123,24 @@ public class Level {
 
         engine.addEntity(entity);
 
+        createHealthBar(entity);
+
         return entity;
     }
 
-    private void createHealthBar()
+    private void createHealthBar(Entity target)
     {
         Entity entity = engine.createEntity();
 
         HealthComponent health = engine.createComponent(HealthComponent.class);
-        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
-        bounds.bounds.width = HealthComponent.WIDTH;
-        bounds.bounds.height = HealthComponent.HEIGHT;
+        health.currentHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
 
-        position.pos.set(5.0f, 5.0f, 1.0f);
+        health.target = target.getComponent(TransformComponent.class).pos;
+        position.pos.set(target.getComponent(TransformComponent.class).pos);
+        //position = target.getComponent(TransformComponent.class);
 
         texture.region = Assets.healthRegion;
 

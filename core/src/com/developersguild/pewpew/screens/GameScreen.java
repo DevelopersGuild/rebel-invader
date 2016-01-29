@@ -13,6 +13,7 @@ import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
 import com.developersguild.pewpew.systems.CameraSystem;
+import com.developersguild.pewpew.systems.HealthSystem;
 import com.developersguild.pewpew.systems.MovementSystem;
 import com.developersguild.pewpew.systems.PhysicsSystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
@@ -56,6 +57,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new StructureSystem());
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
+        engine.addSystem(new HealthSystem());
 
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
 
