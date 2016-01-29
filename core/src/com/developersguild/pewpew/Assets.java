@@ -18,6 +18,9 @@ public class Assets {
     public static Texture ship;
     public static Animation shipNormal;
 
+    public static Texture healthBar;
+    public static TextureRegion healthRegion;
+
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
@@ -32,5 +35,8 @@ public class Assets {
         ship = loadTexture("ship.png");
         shipNormal = new Animation(0.02f, new TextureRegion(ship, 0, 0, 96, 96));
         shipNormal.setPlayMode(Animation.PlayMode.LOOP);
+
+        healthBar = loadTexture("health_bar.png");
+        healthRegion = new TextureRegion(healthBar, 0, 0, 75, 5);
     }
 }

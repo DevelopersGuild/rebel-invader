@@ -2,7 +2,6 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -14,6 +13,7 @@ import com.developersguild.pewpew.components.BackgroundComponent;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.CameraComponent;
+import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
@@ -98,7 +98,7 @@ public class Level {
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
+        polygon.setAsBox(PlayerComponent.WIDTH / 2.f, PlayerComponent.HEIGHT / 2.f);
 
         // Create a fixture with the shape
         FixtureDef fixtureDef = new FixtureDef();
@@ -109,6 +109,9 @@ public class Level {
 
         // Assign shape to body
         body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
 
         state.set(PlayerComponent.STATE_NORMAL);
 
@@ -123,7 +126,32 @@ public class Level {
 
         engine.addEntity(entity);
 
+        createHealthBar(entity);
+
         return entity;
+    }
+
+    private void createHealthBar(Entity target)
+    {
+        Entity entity = engine.createEntity();
+
+        HealthComponent health = engine.createComponent(HealthComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+
+        health.currentHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
+
+        health.target = target.getComponent(TransformComponent.class).pos;
+        position.pos.set(target.getComponent(TransformComponent.class).pos);
+        //position = target.getComponent(TransformComponent.class);
+
+        texture.region = Assets.healthRegion;
+
+        entity.add(health);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
     }
 
     private void createStructure(int size, float x, float y, World world) {
@@ -155,23 +183,19 @@ public class Level {
 
         // Create body
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(position.pos.x, position.pos.y);
         body.body = world.createBody(bodyDef);
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(PlayerComponent.WIDTH * position.scale.x, PlayerComponent.HEIGHT * position.scale.y);
-
-        // Create a fixture with the shape
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygon;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
+        polygon.setAsBox(StructureComponent.WIDTH / 2.f, StructureComponent.HEIGHT / 2.f);
 
         // Assign shape to body
-        body.body.createFixture(fixtureDef);
+        body.body.createFixture(polygon, 0.0f);
+
+        // Clean up
+        polygon.dispose();
 
         entity.add(structure);
         entity.add(bounds);
