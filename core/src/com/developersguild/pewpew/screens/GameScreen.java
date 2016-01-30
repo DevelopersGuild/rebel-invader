@@ -1,5 +1,6 @@
 package com.developersguild.pewpew.screens;
 
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.PewPew;
+import com.developersguild.pewpew.PhysicsListener;
+import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
@@ -32,6 +35,7 @@ public class GameScreen extends ScreenAdapter {
     Level level;
     PooledEngine engine;
     World world;
+    PhysicsListener listener;
 
     private int state;
 
@@ -42,11 +46,11 @@ public class GameScreen extends ScreenAdapter {
         state = GAME_RUNNING;
 
         engine = new PooledEngine();
-
         level = new Level(engine);
-
         world = new World(new Vector2(0, 0), true);
+        listener = new PhysicsListener();
 
+        // Add systems
         engine.addSystem(new PlayerSystem(level));
         engine.addSystem(new CameraSystem());
         engine.addSystem(new BackgroundSystem());
@@ -59,7 +63,12 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem());
 
+        // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
+
+        // Set PhysicsListener as the entity listener for Ashley and contact listener for Box2D
+        engine.addEntityListener(Family.all(BodyComponent.class).get(), listener);
+        world.setContactListener(listener);
 
         level.create(world);
 

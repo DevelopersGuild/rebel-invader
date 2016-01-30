@@ -45,7 +45,6 @@ public class Level {
         createBackground();
         generateLevel(world);
 
-
         this.heightSoFar = 0;
         this.state = WORLD_STATE_RUNNING;
         this.score = 0;
