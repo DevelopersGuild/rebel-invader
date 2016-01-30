@@ -37,6 +37,6 @@ public class Assets {
         shipNormal.setPlayMode(Animation.PlayMode.LOOP);
 
         healthBar = loadTexture("health_bar.png");
-        healthRegion = new TextureRegion(healthBar, 0, 0, 75, 5);
+        healthRegion = new TextureRegion(healthBar, 0, 0, 95, 5);
     }
 }

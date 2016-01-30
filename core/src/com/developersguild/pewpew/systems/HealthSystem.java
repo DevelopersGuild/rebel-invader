@@ -53,7 +53,9 @@ public class HealthSystem extends IteratingSystem {
 
         // Healthbar follows target
         pos.pos.x = health.target.x;
-        pos.pos.y = health.target.y + 1.5f;
+        pos.pos.y = health.target.y + 1.25f;
+
+        takeDamage(entity, 1);
     }
 
     public void takeDamage(Entity entity, int damageValue)
@@ -61,15 +63,19 @@ public class HealthSystem extends IteratingSystem {
         if (family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
+        TransformComponent pos = tm.get(entity);
 
         health.currentHealth -= damageValue;
 
+        // Prevent health decreasing below 0
         if (health.currentHealth < 0)
         {
             health.currentHealth = 0;
         }
 
-        // TODO: update health size on takeDamage
+        // Update healthLength
+        float healthLength = (float)health.currentHealth / (float)health.maxHealth * (2.0f / 3.0f);
+        pos.scale.set(healthLength, 2.0f / 3.0f);
     }
 
     public void recoverHealth(Entity entity, int recoverValue)
@@ -77,15 +83,19 @@ public class HealthSystem extends IteratingSystem {
         if (family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
+        TransformComponent pos = tm.get(entity);
 
         health.currentHealth += recoverValue;
 
+        // Prevent health increasing over maxHealth
         if (health.currentHealth > health.maxHealth)
         {
             health.currentHealth = health.maxHealth;
         }
 
-        // TODO: update health size on recoverHealth
+        // Update healthLength
+        float healthLength = (float)health.currentHealth / (float)health.maxHealth * (2.0f / 3.0f);
+        pos.scale.set(healthLength, 2.0f / 3.0f);
     }
 
     public void nextLevel(Entity entity)

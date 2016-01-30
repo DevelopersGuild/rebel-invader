@@ -139,11 +139,12 @@ public class Level {
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
-        health.currentHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
+        health.maxHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
+        health.currentHealth = health.maxHealth;
 
         health.target = target.getComponent(TransformComponent.class).pos;
-        position.pos.set(target.getComponent(TransformComponent.class).pos);
-        //position = target.getComponent(TransformComponent.class);
+
+        position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
 
         texture.region = Assets.healthRegion;
 
