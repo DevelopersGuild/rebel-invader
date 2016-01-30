@@ -54,8 +54,6 @@ public class HealthSystem extends IteratingSystem {
         // Healthbar follows target
         pos.pos.x = health.target.x;
         pos.pos.y = health.target.y + 1.25f;
-
-        takeDamage(entity, 1);
     }
 
     public void takeDamage(Entity entity, int damageValue)
