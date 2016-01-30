@@ -18,7 +18,7 @@ import com.developersguild.pewpew.components.TransformComponent;
  */
 public class PhysicsSystem extends IteratingSystem {
 
-    private static final float MAX_STEP_TIME = 1/45f;
+    private static final float MAX_STEP_TIME = 1 / 45f;
     private static float accumulator = 0f;
 
     private World world;
@@ -51,7 +51,7 @@ public class PhysicsSystem extends IteratingSystem {
             accumulator -= MAX_STEP_TIME;
 
             // Entity Queue
-            for (Entity entity: bodiesQueue) {
+            for (Entity entity : bodiesQueue) {
                 TransformComponent t = tm.get(entity);
                 BodyComponent body = bm.get(entity);
                 Vector2 pos = body.body.getPosition();

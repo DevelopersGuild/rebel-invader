@@ -67,7 +67,7 @@ public class GameScreen extends ScreenAdapter {
         resumeSystems();
     }
 
-    public void update (float deltaTime) {
+    public void update(float deltaTime) {
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
@@ -82,7 +82,7 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void updateReady () {
+    private void updateReady() {
         if (Gdx.input.justTouched()) {
             state = GAME_RUNNING;
             resumeSystems();
@@ -105,12 +105,12 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
     }
 
-    private void presentReady () {
+    private void presentReady() {
         // In Super Jumper:
         // game.batch.draw(Assets.ready, 160 - 192 / 2, 240 - 32 / 2, 192, 32);
     }
 
-    private void presentRunning () {
+    private void presentRunning() {
         // nothing yet
     }
 
@@ -133,7 +133,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void draw() {
         game.batch.begin();
-        switch(state) {
+        switch (state) {
             case GAME_READY:
                 presentReady();
                 break;

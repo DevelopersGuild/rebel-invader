@@ -2,9 +2,8 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -87,6 +86,7 @@ public class Level {
 
         bounds.bounds.width = PlayerComponent.WIDTH;
         bounds.bounds.height = PlayerComponent.HEIGHT;
+        Gdx.app.log(Gdx.app.getClass().getName(), bounds.bounds.width + " " + bounds.bounds.height);
 
         position.pos.set(5.0f, 2.5f, 0.0f);
         position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
@@ -132,8 +132,7 @@ public class Level {
         return entity;
     }
 
-    private void createHealthBar(Entity target)
-    {
+    private void createHealthBar(Entity target) {
         Entity entity = engine.createEntity();
 
         HealthComponent health = engine.createComponent(HealthComponent.class);
@@ -143,7 +142,10 @@ public class Level {
         health.maxHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
         health.currentHealth = health.maxHealth;
 
-        health.target = target.getComponent(TransformComponent.class).pos;
+        health.target = target;
+
+        health.targetPos = target.getComponent(TransformComponent.class).pos;
+        health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
 
         position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
 
@@ -178,8 +180,7 @@ public class Level {
         structure.size = size;
         if (size == StructureComponent.SIZE_SMALL) {
             // small structure
-        }
-        else {
+        } else {
             // large structure
         }
 
@@ -205,6 +206,8 @@ public class Level {
         entity.add(state);
         entity.add(texture);
         entity.add(body);
+
+        createHealthBar(entity);
 
         engine.addEntity(entity);
     }
