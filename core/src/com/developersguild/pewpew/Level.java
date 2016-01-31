@@ -124,9 +124,9 @@ public class Level {
         entity.add(state);
         entity.add(texture);
 
-        engine.addEntity(entity);
-
         createHealthBar(entity);
+
+        engine.addEntity(entity);
 
         return entity;
     }
@@ -138,15 +138,30 @@ public class Level {
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
-        health.maxHealth = (int) (health.STARTING_HEALTH * health.healthMultiplier);
-        health.currentHealth = health.maxHealth;
-
         health.target = target;
 
         health.targetPos = target.getComponent(TransformComponent.class).pos;
         health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
 
-        position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
+        // Determine type of entity
+        if (target.getComponent(PlayerComponent.class) != null) {
+            health.maxHealth = (int) (health.PLAYER_STARTING_HEALTH * health.healthMultiplier);
+            health.currentHealth = health.maxHealth;
+            health.lengthRatio = 2.0f / 3.0f;
+            health.widthRatio = 2.0f / 3.0f;
+
+            position.scale.set(health.lengthRatio, health.widthRatio);   // TODO: Remove player health bar when we have a health bar gui code; this is for testing
+            health.isPlayer = true;
+        }
+        else if (target.getComponent(StructureComponent.class) != null) {
+            health.maxHealth = (int) (health.STRUCTURE_STARTING_HEALTH * health.healthMultiplier);
+            health.currentHealth = health.maxHealth;
+            health.lengthRatio = 96.0f / 95.0f;
+            health.widthRatio = 2.0f / 3.0f;
+
+            position.scale.set(health.lengthRatio, health.widthRatio);
+            health.isStructure = true;
+        }
 
         texture.region = Assets.healthRegion;
 

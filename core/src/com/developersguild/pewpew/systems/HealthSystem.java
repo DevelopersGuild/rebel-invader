@@ -43,7 +43,7 @@ public class HealthSystem extends IteratingSystem {
     }
 
     public void takeDamage(Entity entity, int damageValue) {
-        if (family.matches(entity)) return;
+        if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
         TransformComponent pos = tm.get(entity);
@@ -56,12 +56,20 @@ public class HealthSystem extends IteratingSystem {
         }
 
         // Update healthLength
-        float healthLength = (float) health.currentHealth / (float) health.maxHealth * (2.0f / 3.0f);
-        pos.scale.set(healthLength, 2.0f / 3.0f);
+        float healthLength = 0.0f;
+
+        if (health.isPlayer) {
+            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+        }
+        else if (health.isStructure) {
+            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+        }
+
+        pos.scale.set(healthLength, health.widthRatio);
     }
 
     public void recoverHealth(Entity entity, int recoverValue) {
-        if (family.matches(entity)) return;
+        if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
         TransformComponent pos = tm.get(entity);
@@ -74,12 +82,20 @@ public class HealthSystem extends IteratingSystem {
         }
 
         // Update healthLength
-        float healthLength = (float) health.currentHealth / (float) health.maxHealth * (2.0f / 3.0f);
-        pos.scale.set(healthLength, 2.0f / 3.0f);
+        float healthLength = 0.0f;
+
+        if (health.isPlayer) {
+            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+        }
+        else if (health.isStructure) {
+            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+        }
+
+        pos.scale.set(healthLength, health.widthRatio);
     }
 
     public void nextLevel(Entity entity) {
-        if (family.matches(entity)) return;
+        if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
 
