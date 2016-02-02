@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.developersguild.pewpew.systems.PlayerSystem;
+import com.developersguild.pewpew.systems.StructureSystem;
 
 /**
  * Created by Vihan on 1/30/2016.
@@ -42,7 +44,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        Gdx.app.log(this.getClass().getSimpleName(), "preSolve() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "preSolve() called");
     }
 
     /**
@@ -54,7 +56,26 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-        Gdx.app.log(this.getClass().getSimpleName(), "postSolve() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "postSolve() called");
+
+        Object a = contact.getFixtureA().getBody().getUserData();
+        Object b = contact.getFixtureB().getBody().getUserData();
+
+        // If a is a player
+        if (a.getClass() == PlayerSystem.class) {
+            // If b is a structure
+            if (b.getClass() == StructureSystem.class) {
+                ((PlayerSystem) a).hitByStructure();
+            }
+        }
+
+        // If b is a player
+        if (b.getClass() == PlayerSystem.class) {
+            // If a is a structure
+            if (a.getClass() == StructureSystem.class) {
+                ((PlayerSystem) a).hitByStructure();
+            }
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
@@ -56,6 +57,9 @@ public class PlayerSystem extends IteratingSystem {
         StateComponent state = sm.get(entity);
         MovementComponent mov = mm.get(entity);
         PlayerComponent player = rm.get(entity);
+        BodyComponent body = bm.get(entity);
+
+        body.body.setUserData(this);
 
         // Movement handling
         if (state.get() == PlayerComponent.STATE_NORMAL) {
@@ -86,5 +90,10 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         player.heightSoFar = t.pos.y;
+    }
+
+    public void hitByStructure() {
+        Gdx.app.log(getClass().getSimpleName(), "hitByStructure() called");
+        // TODO: Make player's health go down, give ~1 second of invulnerability, and make the sprite blink for this duration
     }
 }

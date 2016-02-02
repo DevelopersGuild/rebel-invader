@@ -68,7 +68,6 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    // TODO: Apply healthBar to player entity
     private Entity createPlayer(World world) {
         Entity entity = engine.createEntity();
 

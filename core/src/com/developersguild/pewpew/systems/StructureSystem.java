@@ -45,6 +45,9 @@ public class StructureSystem extends IteratingSystem {
     public void processEntity(Entity entity, float deltaTime) {
         StateComponent state = sm.get(entity);
         TransformComponent t = tm.get(entity);
+        BodyComponent body = bm.get(entity);
+
+        body.body.setUserData(this);
 
         if (state.get() == StructureComponent.STATE_DEAD) {
             engine.removeEntity(entity);
