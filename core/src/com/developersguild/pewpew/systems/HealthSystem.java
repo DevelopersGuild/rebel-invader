@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.TransformComponent;
@@ -37,12 +38,13 @@ public class HealthSystem extends IteratingSystem {
         TransformComponent pos = tm.get(entity);
         HealthComponent health = hm.get(entity);
 
-        // Healthbar follows target
+        // Health bar follows target
+        //pos.pos.x = health.targetPos.x - ((1 - pos.scale.x) * health.target.getComponent(BoundsComponent.class).bounds.width / 2); -- PINS BAR TO THE LEFT EDGE
         pos.pos.x = health.targetPos.x;
         pos.pos.y = health.targetPos.y - health.target.getComponent(BoundsComponent.class).bounds.height / 2f - 0.1f;
     }
 
-    public void takeDamage(Entity entity, int damageValue) {
+    public void takeDamage(Entity entity, float damageValue) {
         if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
@@ -68,7 +70,7 @@ public class HealthSystem extends IteratingSystem {
         pos.scale.set(healthLength, health.widthRatio);
     }
 
-    public void recoverHealth(Entity entity, int recoverValue) {
+    public void recoverHealth(Entity entity, float recoverValue) {
         if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
@@ -85,10 +87,10 @@ public class HealthSystem extends IteratingSystem {
         float healthLength = 0.0f;
 
         if (health.isPlayer) {
-            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
         }
         else if (health.isStructure) {
-            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
+            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
         }
 
         pos.scale.set(healthLength, health.widthRatio);
