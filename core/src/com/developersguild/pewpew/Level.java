@@ -89,6 +89,10 @@ public class Level {
         position.pos.set(5.0f, 2.5f, 0.0f);
         position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
 
+        // Health
+        player.maxHealth = (int) PlayerComponent.STARTING_HEALTH;
+        player.currentHealth = player.maxHealth;
+
         // Create player body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -138,28 +142,24 @@ public class Level {
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
         health.target = target;
-
         health.targetPos = target.getComponent(TransformComponent.class).pos;
         health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
 
         // Determine type of entity
         if (target.getComponent(PlayerComponent.class) != null) {
-            health.maxHealth = (int) (health.PLAYER_STARTING_HEALTH * health.healthMultiplier);
+            health.maxHealth = PlayerComponent.STARTING_HEALTH * health.healthMultiplier;
             health.currentHealth = health.maxHealth;
             health.lengthRatio = 2.0f / 3.0f;
             health.widthRatio = 2.0f / 3.0f;
-
-            position.scale.set(health.lengthRatio, health.widthRatio);   // TODO: Remove player health bar when we have a health bar gui code; this is for testing
             health.isPlayer = true;
-        }
-        else if (target.getComponent(StructureComponent.class) != null) {
-            health.maxHealth = (int) (health.STRUCTURE_STARTING_HEALTH * health.healthMultiplier);
+            position.scale.set(health.lengthRatio, health.widthRatio);   // TODO: Remove player health bar when we have a health bar gui code; this is for testing
+        } else if (target.getComponent(StructureComponent.class) != null) {
+            health.maxHealth = StructureComponent.STARTING_HEALTH * health.healthMultiplier;
             health.currentHealth = health.maxHealth;
             health.lengthRatio = 96.0f / 95.0f;
             health.widthRatio = 2.0f / 3.0f;
-
-            position.scale.set(health.lengthRatio, health.widthRatio);
             health.isStructure = true;
+            position.scale.set(health.lengthRatio, health.widthRatio);
         }
 
         texture.region = Assets.healthRegion;
@@ -180,6 +180,10 @@ public class Level {
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         BodyComponent body = engine.createComponent(BodyComponent.class);
+
+        // Health
+        structure.maxHealth = (int) StructureComponent.STARTING_HEALTH;
+        structure.currentHealth = structure.maxHealth;
 
         bounds.bounds.width = StructureComponent.WIDTH;
         bounds.bounds.height = StructureComponent.HEIGHT;

@@ -10,6 +10,7 @@ import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
+import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
 /**
@@ -59,6 +60,11 @@ public class PlayerSystem extends IteratingSystem {
         PlayerComponent player = rm.get(entity);
         BodyComponent body = bm.get(entity);
 
+        int collisionCode = 0;
+        if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
+            collisionCode = (Integer) body.body.getUserData();
+        }
+
         body.body.setUserData(this);
 
         // Movement handling
@@ -74,6 +80,12 @@ public class PlayerSystem extends IteratingSystem {
 
         if (t.pos.x + player.WIDTH / 2 > Level.WORLD_WIDTH) {
             t.pos.x = Level.WORLD_WIDTH - player.WIDTH / 2;
+        }
+
+        // Collision handling
+        if (collisionCode == BodyComponent.PLAYER_HITS_STRUCTURE) {
+            // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
+            player.currentHealth -= StructureComponent.DAMAGE;
         }
 
         // Tilting
@@ -94,6 +106,6 @@ public class PlayerSystem extends IteratingSystem {
 
     public void hitByStructure() {
         Gdx.app.log(getClass().getSimpleName(), "hitByStructure() called");
-        // TODO: Make player's health go down, give ~1 second of invulnerability, and make the sprite blink for this duration
+
     }
 }

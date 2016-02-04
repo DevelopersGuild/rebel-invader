@@ -3,10 +3,12 @@ package com.developersguild.pewpew;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
 
@@ -58,22 +60,22 @@ public class PhysicsListener implements ContactListener, EntityListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
         //Gdx.app.log(this.getClass().getSimpleName(), "postSolve() called");
 
-        Object a = contact.getFixtureA().getBody().getUserData();
-        Object b = contact.getFixtureB().getBody().getUserData();
+        Body a = contact.getFixtureA().getBody();
+        Body b = contact.getFixtureB().getBody();
 
         // If a is a player
-        if (a.getClass() == PlayerSystem.class) {
+        if (a.getUserData().getClass() == PlayerSystem.class) {
             // If b is a structure
-            if (b.getClass() == StructureSystem.class) {
-                ((PlayerSystem) a).hitByStructure();
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                a.setUserData(BodyComponent.PLAYER_HITS_STRUCTURE);
             }
         }
 
         // If b is a player
-        if (b.getClass() == PlayerSystem.class) {
+        if (b.getUserData().getClass() == PlayerSystem.class) {
             // If a is a structure
-            if (a.getClass() == StructureSystem.class) {
-                ((PlayerSystem) a).hitByStructure();
+            if (a.getUserData().getClass() == StructureSystem.class) {
+                b.setUserData(BodyComponent.PLAYER_HITS_STRUCTURE);
             }
         }
     }

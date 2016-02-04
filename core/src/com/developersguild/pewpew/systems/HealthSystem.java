@@ -5,9 +5,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.HealthComponent;
+import com.developersguild.pewpew.components.PlayerComponent;
+import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
 /**
@@ -20,11 +21,14 @@ public class HealthSystem extends IteratingSystem {
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
     private Engine engine;
+    private float healthLastFrame;
 
     public HealthSystem() {
         super(Family.all(TransformComponent.class, HealthComponent.class).get());
         tm = ComponentMapper.getFor(TransformComponent.class);
         hm = ComponentMapper.getFor(HealthComponent.class);
+
+        healthLastFrame = 0f;
     }
 
     @Override
@@ -42,55 +46,43 @@ public class HealthSystem extends IteratingSystem {
         //pos.pos.x = health.targetPos.x - ((1 - pos.scale.x) * health.target.getComponent(BoundsComponent.class).bounds.width / 2); -- PINS BAR TO THE LEFT EDGE
         pos.pos.x = health.targetPos.x;
         pos.pos.y = health.targetPos.y - health.target.getComponent(BoundsComponent.class).bounds.height / 2f - 0.1f;
+
+        if (health.target.getComponent(PlayerComponent.class) != null) {
+            health.currentHealth = health.target.getComponent(PlayerComponent.class).currentHealth;
+            if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
+        } else if (health.target.getComponent(StructureComponent.class) != null) {
+            health.currentHealth = health.target.getComponent(StructureComponent.class).currentHealth;
+            if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
+        }
+
+        healthLastFrame = health.currentHealth;
     }
 
-    public void takeDamage(Entity entity, float damageValue) {
+    public void updateHealthBar(Entity entity) {
         if (!family.matches(entity)) return;
 
         HealthComponent health = hm.get(entity);
         TransformComponent pos = tm.get(entity);
 
-        health.currentHealth -= damageValue;
+        // Update healthLength
+        float healthLength = 0.0f;
+
+        if (health.isPlayer) {
+            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
+        } else if (health.isStructure) {
+            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
+        }
 
         // Prevent health decreasing below 0
         if (health.currentHealth < 0) {
             health.currentHealth = 0;
+            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
         }
-
-        // Update healthLength
-        float healthLength = 0.0f;
-
-        if (health.isPlayer) {
-            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
-        }
-        else if (health.isStructure) {
-            healthLength = (float) health.currentHealth / (float) health.maxHealth * health.lengthRatio;
-        }
-
-        pos.scale.set(healthLength, health.widthRatio);
-    }
-
-    public void recoverHealth(Entity entity, float recoverValue) {
-        if (!family.matches(entity)) return;
-
-        HealthComponent health = hm.get(entity);
-        TransformComponent pos = tm.get(entity);
-
-        health.currentHealth += recoverValue;
 
         // Prevent health increasing over maxHealth
         if (health.currentHealth > health.maxHealth) {
             health.currentHealth = health.maxHealth;
-        }
-
-        // Update healthLength
-        float healthLength = 0.0f;
-
-        if (health.isPlayer) {
-            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
-        }
-        else if (health.isStructure) {
-            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
+            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
         }
 
         pos.scale.set(healthLength, health.widthRatio);
