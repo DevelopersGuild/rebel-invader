@@ -69,8 +69,10 @@ public class PlayerSystem extends IteratingSystem {
 
         // Movement handling
         if (state.get() == PlayerComponent.STATE_NORMAL) {
+            //goes from 1 to 2 as the level goes on, to make it challenging
+            float difficultyFactor = 1 + t.pos.y / Level.WORLD_HEIGHT;
             mov.velocity.x = -accelX / 10.0f * PlayerComponent.MOVE_VELOCITY_X * deltaTime;
-            mov.velocity.y = PlayerComponent.MOVE_VELOCITY_Y * deltaTime;
+            mov.velocity.y = PlayerComponent.MOVE_VELOCITY_Y * deltaTime * difficultyFactor;
         }
 
         // Bounds checking
@@ -80,6 +82,10 @@ public class PlayerSystem extends IteratingSystem {
 
         if (t.pos.x + player.WIDTH / 2 > Level.WORLD_WIDTH) {
             t.pos.x = Level.WORLD_WIDTH - player.WIDTH / 2;
+        }
+
+        if (t.pos.y > Level.WORLD_HEIGHT) {
+            t.pos.y = Level.WORLD_HEIGHT;
         }
 
         // Collision handling
