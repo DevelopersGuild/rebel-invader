@@ -1,5 +1,7 @@
 package com.developersguild.pewpew;
 
+import java.util.Random;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -52,7 +54,32 @@ public class Level {
 
     private void generateLevel(World world) {
         // create obstacles
-        createStructure(StructureComponent.SIZE_SMALL, 3.0f, 10.0f, world);
+        Random rand=new Random();
+        //Wgen is supposed to keep this relatively clear of obstacles
+        //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
+        float path=5.0f;
+        float deltaPathLinear=3.0f;
+        for(float height=8; height<WORLD_HEIGHT; height+=rand.nextFloat() * 2+3) {
+
+            //Goes from zero to three over the course of the level, sign randomized each step
+            float deltaPathInverse=height/WORLD_HEIGHT*3.0f * (rand.nextBoolean() ? 1 : -1);
+
+            //No obstacles within this distance of path
+            float restrictedArea=StructureComponent.WIDTH*1.3f - height/WORLD_HEIGHT*0.8f;
+            for(int i=0; i<(rand.nextFloat()*height/WORLD_HEIGHT)*6+6; i++) {
+                float x=rand.nextFloat() * 10.0f;
+                if(x>path+restrictedArea || x<path-restrictedArea)
+                    createStructure(
+                            rand.nextFloat()<0.8f ? 0 : 1,
+                            x,
+                            height+rand.nextFloat(),
+                            world);
+            }
+            path += deltaPathInverse;
+            path += (rand.nextBoolean() ? 1 : -1) * deltaPathLinear;
+            if(path < 0)path=0.2f;
+            else if(path>WORLD_WIDTH)path=WORLD_WIDTH-0.2f;
+        }
         // create enemies
     }
 
@@ -172,6 +199,10 @@ public class Level {
     }
 
     private void createStructure(int size, float x, float y, World world) {
+        createStructure(size, x, y, world, (int) StructureComponent.STARTING_HEALTH);
+    }
+
+    private void createStructure(int size, float x, float y, World world, int health) {
         Entity entity = new Entity();
 
         StructureComponent structure = engine.createComponent(StructureComponent.class);
@@ -182,7 +213,7 @@ public class Level {
         BodyComponent body = engine.createComponent(BodyComponent.class);
 
         // Health
-        structure.maxHealth = (int) StructureComponent.STARTING_HEALTH;
+        structure.maxHealth = health;
         structure.currentHealth = structure.maxHealth;
 
         bounds.bounds.width = StructureComponent.WIDTH;
