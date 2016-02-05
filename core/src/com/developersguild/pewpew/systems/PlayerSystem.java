@@ -83,21 +83,21 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         // Collision handling
-        if (collisionCode == BodyComponent.PLAYER_HITS_STRUCTURE) {
+        if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
             // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
             player.currentHealth -= StructureComponent.DAMAGE;
         }
 
         // Tilting
-        if (mov.velocity.x > 0) {
+        if (mov.velocity.x >= 2f) {
             t.rotation = -0.1f;
         }
 
-        if (mov.velocity.x < 0) {
+        if (mov.velocity.x <= -2f) {
             t.rotation = 0.1f;
         }
 
-        if (mov.velocity.x == 0) {
+        if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
             t.rotation = 0.0f;
         }
 

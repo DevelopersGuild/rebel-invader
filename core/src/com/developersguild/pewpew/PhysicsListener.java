@@ -67,7 +67,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
         if (a.getUserData().getClass() == PlayerSystem.class) {
             // If b is a structure
             if (b.getUserData().getClass() == StructureSystem.class) {
-                a.setUserData(BodyComponent.PLAYER_HITS_STRUCTURE);
+                a.setUserData(BodyComponent.PLAYER_STRUCTURE_COLLISION);
             }
         }
 
@@ -75,7 +75,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
         if (b.getUserData().getClass() == PlayerSystem.class) {
             // If a is a structure
             if (a.getUserData().getClass() == StructureSystem.class) {
-                b.setUserData(BodyComponent.PLAYER_HITS_STRUCTURE);
+                b.setUserData(BodyComponent.PLAYER_STRUCTURE_COLLISION);
             }
         }
     }
