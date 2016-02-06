@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
@@ -24,6 +23,7 @@ public class PlayerSystem extends IteratingSystem {
             BodyComponent.class).get();
 
     private float accelX = 0.0f;
+    private Level level;
 
     private ComponentMapper<PlayerComponent> rm;
     private ComponentMapper<StateComponent> sm;
@@ -33,6 +33,8 @@ public class PlayerSystem extends IteratingSystem {
 
     public PlayerSystem(Level level) {
         super(family);
+
+        this.level = level;
 
         rm = ComponentMapper.getFor(PlayerComponent.class);
         sm = ComponentMapper.getFor(StateComponent.class);
@@ -70,7 +72,7 @@ public class PlayerSystem extends IteratingSystem {
         // Movement handling
         if (state.get() == PlayerComponent.STATE_NORMAL) {
             //goes from 1 to 2 as the level goes on, to make it challenging
-            float difficultyFactor = 1 + t.pos.y / Level.WORLD_HEIGHT;
+            float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
             mov.velocity.x = -accelX / 10.0f * PlayerComponent.MOVE_VELOCITY_X * deltaTime;
             mov.velocity.y = PlayerComponent.MOVE_VELOCITY_Y * deltaTime * difficultyFactor;
         }
@@ -80,12 +82,12 @@ public class PlayerSystem extends IteratingSystem {
             t.pos.x = player.WIDTH / 2;
         }
 
-        if (t.pos.x + player.WIDTH / 2 > Level.WORLD_WIDTH) {
-            t.pos.x = Level.WORLD_WIDTH - player.WIDTH / 2;
+        if (t.pos.x + player.WIDTH / 2 > Level.LEVEL_WIDTH) {
+            t.pos.x = Level.LEVEL_WIDTH - player.WIDTH / 2;
         }
 
-        if (t.pos.y > Level.WORLD_HEIGHT) {
-            t.pos.y = Level.WORLD_HEIGHT;
+        if (t.pos.y > Level.LEVEL_HEIGHT) {
+            t.pos.y = Level.LEVEL_HEIGHT;
         }
 
         // Collision handling
@@ -108,10 +110,10 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         player.heightSoFar = t.pos.y;
-    }
 
-    public void hitByStructure() {
-        Gdx.app.log(getClass().getSimpleName(), "hitByStructure() called");
-
+        // TODO: Make death
+        if (player.currentHealth <= 0f) {
+            level.state = Level.LEVEL_STATE_GAME_OVER;
+        }
     }
 }

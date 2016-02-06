@@ -3,12 +3,15 @@ package com.developersguild.pewpew;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Created by Vihan on 1/10/2016.
  */
 public class Assets {
+    public static BitmapFont font;
+
     public static Texture background;
     public static TextureRegion backgroundRegion;
 
@@ -26,6 +29,8 @@ public class Assets {
     }
 
     public static void load() {
+        font = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
+
         background = loadTexture("background.png");
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 

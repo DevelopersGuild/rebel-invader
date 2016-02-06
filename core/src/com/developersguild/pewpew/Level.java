@@ -27,9 +27,12 @@ import java.util.Random;
  * Created by Vihan on 1/10/2016.
  */
 public class Level {
-    public static final float WORLD_WIDTH = 10;
-    public static final float WORLD_HEIGHT = 15 * 20; // I think the second number is the number of screens
-    public static final int WORLD_STATE_RUNNING = 0;
+    public static final float LEVEL_WIDTH = 10;
+    public static final float LEVEL_HEIGHT = 15 * 20; // I think the second number is the number of screens
+    public static final int LEVEL_STATE_RUNNING = 1;
+    public static final int LEVEL_STATE_GAME_OVER = 2;
+
+    public final Random rand;
 
     public float heightSoFar;
     public int state;
@@ -39,6 +42,7 @@ public class Level {
 
     public Level(PooledEngine engine) {
         this.engine = engine;
+        this.rand = new Random();
     }
 
     public void create(World world) {
@@ -48,20 +52,19 @@ public class Level {
         generateLevel(world);
 
         this.heightSoFar = 0;
-        this.state = WORLD_STATE_RUNNING;
+        this.state = LEVEL_STATE_RUNNING;
         this.score = 0;
     }
 
     private void generateLevel(World world) {
         // create obstacles
-        Random rand = new Random();
         //Wgen is supposed to keep this relatively clear of obstacles
         //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
         float path = 5.0f;
-        for (float height = 8; height < WORLD_HEIGHT; height += StructureComponent.HEIGHT - rand.nextFloat()) {
+        for (float height = 8; height < LEVEL_HEIGHT; height += StructureComponent.HEIGHT - rand.nextFloat()) {
             //Keep obstacles outside this distance of path
-            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / WORLD_HEIGHT * 0.4f;
-            for (int i = 0; i <= WORLD_WIDTH / StructureComponent.WIDTH + 1; i++) {
+            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / LEVEL_HEIGHT * 0.4f;
+            for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
                 float x = rand.nextFloat() + i * StructureComponent.WIDTH;
                 //Make sure not in restricted area, and skip part of the time
                 if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
@@ -73,10 +76,10 @@ public class Level {
                             world);
             }
             //Move the clear path so you can't just fly in a straight line
-            path += height / WORLD_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
+            path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
             path += (rand.nextBoolean() ? 1 : -1) * 3.0;
             if (path < 0) path = 0.2f;
-            else if (path > WORLD_WIDTH) path = WORLD_WIDTH - 0.2f;
+            else if (path > LEVEL_WIDTH) path = LEVEL_WIDTH - 0.2f;
         }
         // create enemies
     }
