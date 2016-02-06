@@ -5,12 +5,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.Level;
-import com.developersguild.pewpew.screens.GameScreen;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
-import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
@@ -22,27 +20,27 @@ public class PlayerSystem extends IteratingSystem {
             StateComponent.class,
             TransformComponent.class,
             MovementComponent.class,
-            BodyComponent.class,
-            HealthComponent.class).get();
+            BodyComponent.class).get();
 
     private float accelX = 0.0f;
+    private Level level;
 
     private ComponentMapper<PlayerComponent> rm;
     private ComponentMapper<StateComponent> sm;
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<MovementComponent> mm;
     private ComponentMapper<BodyComponent> bm;
-    private ComponentMapper<HealthComponent> hm;
 
     public PlayerSystem(Level level) {
         super(family);
+
+        this.level = level;
 
         rm = ComponentMapper.getFor(PlayerComponent.class);
         sm = ComponentMapper.getFor(StateComponent.class);
         tm = ComponentMapper.getFor(TransformComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
         bm = ComponentMapper.getFor(BodyComponent.class);
-        hm = ComponentMapper.getFor(HealthComponent.class);
     }
 
     public void setAccelX(float accelX) {
@@ -63,7 +61,6 @@ public class PlayerSystem extends IteratingSystem {
         MovementComponent mov = mm.get(entity);
         PlayerComponent player = rm.get(entity);
         BodyComponent body = bm.get(entity);
-        HealthComponent health = hm.get(entity);
 
         int collisionCode = 0;
         if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
@@ -75,7 +72,7 @@ public class PlayerSystem extends IteratingSystem {
         // Movement handling
         if (state.get() == PlayerComponent.STATE_NORMAL) {
             //goes from 1 to 2 as the level goes on, to make it challenging
-            float difficultyFactor = 1 + t.pos.y / Level.WORLD_HEIGHT;
+            float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
             mov.velocity.x = -accelX / 10.0f * PlayerComponent.MOVE_VELOCITY_X * deltaTime;
             mov.velocity.y = PlayerComponent.MOVE_VELOCITY_Y * deltaTime * difficultyFactor;
         }
@@ -85,12 +82,12 @@ public class PlayerSystem extends IteratingSystem {
             t.pos.x = player.WIDTH / 2;
         }
 
-        if (t.pos.x + player.WIDTH / 2 > Level.WORLD_WIDTH) {
-            t.pos.x = Level.WORLD_WIDTH - player.WIDTH / 2;
+        if (t.pos.x + player.WIDTH / 2 > Level.LEVEL_WIDTH) {
+            t.pos.x = Level.LEVEL_WIDTH - player.WIDTH / 2;
         }
 
-        if (t.pos.y > Level.WORLD_HEIGHT) {
-            t.pos.y = Level.WORLD_HEIGHT;
+        if (t.pos.y > Level.LEVEL_HEIGHT) {
+            t.pos.y = Level.LEVEL_HEIGHT;
         }
 
         // Collision handling
@@ -114,16 +111,9 @@ public class PlayerSystem extends IteratingSystem {
 
         player.heightSoFar = t.pos.y;
 
-        if (health.currentHealth == 0) {
-            die();
+        // TODO: Make death
+        if (player.currentHealth <= 0f) {
+            level.state = Level.LEVEL_STATE_GAME_OVER;
         }
     }
-
-
-    public void die() {
-        //need to make the CASE in GameScreen GameOver.
-    }
-
-
-
 }

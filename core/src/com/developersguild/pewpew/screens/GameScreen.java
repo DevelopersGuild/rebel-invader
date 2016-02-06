@@ -6,8 +6,12 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
+import com.developersguild.pewpew.Assets;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.PewPew;
 import com.developersguild.pewpew.PhysicsListener;
@@ -23,7 +27,6 @@ import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.RenderingSystem;
 import com.developersguild.pewpew.systems.StateSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
-import com.developersguild.pewpew.Assets;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -31,13 +34,19 @@ import com.developersguild.pewpew.Assets;
 public class GameScreen extends ScreenAdapter {
     static final int GAME_READY = 0;
     static final int GAME_RUNNING = 1;
-    static final int GAME_OVER = 2;
+    static final int GAME_PAUSED = 2;
+    static final int GAME_OVER = 3;
 
     PewPew game;
     Level level;
     PooledEngine engine;
     World world;
     PhysicsListener listener;
+
+    //Testing -- not sure why it's initialized here
+    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
+    OrthographicCamera guiCam;
+    Vector3 touchPoint;
 
     private int state;
 
@@ -51,6 +60,11 @@ public class GameScreen extends ScreenAdapter {
         level = new Level(engine);
         world = new World(new Vector2(0, 0), true);
         listener = new PhysicsListener();
+
+        // Testing
+        guiCam = new OrthographicCamera(320, 480);
+        guiCam.position.set(320 / 2, 480 / 2, 0);
+        touchPoint = new Vector3();
 
         // Add systems
         engine.addSystem(new PlayerSystem(level));
@@ -90,6 +104,9 @@ public class GameScreen extends ScreenAdapter {
             case GAME_RUNNING:
                 updateRunning(deltaTime);
                 break;
+            case GAME_OVER:
+                updateGameOver();
+                break;
         }
     }
 
@@ -114,42 +131,23 @@ public class GameScreen extends ScreenAdapter {
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
+
+        if (level.state == Level.LEVEL_STATE_GAME_OVER) {
+            state = GAME_OVER;
+            pauseSystems();
+        }
     }
 
-    private void presentReady() {
-        // In Super Jumper:
-        // game.batch.draw(Assets.ready, 160 - 192 / 2, 240 - 32 / 2, 192, 32);
-    }
-
-    private void presentRunning() {
-        // nothing yet
-    }
-
-    private void presentGameOver() {
-        game.batch.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
-        layout.setText(Assets.font, scoreString);
-        float scoreWidth = layout.width;
-        Assets.font.draw(game.batcher, scoreString, 160 - scoreWidth / 2, 480 - 20);
-    }
-
-    private void pauseSystems() {
-        engine.getSystem(PlayerSystem.class).setProcessing(false);
-        engine.getSystem(StructureSystem.class).setProcessing(false);
-        engine.getSystem(MovementSystem.class).setProcessing(false);
-        engine.getSystem(BoundsSystem.class).setProcessing(false);
-        engine.getSystem(StateSystem.class).setProcessing(false);
-        engine.getSystem(AnimationSystem.class).setProcessing(false);
-    }
-
-    private void resumeSystems() {
-        engine.getSystem(MovementSystem.class).setProcessing(true);
-        engine.getSystem(StructureSystem.class).setProcessing(true);
-        engine.getSystem(BoundsSystem.class).setProcessing(true);
-        engine.getSystem(StateSystem.class).setProcessing(true);
-        engine.getSystem(AnimationSystem.class).setProcessing(true);
+    private void updateGameOver() {
+        if (Gdx.input.justTouched()) {
+            resumeSystems();
+            game.setScreen(new GameScreen(game));
+        }
     }
 
     public void draw() {
+        guiCam.update();
+        game.batch.setProjectionMatrix(guiCam.combined);
         game.batch.begin();
         switch (state) {
             case GAME_READY:
@@ -165,9 +163,63 @@ public class GameScreen extends ScreenAdapter {
         game.batch.end();
     }
 
+    private void presentReady() {
+        // In Super Jumper:
+        // game.batch.draw(Assets.ready, 160 - 192 / 2, 240 - 32 / 2, 192, 32);
+    }
+
+    private void presentRunning() {
+        // nothing yet
+    }
+
+    private void presentGameOver() {
+        //game.batch.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
+        String gameOver = "Game Over";
+        layout.setText(Assets.font, gameOver);
+        float gameOverWidth = layout.width;
+        float gameOverHeight = layout.height;
+        Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+    }
+
+    private void pauseSystems() {
+        engine.getSystem(PlayerSystem.class).setProcessing(false);
+        engine.getSystem(StructureSystem.class).setProcessing(false);
+        engine.getSystem(MovementSystem.class).setProcessing(false);
+        engine.getSystem(BoundsSystem.class).setProcessing(false);
+        engine.getSystem(StateSystem.class).setProcessing(false);
+        engine.getSystem(AnimationSystem.class).setProcessing(false);
+        engine.getSystem(BackgroundSystem.class).setProcessing(false);
+        engine.getSystem(CameraSystem.class).setProcessing(false);
+        engine.getSystem(HealthSystem.class).setProcessing(false);
+        engine.getSystem(PhysicsSystem.class).setProcessing(false);
+        engine.getSystem(RenderingSystem.class).setProcessing(false);
+    }
+
+    private void resumeSystems() {
+        engine.getSystem(PlayerSystem.class).setProcessing(true);
+        engine.getSystem(MovementSystem.class).setProcessing(true);
+        engine.getSystem(StructureSystem.class).setProcessing(true);
+        engine.getSystem(BoundsSystem.class).setProcessing(true);
+        engine.getSystem(StateSystem.class).setProcessing(true);
+        engine.getSystem(AnimationSystem.class).setProcessing(true);
+        engine.getSystem(CameraSystem.class).setProcessing(true);
+        engine.getSystem(BackgroundSystem.class).setProcessing(true);
+        engine.getSystem(HealthSystem.class).setProcessing(true);
+        engine.getSystem(PhysicsSystem.class).setProcessing(true);
+        engine.getSystem(RenderingSystem.class).setProcessing(true);
+    }
+
     @Override
     public void render(float delta) {
         update(delta);
         draw();
+    }
+
+    @Override
+    public void pause() {
+        if (state == GAME_RUNNING) {
+            state = GAME_PAUSED;
+            pauseSystems();
+        }
     }
 }
