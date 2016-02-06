@@ -1,5 +1,7 @@
 package com.developersguild.pewpew;
 
+import java.util.Random;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -52,7 +54,33 @@ public class Level {
 
     private void generateLevel(World world) {
         // create obstacles
-        createStructure(StructureComponent.SIZE_SMALL, 3.0f, 10.0f, world);
+        Random rand=new Random();
+        //Wgen is supposed to keep this relatively clear of obstacles
+        //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
+        float path=5.0f;
+        for(float height=8; height<WORLD_HEIGHT; height+=StructureComponent.HEIGHT-rand.nextFloat()) {
+
+
+            //Keep obstacles outside this distance of path
+            float restrictedArea=StructureComponent.WIDTH*0.7f - height/WORLD_HEIGHT*0.4f;
+            for(int i=0; i<=WORLD_WIDTH/StructureComponent.WIDTH+1; i++) {
+                float x=rand.nextFloat() + i*StructureComponent.WIDTH;
+                //Make sure not in restricted area, and skip part of the time
+                if((x>path+restrictedArea || x<path-restrictedArea) && rand.nextBoolean())
+                    //We might want to make more smaller structures
+                    createStructure(
+                            rand.nextFloat()<0.8f ? 0 : 1,
+                            x,
+                            height,
+                            world);
+            }
+            //Move the clear path so you can't just fly in a straight line
+            path += height/WORLD_HEIGHT*1.5f * (rand.nextBoolean() ? 1 : -1);
+            path += (rand.nextBoolean() ? 1 : -1) * 3.0;
+
+            if(path < 0)path=0.2f;
+            else if(path>WORLD_WIDTH)path=WORLD_WIDTH-0.2f;
+        }
         // create enemies
     }
 
@@ -172,6 +200,10 @@ public class Level {
     }
 
     private void createStructure(int size, float x, float y, World world) {
+        createStructure(size, x, y, world, (int) StructureComponent.STARTING_HEALTH);
+    }
+
+    private void createStructure(int size, float x, float y, World world, int health) {
         Entity entity = new Entity();
 
         StructureComponent structure = engine.createComponent(StructureComponent.class);
@@ -182,7 +214,7 @@ public class Level {
         BodyComponent body = engine.createComponent(BodyComponent.class);
 
         // Health
-        structure.maxHealth = (int) StructureComponent.STARTING_HEALTH;
+        structure.maxHealth = health;
         structure.currentHealth = structure.maxHealth;
 
         bounds.bounds.width = StructureComponent.WIDTH;
