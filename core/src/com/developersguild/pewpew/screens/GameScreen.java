@@ -23,6 +23,7 @@ import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.RenderingSystem;
 import com.developersguild.pewpew.systems.StateSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
+import com.developersguild.pewpew.Assets;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -30,6 +31,7 @@ import com.developersguild.pewpew.systems.StructureSystem;
 public class GameScreen extends ScreenAdapter {
     static final int GAME_READY = 0;
     static final int GAME_RUNNING = 1;
+    static final int GAME_OVER = 2;
 
     PewPew game;
     Level level;
@@ -123,6 +125,13 @@ public class GameScreen extends ScreenAdapter {
         // nothing yet
     }
 
+    private void presentGameOver() {
+        game.batch.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
+        layout.setText(Assets.font, scoreString);
+        float scoreWidth = layout.width;
+        Assets.font.draw(game.batcher, scoreString, 160 - scoreWidth / 2, 480 - 20);
+    }
+
     private void pauseSystems() {
         engine.getSystem(PlayerSystem.class).setProcessing(false);
         engine.getSystem(StructureSystem.class).setProcessing(false);
@@ -148,6 +157,9 @@ public class GameScreen extends ScreenAdapter {
                 break;
             case GAME_RUNNING:
                 presentRunning();
+                break;
+            case GAME_OVER:
+                presentGameOver();
                 break;
         }
         game.batch.end();
