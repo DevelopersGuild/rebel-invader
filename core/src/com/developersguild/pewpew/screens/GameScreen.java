@@ -182,6 +182,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void pauseSystems() {
+        // RenderingSystem not included
         engine.getSystem(PlayerSystem.class).setProcessing(false);
         engine.getSystem(StructureSystem.class).setProcessing(false);
         engine.getSystem(MovementSystem.class).setProcessing(false);
@@ -192,10 +193,10 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(CameraSystem.class).setProcessing(false);
         engine.getSystem(HealthSystem.class).setProcessing(false);
         engine.getSystem(PhysicsSystem.class).setProcessing(false);
-        engine.getSystem(RenderingSystem.class).setProcessing(false);
     }
 
     private void resumeSystems() {
+        // RenderingSystem not included
         engine.getSystem(PlayerSystem.class).setProcessing(true);
         engine.getSystem(MovementSystem.class).setProcessing(true);
         engine.getSystem(StructureSystem.class).setProcessing(true);
@@ -206,7 +207,6 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(BackgroundSystem.class).setProcessing(true);
         engine.getSystem(HealthSystem.class).setProcessing(true);
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
-        engine.getSystem(RenderingSystem.class).setProcessing(true);
     }
 
     @Override
