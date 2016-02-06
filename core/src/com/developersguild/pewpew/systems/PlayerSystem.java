@@ -4,12 +4,13 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
+import com.developersguild.pewpew.screens.GameScreen;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
+import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
@@ -21,7 +22,8 @@ public class PlayerSystem extends IteratingSystem {
             StateComponent.class,
             TransformComponent.class,
             MovementComponent.class,
-            BodyComponent.class).get();
+            BodyComponent.class,
+            HealthComponent.class).get();
 
     private float accelX = 0.0f;
 
@@ -30,6 +32,7 @@ public class PlayerSystem extends IteratingSystem {
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<MovementComponent> mm;
     private ComponentMapper<BodyComponent> bm;
+    private ComponentMapper<HealthComponent> hm;
 
     public PlayerSystem(Level level) {
         super(family);
@@ -39,6 +42,7 @@ public class PlayerSystem extends IteratingSystem {
         tm = ComponentMapper.getFor(TransformComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
         bm = ComponentMapper.getFor(BodyComponent.class);
+        hm = ComponentMapper.getFor(HealthComponent.class);
     }
 
     public void setAccelX(float accelX) {
@@ -59,6 +63,7 @@ public class PlayerSystem extends IteratingSystem {
         MovementComponent mov = mm.get(entity);
         PlayerComponent player = rm.get(entity);
         BodyComponent body = bm.get(entity);
+        HealthComponent health = hm.get(entity);
 
         int collisionCode = 0;
         if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
@@ -108,10 +113,17 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         player.heightSoFar = t.pos.y;
+
+        if (health.currentHealth == 0) {
+            die();
+        }
     }
 
-    public void hitByStructure() {
-        Gdx.app.log(getClass().getSimpleName(), "hitByStructure() called");
 
+    public void die() {
+        //need to make the CASE in GameScreen GameOver.
     }
+
+
+
 }
