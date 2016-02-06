@@ -58,25 +58,23 @@ public class Level {
         //Wgen is supposed to keep this relatively clear of obstacles
         //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
         float path = 5.0f;
-        float deltaPathLinear = 3.0f;
-        for (float height = 8; height < WORLD_HEIGHT; height += rand.nextFloat() * 2 + 3) {
-
-            //Goes from zero to three over the course of the level, sign randomized each step
-            float deltaPathInverse = height / WORLD_HEIGHT * 3.0f * (rand.nextBoolean() ? 1 : -1);
-
-            //No obstacles within this distance of path
-            float restrictedArea = StructureComponent.WIDTH * 1.3f - height / WORLD_HEIGHT * 0.8f;
-            for (int i = 0; i < (rand.nextFloat() * height / WORLD_HEIGHT) * 6 + 6; i++) {
-                float x = rand.nextFloat() * 10.0f;
-                if (x > path + restrictedArea || x < path - restrictedArea)
+        for (float height = 8; height < WORLD_HEIGHT; height += StructureComponent.HEIGHT - rand.nextFloat()) {
+            //Keep obstacles outside this distance of path
+            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / WORLD_HEIGHT * 0.4f;
+            for (int i = 0; i <= WORLD_WIDTH / StructureComponent.WIDTH + 1; i++) {
+                float x = rand.nextFloat() + i * StructureComponent.WIDTH;
+                //Make sure not in restricted area, and skip part of the time
+                if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
+                    //We might want to make more smaller structures
                     createStructure(
                             rand.nextFloat() < 0.8f ? 0 : 1,
                             x,
-                            height + rand.nextFloat(),
+                            height,
                             world);
             }
-            path += deltaPathInverse;
-            path += (rand.nextBoolean() ? 1 : -1) * deltaPathLinear;
+            //Move the clear path so you can't just fly in a straight line
+            path += height / WORLD_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
+            path += (rand.nextBoolean() ? 1 : -1) * 3.0;
             if (path < 0) path = 0.2f;
             else if (path > WORLD_WIDTH) path = WORLD_WIDTH - 0.2f;
         }
