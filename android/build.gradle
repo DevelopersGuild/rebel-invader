@@ -14,6 +14,11 @@ android {
 
         instrumentTest.setRoot('tests')
     }
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
     defaultConfig {
         applicationId "com.developersguild.pewpew"
         minSdkVersion 8
