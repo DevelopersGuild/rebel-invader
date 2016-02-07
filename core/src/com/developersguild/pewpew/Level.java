@@ -69,11 +69,7 @@ public class Level {
                 //Make sure not in restricted area, and skip part of the time
                 if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
                     //We might want to make more smaller structures
-                    createStructure(
-                            rand.nextFloat() < 0.8f ? 0 : 1,
-                            x,
-                            height,
-                            world);
+                    createStructure(x, height, world);
             }
             //Move the clear path so you can't just fly in a straight line
             path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
@@ -199,22 +195,17 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createStructure(int size, float x, float y, World world) {
-        createStructure(size, x, y, world, (int) StructureComponent.STARTING_HEALTH);
-    }
-
-    private void createStructure(int size, float x, float y, World world, int health) {
+    private void createStructure(float x, float y, World world) {
         Entity entity = new Entity();
 
         StructureComponent structure = engine.createComponent(StructureComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
-        StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         BodyComponent body = engine.createComponent(BodyComponent.class);
 
         // Health
-        structure.maxHealth = health;
+        structure.maxHealth = StructureComponent.STARTING_HEALTH;
         structure.currentHealth = structure.maxHealth;
 
         bounds.bounds.width = StructureComponent.WIDTH;
@@ -223,15 +214,6 @@ public class Level {
         position.pos.set(x, y, 1.0f);
 
         texture.region = Assets.roofRegion;
-
-        state.set(StructureComponent.STATE_ALIVE);
-
-        structure.size = size;
-        if (size == StructureComponent.SIZE_SMALL) {
-            // small structure
-        } else {
-            // large structure
-        }
 
         // Create body
         BodyDef bodyDef = new BodyDef();
@@ -252,7 +234,6 @@ public class Level {
         entity.add(structure);
         entity.add(bounds);
         entity.add(position);
-        entity.add(state);
         entity.add(texture);
         entity.add(body);
 

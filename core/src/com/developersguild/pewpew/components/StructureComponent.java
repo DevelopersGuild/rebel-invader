@@ -10,13 +10,8 @@ public class StructureComponent implements Component {
     public static final float STARTING_HEALTH = 100f;
     public static final float WIDTH = 3.0f;
     public static final float HEIGHT = 4.0f;
-    public static final int STATE_ALIVE = 0;
-    public static final int STATE_DEAD = 1;
-    public static final int SIZE_SMALL = 0;
-    public static final int SIZE_LARGE = 1;
     public static final float DAMAGE = 1f;
 
     public float maxHealth;
     public float currentHealth;
-    public int size = SIZE_SMALL;
 }

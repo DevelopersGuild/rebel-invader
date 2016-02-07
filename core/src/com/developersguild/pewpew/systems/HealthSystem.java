@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.components.BoundsComponent;
+import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StructureComponent;
@@ -52,6 +53,9 @@ public class HealthSystem extends IteratingSystem {
             if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
         } else if (health.target.getComponent(StructureComponent.class) != null) {
             health.currentHealth = health.target.getComponent(StructureComponent.class).currentHealth;
+            if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
+        } else if (health.target.getComponent(EnemyComponent.class) != null) {
+            health.currentHealth = health.target.getComponent(EnemyComponent.class).currentHealth;
             if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
         }
 

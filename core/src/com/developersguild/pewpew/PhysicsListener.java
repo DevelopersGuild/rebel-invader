@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
 
@@ -69,6 +70,10 @@ public class PhysicsListener implements ContactListener, EntityListener {
             if (b.getUserData().getClass() == StructureSystem.class) {
                 a.setUserData(BodyComponent.PLAYER_STRUCTURE_COLLISION);
             }
+            // If b is an enemy
+            if (b.getUserData().getClass() == EnemySystem.class) {
+                a.setUserData(BodyComponent.PLAYER_ENEMY_COLLISION);
+            }
         }
 
         // If b is a player
@@ -76,6 +81,10 @@ public class PhysicsListener implements ContactListener, EntityListener {
             // If a is a structure
             if (a.getUserData().getClass() == StructureSystem.class) {
                 b.setUserData(BodyComponent.PLAYER_STRUCTURE_COLLISION);
+            }
+            // If a is an enemy
+            if (b.getUserData().getClass() == EnemySystem.class) {
+                a.setUserData(BodyComponent.PLAYER_ENEMY_COLLISION);
             }
         }
     }

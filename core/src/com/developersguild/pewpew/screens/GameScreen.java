@@ -20,6 +20,7 @@ import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
 import com.developersguild.pewpew.systems.CameraSystem;
+import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.HealthSystem;
 import com.developersguild.pewpew.systems.MovementSystem;
 import com.developersguild.pewpew.systems.PhysicsSystem;
@@ -75,6 +76,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new StateSystem());
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new StructureSystem());
+        engine.addSystem(new EnemySystem());
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem());
@@ -185,6 +187,7 @@ public class GameScreen extends ScreenAdapter {
         // RenderingSystem not included
         engine.getSystem(PlayerSystem.class).setProcessing(false);
         engine.getSystem(StructureSystem.class).setProcessing(false);
+        engine.getSystem(EnemySystem.class).setProcessing(false);
         engine.getSystem(MovementSystem.class).setProcessing(false);
         engine.getSystem(BoundsSystem.class).setProcessing(false);
         engine.getSystem(StateSystem.class).setProcessing(false);
@@ -200,6 +203,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PlayerSystem.class).setProcessing(true);
         engine.getSystem(MovementSystem.class).setProcessing(true);
         engine.getSystem(StructureSystem.class).setProcessing(true);
+        engine.getSystem(EnemySystem.class).setProcessing(true);
         engine.getSystem(BoundsSystem.class).setProcessing(true);
         engine.getSystem(StateSystem.class).setProcessing(true);
         engine.getSystem(AnimationSystem.class).setProcessing(true);

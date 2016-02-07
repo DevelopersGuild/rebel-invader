@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
@@ -73,8 +74,8 @@ public class PlayerSystem extends IteratingSystem {
         if (state.get() == PlayerComponent.STATE_NORMAL) {
             //goes from 1 to 2 as the level goes on, to make it challenging
             float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
-            mov.velocity.x = -accelX / 10.0f * PlayerComponent.MOVE_VELOCITY_X * deltaTime;
-            mov.velocity.y = PlayerComponent.MOVE_VELOCITY_Y * deltaTime * difficultyFactor;
+            mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
+            mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
         }
 
         // Bounds checking
@@ -86,14 +87,14 @@ public class PlayerSystem extends IteratingSystem {
             t.pos.x = Level.LEVEL_WIDTH - player.WIDTH / 2;
         }
 
-        if (t.pos.y > Level.LEVEL_HEIGHT) {
-            t.pos.y = Level.LEVEL_HEIGHT;
-        }
-
         // Collision handling
         if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
             // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
             player.currentHealth -= StructureComponent.DAMAGE;
+        }
+        else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
+            // TODO: Same as structure collision
+            player.currentHealth -= EnemyComponent.DAMAGE;
         }
 
         // Tilting
@@ -111,7 +112,7 @@ public class PlayerSystem extends IteratingSystem {
 
         player.heightSoFar = t.pos.y;
 
-        // TODO: Make death
+        // Death
         if (player.currentHealth <= 0f) {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }

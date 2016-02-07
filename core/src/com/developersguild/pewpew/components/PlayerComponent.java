@@ -8,11 +8,10 @@ import com.badlogic.ashley.core.Component;
 public class PlayerComponent implements Component {
     public static final float STARTING_HEALTH = 100f;
     public static final int STATE_NORMAL = 0;
-    public static final int STATE_DEAD = 1;
-    public static final float MOVE_VELOCITY_X = 2500.f;
-    public static final float MOVE_VELOCITY_Y = 50.0f;
-    public static final float WIDTH = 2.0f;
-    public static final float HEIGHT = 2.0f;
+    public static final float VELOCITY_X = 2500f;
+    public static final float VELOCITY_Y = 50f;
+    public static final float WIDTH = 2f;
+    public static final float HEIGHT = 2f;
 
     public float maxHealth;
     public float currentHealth;
