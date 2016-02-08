@@ -57,6 +57,7 @@ public class PlayerSystem extends IteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
+    	
         TransformComponent t = tm.get(entity);
         StateComponent state = sm.get(entity);
         MovementComponent mov = mm.get(entity);
@@ -116,5 +117,7 @@ public class PlayerSystem extends IteratingSystem {
         if (player.currentHealth <= 0f) {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }
+        
+        level.generateObstacles(player.heightSoFar);
     }
 }
