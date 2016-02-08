@@ -21,25 +21,34 @@ import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.systems.RenderingSystem;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Random;
 
 /**
  * Created by Vihan on 1/10/2016.
  */
 public class Level {
+	
+    public static final float SCREEN_HEIGHT = 15;
+    
     public static final float LEVEL_WIDTH = 10;
-    public static final float LEVEL_HEIGHT = 15 * 20; // I think the second number is the number of screens
+    public static final float LEVEL_HEIGHT = SCREEN_HEIGHT * 20; // I think the second number is the number of screens
+
     public static final int LEVEL_STATE_RUNNING = 1;
     public static final int LEVEL_STATE_GAME_OVER = 2;
 
     public final Random rand;
 
-    public float heightSoFar;
     public int state;
     public int score;
 
     private PooledEngine engine;
-
+    
+    private WorldGenerator generator;
+    
+    public static float playerHeight;
+    
     public Level(PooledEngine engine) {
         this.engine = engine;
         this.rand = new Random();
@@ -49,35 +58,13 @@ public class Level {
         Entity player = createPlayer(world);
         createCamera(player);
         createBackground();
-        generateLevel(world);
-
-        this.heightSoFar = 0;
+        
+        generator=new WorldGenerator(world);
+        
+        generateObstacles(1.5f * SCREEN_HEIGHT);
+        
         this.state = LEVEL_STATE_RUNNING;
         this.score = 0;
-    }
-
-    private void generateLevel(World world) {
-        // create obstacles
-        //Wgen is supposed to keep this relatively clear of obstacles
-        //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
-        float path = 5.0f;
-        for (float height = 8; height < LEVEL_HEIGHT; height += StructureComponent.HEIGHT - rand.nextFloat()) {
-            //Keep obstacles outside this distance of path
-            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / LEVEL_HEIGHT * 0.4f;
-            for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
-                float x = rand.nextFloat() + i * StructureComponent.WIDTH;
-                //Make sure not in restricted area, and skip part of the time
-                if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
-                    //We might want to make more smaller structures
-                    createStructure(x, height, world);
-            }
-            //Move the clear path so you can't just fly in a straight line
-            path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
-            path += (rand.nextBoolean() ? 1 : -1) * 3.0;
-            if (path < 0) path = 0.2f;
-            else if (path > LEVEL_WIDTH) path = LEVEL_WIDTH - 0.2f;
-        }
-        // create enemies
     }
 
     private void createCamera(Entity target) {
@@ -196,6 +183,10 @@ public class Level {
     }
 
     private void createStructure(float x, float y, World world) {
+		createStructure(x, y, StructureComponent.WIDTH/2, StructureComponent.HEIGHT/2, world);
+	}
+
+	private void createStructure(float x, float y, float xSize, float ySize, World world) {
         Entity entity = new Entity();
 
         StructureComponent structure = engine.createComponent(StructureComponent.class);
@@ -238,7 +229,7 @@ public class Level {
         entity.add(body);
 
         createHealthBar(entity);
-
+        
         engine.addEntity(entity);
     }
 
@@ -257,4 +248,47 @@ public class Level {
 
         engine.addEntity(entity);
     }
+
+    //Makes sure that the world is generated up to the given height, and cleans up entities out of bounds
+	public void generateObstacles(float heightSoFar) {
+		generator.provideWorld(heightSoFar);
+		playerHeight=heightSoFar;
+	}
+
+	private class WorldGenerator{
+		
+		private float height=0;
+        private float path = 5.0f;
+		
+		private final World world;
+		
+		public WorldGenerator(World world){
+			this.world=world;
+		}
+		
+		public void provideWorld(float heightNeeded){
+	        //create obstacles
+	        //Wgen is supposed to keep this relatively clear of obstacles
+	        //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
+	        while(height < heightNeeded+1.5f*SCREEN_HEIGHT) {
+	        	height += StructureComponent.HEIGHT - rand.nextFloat();
+	            //Keep obstacles outside this distance of path
+	            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / LEVEL_HEIGHT * 0.4f;
+	            for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
+	                float x = rand.nextFloat() + i * StructureComponent.WIDTH;
+	                //Make sure not in restricted area, and skip part of the time
+	                if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
+	                    //We might want to make more smaller structures
+	                    createStructure(x, height, world);
+	            }
+	            //Move the clear path so you can't just fly in a straight line
+	            path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
+	            path += (rand.nextBoolean() ? 1 : -1) * 3.0;
+	            if (path < 0) path = 0.2f;
+	            else if (path > LEVEL_WIDTH) path = LEVEL_WIDTH - 0.2f;
+	        }
+	        // create enemies
+		}
+	}
+	
 }
