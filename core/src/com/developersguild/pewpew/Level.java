@@ -1,6 +1,7 @@
 package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -48,15 +49,15 @@ public class Level {
         Entity player = createPlayer(world);
         createCamera(player);
         createBackground();
-        generateLevel(world);
-        createEnemy(3f, 10f, world);
+        generateLevel(world, player);
+        createEnemy(3f, 5f, world, player);
 
         this.heightSoFar = 0;
         this.state = LEVEL_STATE_RUNNING;
         this.score = 0;
     }
 
-    private void generateLevel(World world) {
+    private void generateLevel(World world, Entity player) {
         // create obstacles
         //Wgen is supposed to keep this relatively clear of obstacles
         //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
@@ -69,7 +70,7 @@ public class Level {
                 //Make sure not in restricted area, and skip part of the time
                 if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
                     //We might want to make more smaller structures
-                    createStructure(x, height, world);
+                    createStructure(x, height, world, player);
             }
             //Move the clear path so you can't just fly in a straight line
             path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
@@ -121,6 +122,7 @@ public class Level {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.pos.x, position.pos.y);
         body.body = world.createBody(bodyDef);
+        body.body.setUserData(this);
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
@@ -157,18 +159,22 @@ public class Level {
         return entity;
     }
 
-    private void createStructure(float x, float y, World world) {
+    private void createStructure(float x, float y, World world, Entity player) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
+        StateComponent state = engine.createComponent(StateComponent.class);
         StructureComponent structure = engine.createComponent(StructureComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
         // Health
         structure.maxHealth = StructureComponent.STARTING_HEALTH;
         structure.currentHealth = structure.maxHealth;
+        structure.target = player;
+
+        state.set(StructureComponent.STATE_ALIVE);
 
         bounds.bounds.width = StructureComponent.WIDTH;
         bounds.bounds.height = StructureComponent.HEIGHT;
@@ -182,6 +188,7 @@ public class Level {
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(position.pos.x, position.pos.y);
         body.body = world.createBody(bodyDef);
+        body.body.setUserData(this);
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
@@ -196,6 +203,7 @@ public class Level {
         entity.add(structure);
         entity.add(bounds);
         entity.add(position);
+        entity.add(state);
         entity.add(texture);
         entity.add(body);
 
@@ -204,19 +212,23 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createEnemy(float x, float y, World world) {
+    private void createEnemy(float x, float y, World world, Entity player) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         EnemyComponent enemy = engine.createComponent(EnemyComponent.class);
         MovementComponent mov = engine.createComponent(MovementComponent.class);
+        StateComponent state = engine.createComponent(StateComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
         // Health
         enemy.maxHealth = EnemyComponent.STARTING_HEALTH;
         enemy.currentHealth = enemy.maxHealth;
+        enemy.target = player;
+
+        state.set(EnemyComponent.STATE_ALIVE);
 
         bounds.bounds.width = EnemyComponent.WIDTH;
         bounds.bounds.height = EnemyComponent.HEIGHT;
@@ -231,6 +243,7 @@ public class Level {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.pos.x, position.pos.y);
         body.body = world.createBody(bodyDef);
+        body.body.setUserData(this);
 
         // Define a shape with the vertices
         PolygonShape polygon = new PolygonShape();
@@ -254,6 +267,7 @@ public class Level {
         entity.add(enemy);
         entity.add(mov);
         entity.add(position);
+        entity.add(state);
         entity.add(texture);
 
         createHealthBar(entity);
