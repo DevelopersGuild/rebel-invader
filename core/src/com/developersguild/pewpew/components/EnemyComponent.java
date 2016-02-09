@@ -11,7 +11,7 @@ public class EnemyComponent implements Component {
     public static final float VELOCITY_X = 50f;
     public static final float VELOCITY_Y = 50f;
     public static final float STARTING_HEALTH = 50f;
-    public static final float DAMAGE = 20f;
+    public static final float DAMAGE = 0.5f;
 
     public float maxHealth;
     public float currentHealth;

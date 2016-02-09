@@ -64,6 +64,9 @@ public class EnemySystem extends IteratingSystem {
             engine.removeEntity(entity);
         }
 
+        // TODO: Set enemy x-velocity based on pathfinding
+        // TODO: Set enemy y-velocity once within a certain distance of player
+
         // Death
         if (enemy.currentHealth <= 0f) {
             engine.removeEntity(entity);

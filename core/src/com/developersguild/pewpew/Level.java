@@ -2,7 +2,7 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -12,6 +12,7 @@ import com.developersguild.pewpew.components.BackgroundComponent;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.CameraComponent;
+import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
@@ -20,8 +21,6 @@ import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.systems.RenderingSystem;
-
-import java.util.Random;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -32,7 +31,7 @@ public class Level {
     public static final int LEVEL_STATE_RUNNING = 1;
     public static final int LEVEL_STATE_GAME_OVER = 2;
 
-    public final Random rand;
+    public final RandomXS128 rand;
 
     public float heightSoFar;
     public int state;
@@ -42,7 +41,7 @@ public class Level {
 
     public Level(PooledEngine engine) {
         this.engine = engine;
-        this.rand = new Random();
+        this.rand = new RandomXS128();
     }
 
     public void create(World world) {
@@ -50,6 +49,7 @@ public class Level {
         createCamera(player);
         createBackground();
         generateLevel(world);
+        createEnemy(3f, 10f, world);
 
         this.heightSoFar = 0;
         this.state = LEVEL_STATE_RUNNING;
@@ -96,11 +96,11 @@ public class Level {
         Entity entity = engine.createEntity();
 
         AnimationComponent animation = engine.createComponent(AnimationComponent.class);
+        BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         MovementComponent movement = engine.createComponent(MovementComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         PlayerComponent player = engine.createComponent(PlayerComponent.class);
-        BodyComponent body = engine.createComponent(BodyComponent.class);
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
@@ -108,7 +108,6 @@ public class Level {
 
         bounds.bounds.width = PlayerComponent.WIDTH;
         bounds.bounds.height = PlayerComponent.HEIGHT;
-        Gdx.app.log(Gdx.app.getClass().getName(), bounds.bounds.width + " " + bounds.bounds.height);
 
         position.pos.set(5.0f, 2.5f, 0.0f);
         position.scale.set(2.0f / 3.0f, 2.0f / 3.0f);
@@ -158,51 +157,14 @@ public class Level {
         return entity;
     }
 
-    private void createHealthBar(Entity target) {
+    private void createStructure(float x, float y, World world) {
         Entity entity = engine.createEntity();
 
-        HealthComponent health = engine.createComponent(HealthComponent.class);
-        TransformComponent position = engine.createComponent(TransformComponent.class);
-        TextureComponent texture = engine.createComponent(TextureComponent.class);
-
-        health.target = target;
-        health.targetPos = target.getComponent(TransformComponent.class).pos;
-        health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
-
-        // Determine type of entity
-        if (target.getComponent(PlayerComponent.class) != null) {
-            health.maxHealth = PlayerComponent.STARTING_HEALTH * health.healthMultiplier;
-            health.currentHealth = health.maxHealth;
-            health.lengthRatio = 2.0f / 3.0f;
-            health.widthRatio = 2.0f / 3.0f;
-            health.isPlayer = true;
-            position.scale.set(health.lengthRatio, health.widthRatio);   // TODO: Remove player health bar when we have a health bar gui code; this is for testing
-        } else if (target.getComponent(StructureComponent.class) != null) {
-            health.maxHealth = StructureComponent.STARTING_HEALTH * health.healthMultiplier;
-            health.currentHealth = health.maxHealth;
-            health.lengthRatio = 96.0f / 95.0f;
-            health.widthRatio = 2.0f / 3.0f;
-            health.isStructure = true;
-            position.scale.set(health.lengthRatio, health.widthRatio);
-        }
-
-        texture.region = Assets.healthRegion;
-
-        entity.add(health);
-        entity.add(position);
-        entity.add(texture);
-
-        engine.addEntity(entity);
-    }
-
-    private void createStructure(float x, float y, World world) {
-        Entity entity = new Entity();
-
-        StructureComponent structure = engine.createComponent(StructureComponent.class);
+        BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
+        StructureComponent structure = engine.createComponent(StructureComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
-        BodyComponent body = engine.createComponent(BodyComponent.class);
 
         // Health
         structure.maxHealth = StructureComponent.STARTING_HEALTH;
@@ -242,12 +204,113 @@ public class Level {
         engine.addEntity(entity);
     }
 
+    private void createEnemy(float x, float y, World world) {
+        Entity entity = engine.createEntity();
+
+        BodyComponent body = engine.createComponent(BodyComponent.class);
+        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        EnemyComponent enemy = engine.createComponent(EnemyComponent.class);
+        MovementComponent mov = engine.createComponent(MovementComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+
+        // Health
+        enemy.maxHealth = EnemyComponent.STARTING_HEALTH;
+        enemy.currentHealth = enemy.maxHealth;
+
+        bounds.bounds.width = EnemyComponent.WIDTH;
+        bounds.bounds.height = EnemyComponent.HEIGHT;
+
+        position.pos.set(x, y, 1f);
+        position.scale.set(2f, 2f);
+
+        texture.region = Assets.enemyRegions[rand.nextInt(15)];
+
+        // Create player body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.pos.x, position.pos.y);
+        body.body = world.createBody(bodyDef);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(EnemyComponent.WIDTH / 2.f, EnemyComponent.HEIGHT / 2.f);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
+
+        entity.add(body);
+        entity.add(bounds);
+        entity.add(enemy);
+        entity.add(mov);
+        entity.add(position);
+        entity.add(texture);
+
+        createHealthBar(entity);
+
+        engine.addEntity(entity);
+    }
+
+    private void createHealthBar(Entity target) {
+        Entity entity = engine.createEntity();
+
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        HealthComponent health = engine.createComponent(HealthComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+
+        health.target = target;
+        health.targetPos = target.getComponent(TransformComponent.class).pos;
+        health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
+
+        // Determine type of entity
+        if (target.getComponent(PlayerComponent.class) != null) {
+            health.maxHealth = PlayerComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.currentHealth = health.maxHealth;
+            health.lengthRatio = 2.0f / 3.0f;
+            health.widthRatio = 2.0f / 3.0f;
+            health.belongsTo = HealthComponent.IS_PLAYER;
+            position.scale.set(health.lengthRatio, health.widthRatio);
+        } else if (target.getComponent(StructureComponent.class) != null) {
+            health.maxHealth = StructureComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.currentHealth = health.maxHealth;
+            health.lengthRatio = 96.0f / 95.0f;
+            health.widthRatio = 2.0f / 3.0f;
+            health.belongsTo = HealthComponent.IS_STRUCTURE;
+            position.scale.set(health.lengthRatio, health.widthRatio);
+        } else if (target.getComponent(EnemyComponent.class) != null) {
+            health.maxHealth = EnemyComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.currentHealth = health.maxHealth;
+            health.lengthRatio = 2.0f / 3.0f;
+            health.widthRatio = 2.0f / 3.0f;
+            health.belongsTo = HealthComponent.IS_ENEMY;
+            position.scale.set(health.lengthRatio, health.widthRatio);
+        }
+
+        texture.region = Assets.healthRegion;
+
+        entity.add(health);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
+    }
+
     private void createBackground() {
         Entity entity = engine.createEntity();
 
         BackgroundComponent background = engine.createComponent(BackgroundComponent.class);
-        TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
 
         texture.region = Assets.backgroundRegion;
 

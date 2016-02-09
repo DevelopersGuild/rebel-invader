@@ -69,27 +69,32 @@ public class HealthSystem extends IteratingSystem {
         TransformComponent pos = tm.get(entity);
 
         // Update healthLength
-        float healthLength = 0.0f;
+        float healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
 
-        if (health.isPlayer) {
-            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
-        } else if (health.isStructure) {
-            healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
-        }
+        checkHealthBounds(health);
 
+        pos.scale.set(healthLength, health.widthRatio);
+    }
+
+    private void checkHealthBounds(HealthComponent health) {
         // Prevent health decreasing below 0
         if (health.currentHealth < 0) {
             health.currentHealth = 0;
-            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
         }
 
         // Prevent health increasing over maxHealth
         if (health.currentHealth > health.maxHealth) {
             health.currentHealth = health.maxHealth;
-            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
         }
 
-        pos.scale.set(healthLength, health.widthRatio);
+        // Do the same for the actual target entity too
+        if (health.target.getComponent(PlayerComponent.class) != null) {
+            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
+        } else if (health.target.getComponent(PlayerComponent.class) != null) {
+            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
+        } else if (health.target.getComponent(PlayerComponent.class) != null) {
+            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
+        }
     }
 
     public void nextLevel(Entity entity) {

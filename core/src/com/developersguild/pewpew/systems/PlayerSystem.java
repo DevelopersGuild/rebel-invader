@@ -93,7 +93,7 @@ public class PlayerSystem extends IteratingSystem {
             player.currentHealth -= StructureComponent.DAMAGE;
         }
         else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
-            // TODO: Same as structure collision
+            // TODO: Do the same here
             player.currentHealth -= EnemyComponent.DAMAGE;
         }
 
