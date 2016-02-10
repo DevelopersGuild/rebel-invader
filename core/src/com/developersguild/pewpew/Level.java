@@ -1,7 +1,6 @@
 package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -50,6 +49,8 @@ public class Level {
         createCamera(player);
         createBackground();
         generateLevel(world, player);
+
+        // TODO: Remove this once enemies are in generate Level
         createEnemy(3f, 15f, world, player);
 
         this.heightSoFar = 0;
