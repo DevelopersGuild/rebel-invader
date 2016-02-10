@@ -1,8 +1,5 @@
 package com.developersguild.pewpew.screens;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
@@ -35,6 +32,9 @@ import com.developersguild.pewpew.systems.RenderingSystem;
 import com.developersguild.pewpew.systems.StateSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Vihan on 1/10/2016.
  */
@@ -51,12 +51,11 @@ public class GameScreen extends ScreenAdapter {
     PhysicsListener listener;
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-    //Testing -- not sure why it's initialized here
-    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
+
+    private GlyphLayout layout;
     private int state;
-    
-    private List<Entity> deadEntities=new ArrayList<Entity>();
-    
+    private List<Entity> deadEntities;
+
     public GameScreen(PewPew game) {
         this.game = game;
 
@@ -72,6 +71,8 @@ public class GameScreen extends ScreenAdapter {
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
+        layout = new GlyphLayout();
+        deadEntities = new ArrayList<Entity>();
 
         // Add systems
         engine.addSystem(new PlayerSystem(level));
@@ -109,7 +110,7 @@ public class GameScreen extends ScreenAdapter {
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
-        
+
         switch (state) {
             case GAME_READY:
                 updateReady();
@@ -149,10 +150,11 @@ public class GameScreen extends ScreenAdapter {
             state = GAME_OVER;
             pauseSystems();
         }
-        
+
         //Kill off any dead entities
-        for(Entity e:deadEntities) {
-        	engine.removeEntity(e);
+        for (Entity e : deadEntities) {
+            // TODO: Remove health bar entities too, then uncomment
+            //engine.removeEntity(e);
         }
     }
 
@@ -246,8 +248,8 @@ public class GameScreen extends ScreenAdapter {
             pauseSystems();
         }
     }
-    
-    public void markEntityForRemoval(Entity e){
-    	deadEntities.add(e);
+
+    public void markEntityForRemoval(Entity e) {
+        deadEntities.add(e);
     }
 }
