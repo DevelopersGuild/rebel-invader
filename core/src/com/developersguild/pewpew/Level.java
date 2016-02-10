@@ -257,8 +257,20 @@ public class Level {
 
 	private class WorldGenerator{
 		
-		private float height=0;
+		/**
+		 * How far up has been pre-generated
+		 */
+		private float height=8;
+		/**
+		 * This is the X-coordinate of the path that the player can follow.
+		 * The path is kept clear of all obstacles.
+		 */
         private float path = 5.0f;
+        
+        /**
+         * Each step, path += lastDeltaPath. lastDeltaPath itself changes by a random walk.
+         */
+        private float lastDeltaPath=0.0f;
 		
 		private final World world;
 		
@@ -267,25 +279,35 @@ public class Level {
 		}
 		
 		public void provideWorld(float heightNeeded){
-	        //create obstacles
-	        //Wgen is supposed to keep this relatively clear of obstacles
-	        //It changes by +-deltaPathLinear*random +- deltaPathInverse/random
+	        //Make sure generation has made it off screen above the requested height
 	        while(height < heightNeeded+1.5f*SCREEN_HEIGHT) {
-	        	height += StructureComponent.HEIGHT - rand.nextFloat();
-	            //Keep obstacles outside this distance of path
-	            float restrictedArea = StructureComponent.WIDTH * 0.7f - height / LEVEL_HEIGHT * 0.4f;
+	        	//Advance world generation
+	        	height += StructureComponent.HEIGHT;
+	            
+	            float restrictedArea = 
+	            		PlayerComponent.WIDTH		//One player wide
+	            		- height / LEVEL_HEIGHT * 0.4f//Minus a difficulty scaling term
+	            		+ lastDeltaPath/2; 			//Plus more if the path is changing sharply, so you can still get through
 	            for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
-	                float x = rand.nextFloat() + i * StructureComponent.WIDTH;
-	                //Make sure not in restricted area, and skip part of the time
-	                if ((x > path + restrictedArea || x < path - restrictedArea) && rand.nextBoolean())
-	                    //We might want to make more smaller structures
+	                float x = i * StructureComponent.WIDTH;
+	                //Check that we're not stomping the path
+	                if ((x > path + restrictedArea || x < path - restrictedArea))
 	                    createStructure(x, height, world);
 	            }
 	            //Move the clear path so you can't just fly in a straight line
-	            path += height / LEVEL_HEIGHT * 1.5f * (rand.nextBoolean() ? 1 : -1);
-	            path += (rand.nextBoolean() ? 1 : -1) * 3.0;
-	            if (path < 0) path = 0.2f;
-	            else if (path > LEVEL_WIDTH) path = LEVEL_WIDTH - 0.2f;
+	            path += lastDeltaPath;
+	            
+	            lastDeltaPath += (rand.nextFloat() - 0.5f)//random-walk term, evenly distributed in +-0.5
+	            		*(1+height/LEVEL_HEIGHT);			//plus a difficulty scaling term
+	            
+	            //If the path is outside the world, move it back in, and make it go the other way
+	            if (path < 0) {
+	            	path = 0.2f;
+	            	lastDeltaPath *= -1;
+	            } else if (path > LEVEL_WIDTH){
+	            	path = LEVEL_WIDTH - 0.2f;
+	            	lastDeltaPath *= -1;
+	            }
 	        }
 	        // create enemies
 		}
