@@ -58,12 +58,20 @@ public class EnemySystem extends IteratingSystem {
         body.body.setUserData(this);
 
         // Movement handling
-        // Start moving down if on screen
+        // If on screen
         if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < 12.5f) {
+            // Start moving down
             mov.velocity.y = -EnemyComponent.VELOCITY_Y * deltaTime;
-        }
-        // X-pathfinding
 
+            // Start X-pathfinding
+            if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x < -EnemyComponent.WIDTH / 2) {
+                mov.velocity.x = EnemyComponent.VELOCITY_X * deltaTime;
+            } else if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x > EnemyComponent.WIDTH / 2) {
+                mov.velocity.x = -EnemyComponent.VELOCITY_X * deltaTime;
+            } else {
+                mov.velocity.x = 0f;
+            }
+        }
 
         // Bounds checking
         // Removes the enemy from the game if it goes off the left, right, or bottom of the screen

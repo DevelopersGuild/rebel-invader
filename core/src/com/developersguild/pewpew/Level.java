@@ -50,7 +50,7 @@ public class Level {
         createCamera(player);
         createBackground();
         generateLevel(world, player);
-        createEnemy(3f, 5f, world, player);
+        createEnemy(3f, 15f, world, player);
 
         this.heightSoFar = 0;
         this.state = LEVEL_STATE_RUNNING;
