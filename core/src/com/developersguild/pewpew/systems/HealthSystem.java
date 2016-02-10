@@ -21,7 +21,6 @@ public class HealthSystem extends IteratingSystem {
 
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
-    private Engine engine;
     private float healthLastFrame;
 
     public HealthSystem() {
@@ -35,11 +34,10 @@ public class HealthSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        this.engine = engine;
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         TransformComponent pos = tm.get(entity);
         HealthComponent health = hm.get(entity);
 

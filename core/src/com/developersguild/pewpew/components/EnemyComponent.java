@@ -9,7 +9,7 @@ import com.badlogic.ashley.core.Entity;
 public class EnemyComponent implements Component {
     public static final float WIDTH = 2f;
     public static final float HEIGHT = 2f;
-    public static final float VELOCITY_X = 50f;
+    public static final float VELOCITY_X = 100f;
     public static final float VELOCITY_Y = 50f;
     public static final float STARTING_HEALTH = 50f;
     public static final float DAMAGE = 0.5f;

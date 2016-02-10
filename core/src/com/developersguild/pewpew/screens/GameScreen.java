@@ -44,12 +44,10 @@ public class GameScreen extends ScreenAdapter {
     PooledEngine engine;
     World world;
     PhysicsListener listener;
-
-    //Testing -- not sure why it's initialized here
-    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-
+    //Testing -- not sure why it's initialized here
+    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
     private int state;
 
     public GameScreen(PewPew game) {

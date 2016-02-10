@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
@@ -62,7 +61,8 @@ public class EnemySystem extends IteratingSystem {
         if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < 12.5f) {
             // Start moving down
             mov.velocity.y = -EnemyComponent.VELOCITY_Y * deltaTime;
-
+        }
+        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < 6f) {
             // Start X-pathfinding
             if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x < -EnemyComponent.WIDTH / 2) {
                 mov.velocity.x = EnemyComponent.VELOCITY_X * deltaTime;
