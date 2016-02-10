@@ -1,5 +1,6 @@
 package com.developersguild.pewpew.screens;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Application;
@@ -23,12 +24,16 @@ import com.developersguild.pewpew.systems.BulletSystem;
 import com.developersguild.pewpew.systems.CameraSystem;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.HealthSystem;
+import com.developersguild.pewpew.systems.HeightDisposableSystem;
 import com.developersguild.pewpew.systems.MovementSystem;
 import com.developersguild.pewpew.systems.PhysicsSystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.RenderingSystem;
 import com.developersguild.pewpew.systems.StateSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -46,9 +51,10 @@ public class GameScreen extends ScreenAdapter {
     PhysicsListener listener;
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-    //Testing -- not sure why it's initialized here
-    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
+
+    private GlyphLayout layout;
     private int state;
+    private List<Entity> deadEntities;
 
     public GameScreen(PewPew game) {
         this.game = game;
@@ -65,6 +71,8 @@ public class GameScreen extends ScreenAdapter {
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
+        layout = new GlyphLayout();
+        deadEntities = new ArrayList<Entity>();
 
         // Add systems
         engine.addSystem(new PlayerSystem(level));
@@ -79,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem());
+        engine.addSystem(new HeightDisposableSystem(this));
         engine.addSystem(new BulletSystem());
 
         // Set camera
@@ -141,6 +150,12 @@ public class GameScreen extends ScreenAdapter {
             state = GAME_OVER;
             pauseSystems();
         }
+
+        //Kill off any dead entities
+        for (Entity e : deadEntities) {
+            // TODO: Remove health bar entities too, then uncomment
+            //engine.removeEntity(e);
+        }
     }
 
     private void updateGameOver() {
@@ -199,6 +214,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(CameraSystem.class).setProcessing(false);
         engine.getSystem(HealthSystem.class).setProcessing(false);
         engine.getSystem(PhysicsSystem.class).setProcessing(false);
+        engine.getSystem(HeightDisposableSystem.class).setProcessing(false);
         engine.getSystem(BulletSystem.class).setProcessing(false);
     }
 
@@ -215,6 +231,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(BackgroundSystem.class).setProcessing(true);
         engine.getSystem(HealthSystem.class).setProcessing(true);
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
+        engine.getSystem(HeightDisposableSystem.class).setProcessing(true);
         engine.getSystem(BulletSystem.class).setProcessing(true);
     }
 
@@ -230,5 +247,9 @@ public class GameScreen extends ScreenAdapter {
             state = GAME_PAUSED;
             pauseSystems();
         }
+    }
+
+    public void markEntityForRemoval(Entity e) {
+        deadEntities.add(e);
     }
 }

@@ -38,7 +38,7 @@ public class Assets {
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 
         roof = loadTexture("roof.png");
-        roofRegion = new TextureRegion(roof, 0, 0, 96, 128);
+        roofRegion = new TextureRegion(roof, 0, 0, 64, 64);
 
         ship = loadTexture("ship.png");
         shipNormal = new Animation(0.02f, new TextureRegion(ship, 0, 0, 96, 96));

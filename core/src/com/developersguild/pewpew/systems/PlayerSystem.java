@@ -115,5 +115,8 @@ public class PlayerSystem extends IteratingSystem {
         if (player.currentHealth <= 0f) {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }
+
+        //Wgen
+        level.generateObstacles(player.heightSoFar, entity);
     }
 }
