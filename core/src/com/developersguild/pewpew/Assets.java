@@ -24,6 +24,9 @@ public class Assets {
     public static Texture healthBar;
     public static TextureRegion healthRegion;
 
+    public static Texture[] enemies;
+    public static TextureRegion[] enemyRegions;
+
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
@@ -43,5 +46,12 @@ public class Assets {
 
         healthBar = loadTexture("health_bar.png");
         healthRegion = new TextureRegion(healthBar, 0, 0, 95, 5);
+
+        enemies = new Texture[15];
+        enemyRegions = new TextureRegion[15];
+        for (int i = 0; i < 15; i++) {
+            enemies[i] = loadTexture(i + 1 + ".png");
+            enemyRegions[i] = new TextureRegion(enemies[i], 0, 0, 32, 32);
+        }
     }
 }

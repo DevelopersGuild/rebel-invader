@@ -23,7 +23,7 @@ public class BoundsSystem extends IteratingSystem {
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         TransformComponent pos = tm.get(entity);
         BoundsComponent bounds = bm.get(entity);
 

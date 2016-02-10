@@ -6,6 +6,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.EnemyComponent;
+import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
@@ -22,6 +24,7 @@ public class StructureSystem extends IteratingSystem {
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<StructureComponent> sm;
     private ComponentMapper<BodyComponent> bm;
+    private ComponentMapper<StateComponent> stm;
 
     public StructureSystem() {
         super(Family.all(StructureComponent.class).get());
@@ -29,6 +32,7 @@ public class StructureSystem extends IteratingSystem {
         tm = ComponentMapper.getFor(TransformComponent.class);
         sm = ComponentMapper.getFor(StructureComponent.class);
         bm = ComponentMapper.getFor(BodyComponent.class);
+        stm = ComponentMapper.getFor(StateComponent.class);
     }
 
     @Override
@@ -42,12 +46,17 @@ public class StructureSystem extends IteratingSystem {
         TransformComponent t = tm.get(entity);
         BodyComponent body = bm.get(entity);
         StructureComponent structure = sm.get(entity);
+        StateComponent state = stm.get(entity);
 
         body.body.setUserData(this);
 
         // Death
         if (structure.currentHealth <= 0f) {
-            engine.removeEntity(entity);
+            state.set(EnemyComponent.STATE_DEAD);
+        }
+
+        if (state.get() == StructureComponent.STATE_DEAD) {
+            //engine.removeEntity(entity);
         }
     }
 }

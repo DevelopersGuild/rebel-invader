@@ -56,8 +56,7 @@ public class PlayerSystem extends IteratingSystem {
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
-    	
+    protected void processEntity(Entity entity, float deltaTime) {
         TransformComponent t = tm.get(entity);
         StateComponent state = sm.get(entity);
         MovementComponent mov = mm.get(entity);
@@ -92,9 +91,8 @@ public class PlayerSystem extends IteratingSystem {
         if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
             // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
             player.currentHealth -= StructureComponent.DAMAGE;
-        }
-        else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
-            // TODO: Same as structure collision
+        } else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
+            // TODO: Do the same here
             player.currentHealth -= EnemyComponent.DAMAGE;
         }
 
@@ -118,6 +116,7 @@ public class PlayerSystem extends IteratingSystem {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }
         
-        level.generateObstacles(player.heightSoFar);
+        //Wgen
+        level.generateObstacles(player.heightSoFar, entity);
     }
 }

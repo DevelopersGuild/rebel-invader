@@ -23,6 +23,7 @@ import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
+import com.developersguild.pewpew.systems.BulletSystem;
 import com.developersguild.pewpew.systems.CameraSystem;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.HealthSystem;
@@ -48,12 +49,10 @@ public class GameScreen extends ScreenAdapter {
     PooledEngine engine;
     World world;
     PhysicsListener listener;
-
-    //Testing -- not sure why it's initialized here
-    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-
+    //Testing -- not sure why it's initialized here
+    private GlyphLayout layout = new GlyphLayout(); // from ashley-superjumper
     private int state;
     
     private List<Entity> deadEntities=new ArrayList<Entity>();
@@ -88,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem());
         engine.addSystem(new HeightDisposableSystem(this));
+        engine.addSystem(new BulletSystem());
 
         // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -95,6 +95,9 @@ public class GameScreen extends ScreenAdapter {
         // Set PhysicsListener as the entity listener for Ashley and contact listener for Box2D
         engine.addEntityListener(Family.all(BodyComponent.class).get(), listener);
         world.setContactListener(listener);
+
+        // Set continuous physics for bullets
+        world.setContinuousPhysics(true);
 
         level.create(world);
 
@@ -210,6 +213,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(HealthSystem.class).setProcessing(false);
         engine.getSystem(PhysicsSystem.class).setProcessing(false);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(false);
+        engine.getSystem(BulletSystem.class).setProcessing(false);
     }
 
     private void resumeSystems() {
@@ -226,6 +230,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(HealthSystem.class).setProcessing(true);
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(true);
+        engine.getSystem(BulletSystem.class).setProcessing(true);
     }
 
     @Override

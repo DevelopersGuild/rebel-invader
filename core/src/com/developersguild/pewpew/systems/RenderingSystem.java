@@ -85,7 +85,7 @@ public class RenderingSystem extends IteratingSystem {
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         renderQueue.add(entity);
     }
 

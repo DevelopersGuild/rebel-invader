@@ -23,7 +23,7 @@ public class CameraSystem extends IteratingSystem {
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         CameraComponent cam = cm.get(entity);
 
         if (cam.target == null) {
