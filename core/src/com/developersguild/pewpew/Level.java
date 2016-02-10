@@ -358,7 +358,7 @@ public class Level {
 	        	height += StructureComponent.HEIGHT;
 	            
 	            float restrictedArea = 
-	            		PlayerComponent.WIDTH		//One player wide
+	            		PlayerComponent.WIDTH * 1.3f		//Generous width
 	            		- height / LEVEL_HEIGHT * 0.4f//Minus a difficulty scaling term
 	            		+ lastDeltaPath/2; 			//Plus more if the path is changing sharply, so you can still get through
 	            for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
@@ -367,6 +367,12 @@ public class Level {
 	                if ((x > path + restrictedArea || x < path - restrictedArea))
 	                    createStructure(x, height, world, player);
 	            }
+	            
+	            //Generate enemy
+	            if(rand.nextFloat() < 0.1){
+	            	createEnemy(path, height, world, player);
+	            }
+	            
 	            //Move the clear path so you can't just fly in a straight line
 	            path += lastDeltaPath;
 	            
