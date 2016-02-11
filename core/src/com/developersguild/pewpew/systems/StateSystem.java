@@ -19,7 +19,7 @@ public class StateSystem extends IteratingSystem {
     }
 
     @Override
-    public void processEntity(Entity entity, float deltaTime) {
+    protected void processEntity(Entity entity, float deltaTime) {
         sm.get(entity).time += deltaTime;
     }
 }

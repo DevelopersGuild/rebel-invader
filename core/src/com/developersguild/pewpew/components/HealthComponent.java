@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector3;
  * Created by Thomas on 1/22/2016.
  */
 public class HealthComponent implements Component {
-    // TODO: Put into EnemyComponent
-    //public static final float ENEMY_STARTING_HEALTH = 25f;
+    public static final int IS_PLAYER = 1;
+    public static final int IS_ENEMY = 2;
+    public static final int IS_STRUCTURE = 3;
 
     public static final float LEVEL_INC = 0.1f;     // The percent increase of health every level
     public static float healthMultiplier = 1.0f;
@@ -18,9 +19,7 @@ public class HealthComponent implements Component {
     public float currentHealth;
     public Entity target;
     public Vector3 targetPos;
-    public boolean isPlayer = false;
-    public boolean isEnemy = false;
-    public boolean isStructure = false;
+    public int belongsTo;
     public float lengthRatio;
     public float widthRatio;
 }

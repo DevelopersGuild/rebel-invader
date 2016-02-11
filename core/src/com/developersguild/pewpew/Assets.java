@@ -24,6 +24,9 @@ public class Assets {
     public static Texture healthBar;
     public static TextureRegion healthRegion;
 
+    public static Texture[] enemies;
+    public static TextureRegion[] enemyRegions;
+
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
@@ -35,7 +38,7 @@ public class Assets {
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 
         roof = loadTexture("roof.png");
-        roofRegion = new TextureRegion(roof, 0, 0, 96, 128);
+        roofRegion = new TextureRegion(roof, 0, 0, 64, 64);
 
         ship = loadTexture("ship.png");
         shipNormal = new Animation(0.02f, new TextureRegion(ship, 0, 0, 96, 96));
@@ -43,5 +46,12 @@ public class Assets {
 
         healthBar = loadTexture("health_bar.png");
         healthRegion = new TextureRegion(healthBar, 0, 0, 95, 5);
+
+        enemies = new Texture[15];
+        enemyRegions = new TextureRegion[15];
+        for (int i = 0; i < 15; i++) {
+            enemies[i] = loadTexture(i + 1 + ".png");
+            enemyRegions[i] = new TextureRegion(enemies[i], 0, 0, 32, 32);
+        }
     }
 }
