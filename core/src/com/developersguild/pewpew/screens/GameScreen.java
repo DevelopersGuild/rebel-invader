@@ -55,6 +55,7 @@ public class GameScreen extends ScreenAdapter {
     private GlyphLayout layout;
     private int state;
     private List<Entity> deadEntities;
+    private List<Entity> entitiesSpawned;
 
     public GameScreen(PewPew game) {
         this.game = game;
@@ -145,7 +146,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
-
+        
         if (level.state == Level.LEVEL_STATE_GAME_OVER) {
             state = GAME_OVER;
             pauseSystems();
@@ -153,8 +154,7 @@ public class GameScreen extends ScreenAdapter {
 
         //Kill off any dead entities
         for (Entity e : deadEntities) {
-            // TODO: Remove health bar entities too, then uncomment
-            //engine.removeEntity(e);
+            engine.removeEntity(e);
         }
     }
 
