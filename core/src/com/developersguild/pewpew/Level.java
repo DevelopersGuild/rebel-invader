@@ -11,6 +11,7 @@ import com.developersguild.pewpew.components.AnimationComponent;
 import com.developersguild.pewpew.components.BackgroundComponent;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
+import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.CameraComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;
@@ -255,6 +256,26 @@ public class Level {
         entity.add(disposable);
         createHealthBar(entity, disposable);
         
+        engine.addEntity(entity);
+    }
+
+    private void createBullet(float x, float y, World world, Entity target) {
+        Entity entity = engine.createEntity();
+
+        BodyComponent body = engine.createComponent(BodyComponent.class);
+        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        BulletComponent bullet = engine.createComponent(BulletComponent.class);
+        MovementComponent mov = engine.createComponent(MovementComponent.class);
+        StateComponent state = engine.createComponent(StateComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        
+        entity.add(body);
+        entity.add(bounds);
+        entity.add(bullet);
+        entity.add(mov);
+        entity.add(state);
+        entity.add(texture);
+
         engine.addEntity(entity);
     }
 
