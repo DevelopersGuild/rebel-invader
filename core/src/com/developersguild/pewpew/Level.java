@@ -14,6 +14,7 @@ import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.CameraComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;
+import com.developersguild.pewpew.components.HeightDisposableComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
@@ -130,7 +131,7 @@ public class Level {
         entity.add(state);
         entity.add(texture);
 
-        createHealthBar(entity);
+        createHealthBar(entity, null);
 
         engine.addEntity(entity);
 
@@ -146,6 +147,7 @@ public class Level {
         StateComponent state = engine.createComponent(StateComponent.class);
         StructureComponent structure = engine.createComponent(StructureComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
+        HeightDisposableComponent disposable = engine.createComponent(HeightDisposableComponent.class);
 
         // Health
         structure.maxHealth = StructureComponent.STARTING_HEALTH;
@@ -184,8 +186,10 @@ public class Level {
         entity.add(state);
         entity.add(texture);
         entity.add(body);
+        entity.add(disposable);
 
-        createHealthBar(entity);
+        
+        createHealthBar(entity, disposable);
 
         engine.addEntity(entity);
     }
@@ -200,6 +204,7 @@ public class Level {
         StateComponent state = engine.createComponent(StateComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
+        HeightDisposableComponent disposable = engine.createComponent(HeightDisposableComponent.class);
 
         // Health
         enemy.maxHealth = EnemyComponent.STARTING_HEALTH;
@@ -247,15 +252,19 @@ public class Level {
         entity.add(position);
         entity.add(state);
         entity.add(texture);
-
-        createHealthBar(entity);
-
+        entity.add(disposable);
+        createHealthBar(entity, disposable);
+        
         engine.addEntity(entity);
     }
 
-    private void createHealthBar(Entity target) {
+    private void createHealthBar(Entity target, HeightDisposableComponent disposable) {
         Entity entity = engine.createEntity();
-
+        
+        if(disposable != null){
+        	disposable.childEntity=entity;
+        }
+        
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         HealthComponent health = engine.createComponent(HealthComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);

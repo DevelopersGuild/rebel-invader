@@ -33,9 +33,13 @@ public class HeightDisposableSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float partialTime) {
         TransformComponent t = tm.get(entity);
-
+        HeightDisposableComponent hdc = hm.get(entity);
+        
         if (t.pos.y < Level.playerHeight - 0.5f * Level.SCREEN_HEIGHT) {
             screen.markEntityForRemoval(entity);
+            if(hdc.childEntity != null){
+            	screen.markEntityForRemoval(hdc.childEntity);
+            }
         }
     }
 
