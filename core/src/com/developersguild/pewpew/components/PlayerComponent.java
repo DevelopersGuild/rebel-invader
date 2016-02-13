@@ -14,6 +14,8 @@ public class PlayerComponent implements Component {
     public static final float VELOCITY_Y = 50f;
     public static final float WIDTH = 2f;
     public static final float HEIGHT = 2f;
+    
+    public static final float KNOCKBACK_DURATION=0.4f;
 
     public float maxHealth;
     public float currentHealth;

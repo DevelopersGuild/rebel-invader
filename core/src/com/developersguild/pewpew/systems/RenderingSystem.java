@@ -72,6 +72,7 @@ public class RenderingSystem extends IteratingSystem {
             float originX = width * 0.5f;
             float originY = height * 0.5f;
 
+            batch.setColor(tex.color);
             batch.draw(tex.region,
                     t.pos.x - originX, t.pos.y - originY,
                     originX, originY,

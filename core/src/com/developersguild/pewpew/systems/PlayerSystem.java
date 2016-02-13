@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
@@ -11,6 +12,7 @@ import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
+import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
 /**
@@ -21,7 +23,8 @@ public class PlayerSystem extends IteratingSystem {
 			StateComponent.class,
 			TransformComponent.class,
 			MovementComponent.class,
-			BodyComponent.class).get();
+			BodyComponent.class,
+			TextureComponent.class).get();
 
 	private float accelX = 0.0f;
 	private Level level;
@@ -31,6 +34,7 @@ public class PlayerSystem extends IteratingSystem {
 	private ComponentMapper<TransformComponent> tm;
 	private ComponentMapper<MovementComponent> mm;
 	private ComponentMapper<BodyComponent> bm;
+	private ComponentMapper<TextureComponent> texm;
 
 	public PlayerSystem(Level level) {
 		super(family);
@@ -42,6 +46,7 @@ public class PlayerSystem extends IteratingSystem {
 		tm = ComponentMapper.getFor(TransformComponent.class);
 		mm = ComponentMapper.getFor(MovementComponent.class);
 		bm = ComponentMapper.getFor(BodyComponent.class);
+		texm=ComponentMapper.getFor(TextureComponent.class);
 	}
 
 	public void setAccelX(float accelX) {
@@ -62,6 +67,7 @@ public class PlayerSystem extends IteratingSystem {
 		MovementComponent mov = mm.get(entity);
 		PlayerComponent player = rm.get(entity);
 		BodyComponent body = bm.get(entity);
+		TextureComponent tex=texm.get(entity);
 
 		int collisionCode = 0;
 		if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
@@ -71,17 +77,23 @@ public class PlayerSystem extends IteratingSystem {
 		body.body.setUserData(this);
 
 		// Movement handling
-		mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
-		
-		if (state.get() == PlayerComponent.STATE_NORMAL) {
-			//goes from 1 to 2 as the level goes on, to make it challenging
+		{
+			mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
+
 			float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
 			mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
-		} else if(state.get() == PlayerComponent.STATE_KNOCKED_BACK ){
-			mov.velocity.y=PlayerComponent.VELOCITY_Y * deltaTime * (1-6*player.impactCooldown);
-			player.impactCooldown-=deltaTime;
-			if(player.impactCooldown < 0)
-				state.set(PlayerComponent.STATE_NORMAL);
+
+			if(state.get() == PlayerComponent.STATE_KNOCKED_BACK ){
+				mov.velocity.y-= 
+						player.impactCooldown
+						/PlayerComponent.KNOCKBACK_DURATION 
+						* PlayerComponent.VELOCITY_Y
+						* 0.5;
+				
+				player.impactCooldown-=deltaTime;
+				if(player.impactCooldown < 0)
+					state.set(PlayerComponent.STATE_NORMAL);
+			}
 		}
 
 		// Bounds checking
@@ -98,12 +110,19 @@ public class PlayerSystem extends IteratingSystem {
 			if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
 				player.currentHealth -= StructureComponent.DAMAGE;
 				state.set(PlayerComponent.STATE_KNOCKED_BACK);
-				player.impactCooldown=0.4f;
+				player.impactCooldown=PlayerComponent.KNOCKBACK_DURATION;
 			} else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
 				player.currentHealth -= EnemyComponent.DAMAGE;
 				state.set(PlayerComponent.STATE_KNOCKED_BACK);
-				player.impactCooldown=0.4f;
+				player.impactCooldown=PlayerComponent.KNOCKBACK_DURATION;
 			}
+		}
+		
+		//Blink after being knocked back
+		if(state.get() == PlayerComponent.STATE_KNOCKED_BACK) {
+			tex.color=Color.RED;//.lerp(Color.WHITE, player.impactCooldown/PlayerComponent.KNOCKBACK_DURATION);
+		} else {
+			tex.color=Color.WHITE;
 		}
 
 		// Tilting
@@ -119,7 +138,7 @@ public class PlayerSystem extends IteratingSystem {
 			t.rotation = 0.0f;
 		}
 
-		player.heightSoFar = t.pos.y;
+		player.heightSoFar = Math.max(t.pos.y, player.heightSoFar);
 
 		// Death
 		if (player.currentHealth <= 0f) {
