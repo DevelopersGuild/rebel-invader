@@ -1,7 +1,9 @@
 package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -52,7 +54,6 @@ public class Level {
         Entity player = createPlayer(world);
         createCamera(player);
         createBackground();
-
         generator = new WorldGenerator(world);
 
         generateObstacles(1.5f * SCREEN_HEIGHT, player);
@@ -189,7 +190,6 @@ public class Level {
         entity.add(body);
         entity.add(disposable);
 
-        
         createHealthBar(entity, disposable);
 
         engine.addEntity(entity);
@@ -281,18 +281,19 @@ public class Level {
 
         // Get origin position
         float x = origin.getComponent(TransformComponent.class).pos.x;
-        float y = origin.getComponent(TransformComponent.class).pos.y;
+        float y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
 
         pos.pos.set(x, y, 1f);
+        pos.scale.set(1f, 1f);
 
-        mov.velocity.y = BulletComponent.VELOCITY;
+        //mov.velocity.y = BulletComponent.VELOCITY;
 
         // Create player body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(pos.pos.x, pos.pos.y);
-        body.body.setBullet(true);
         body.body = world.createBody(bodyDef);
+        body.body.setBullet(true);
         body.body.setUserData(this);
 
         // Define a shape with the vertices
@@ -302,9 +303,9 @@ public class Level {
         // Create a fixture with the shape
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygon;
-        //fixtureDef.density = 0.5f;
-        //fixtureDef.friction = 0.4f;
-        //fixtureDef.restitution = 0.6f;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
 
         // Assign shape to body
         body.body.createFixture(fixtureDef);
@@ -318,6 +319,7 @@ public class Level {
         entity.add(mov);
         entity.add(state);
         entity.add(texture);
+        entity.add(pos);
 
         engine.addEntity(entity);
     }
@@ -426,8 +428,9 @@ public class Level {
                 for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
                     float x = i * StructureComponent.WIDTH;
                     //Check that we're not stomping the path
-                    if ((x > path + restrictedArea || x < path - restrictedArea))
+                    if ((x > path + restrictedArea || x < path - restrictedArea)) {
                         createStructure(x, height, world, player);
+                    }
                 }
 
                 //Generate enemy

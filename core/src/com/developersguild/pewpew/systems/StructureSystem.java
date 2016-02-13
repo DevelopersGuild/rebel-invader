@@ -27,7 +27,7 @@ public class StructureSystem extends IteratingSystem {
     private ComponentMapper<StateComponent> stm;
 
     public StructureSystem() {
-        super(Family.all(StructureComponent.class).get());
+        super(family);
 
         tm = ComponentMapper.getFor(TransformComponent.class);
         sm = ComponentMapper.getFor(StructureComponent.class);

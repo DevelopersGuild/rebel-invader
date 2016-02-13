@@ -24,7 +24,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void beginContact(Contact contact) {
-        Gdx.app.log(this.getClass().getSimpleName(), "beginContact() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "beginContact() called");
     }
 
     /**
@@ -34,7 +34,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void endContact(Contact contact) {
-        Gdx.app.log(this.getClass().getSimpleName(), "endContact() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "endContact() called");
 
     }
 
@@ -97,7 +97,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void entityAdded(Entity entity) {
-        Gdx.app.log(this.getClass().getSimpleName(), "entityAdded() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "entityAdded() called");
     }
 
     /**
@@ -108,6 +108,6 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void entityRemoved(Entity entity) {
-        Gdx.app.log(this.getClass().getSimpleName(), "entityRemoved() called");
+        //Gdx.app.log(this.getClass().getSimpleName(), "entityRemoved() called");
     }
 }

@@ -1,9 +1,11 @@
 package com.developersguild.pewpew.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
@@ -29,7 +31,7 @@ public class BulletSystem extends IteratingSystem {
     private ComponentMapper<TransformComponent> tm;
 
     public BulletSystem() {
-        super(family);
+        super(Family.all(BulletComponent.class).get());
 
         bm = ComponentMapper.getFor(BodyComponent.class);
         blm = ComponentMapper.getFor(BulletComponent.class);
@@ -50,6 +52,10 @@ public class BulletSystem extends IteratingSystem {
         if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
             collisionCode = (Integer) body.body.getUserData();
         }
+
+        Gdx.app.log(getClass().getSimpleName(), "STUFF");
+
+        mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
 
         body.body.setUserData(this);
     }
