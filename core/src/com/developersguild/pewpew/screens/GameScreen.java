@@ -44,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_RUNNING = 1;
     static final int GAME_PAUSED = 2;
     static final int GAME_OVER = 3;
+    static final int GAME_WON = 4;
 
     PewPew game;
     Level level;
@@ -123,6 +124,9 @@ public class GameScreen extends ScreenAdapter {
             case GAME_OVER:
                 updateGameOver();
                 break;
+            case GAME_WON:
+                updateGameOver();
+                break;
         }
     }
 
@@ -158,6 +162,11 @@ public class GameScreen extends ScreenAdapter {
             pauseSystems();
         }
 
+        if (level.state == Level.LEVEL_STATE_GAME_WON) {
+            state = GAME_WON;
+            pauseSystems();
+        }
+
         //Kill off any dead entities
         for (Entity e : deadEntities) {
             engine.removeEntity(e);
@@ -185,6 +194,9 @@ public class GameScreen extends ScreenAdapter {
             case GAME_OVER:
                 presentGameOver();
                 break;
+            case GAME_WON:
+                presentWin();
+                break;
         }
         game.batch.end();
     }
@@ -206,6 +218,15 @@ public class GameScreen extends ScreenAdapter {
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
     }
+
+    private void presentWin() {
+        String gameOver = "YOU WIN!";
+        layout.setText(Assets.font, gameOver);
+        float gameOverWidth = layout.width;
+        float gameOverHeight = layout.height;
+        Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+    }
+
 
     private void pauseSystems() {
         // RenderingSystem not included
