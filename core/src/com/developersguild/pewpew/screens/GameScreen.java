@@ -109,7 +109,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void update(float deltaTime) {
-        if (deltaTime > 0.1f) deltaTime = 0.1f;
+        //if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
 
@@ -142,9 +142,9 @@ public class GameScreen extends ScreenAdapter {
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             accelX = Gdx.input.getAccelerometerX();
         } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) accelX = 2.0f;
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) accelX = -2.0f;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 // Create bullet
                 Entity origin = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
                 level.createBullet(world, origin);

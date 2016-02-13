@@ -161,8 +161,8 @@ public class Level {
         bounds.bounds.height = StructureComponent.HEIGHT;
 
         position.pos.set(x, y, 1.0f);
-
-        texture.region = Assets.roofRegion;
+        
+        texture.region = Assets.terrainRegions[rand.nextInt(Assets.TERRAIN_SPRITES)];
 
         // Create body
         BodyDef bodyDef = new BodyDef();
@@ -220,7 +220,7 @@ public class Level {
         position.pos.set(x, y, 1f);
         position.scale.set(2f, 2f);
 
-        texture.region = Assets.enemyRegions[rand.nextInt(15)];
+        texture.region = Assets.enemyRegions[rand.nextInt(Assets.ENEMY_SPRITES)];
 
         // Create player body
         BodyDef bodyDef = new BodyDef();
