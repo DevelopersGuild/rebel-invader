@@ -36,6 +36,7 @@ public class Level {
 
     public static final int LEVEL_STATE_RUNNING = 1;
     public static final int LEVEL_STATE_GAME_OVER = 2;
+    public static final int LEVEL_STATE_GAME_WON = 3;
     public static float playerHeight;
     public final RandomXS128 rand;
     public int state;

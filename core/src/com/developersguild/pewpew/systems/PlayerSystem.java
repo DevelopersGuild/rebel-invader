@@ -116,6 +116,8 @@ public class PlayerSystem extends IteratingSystem {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }
 
+        if (player.heightSoFar > 10f)
+            level.state = Level.LEVEL_STATE_GAME_WON;
         //Wgen
         level.generateObstacles(player.heightSoFar, entity);
     }
