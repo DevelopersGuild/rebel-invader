@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
@@ -11,114 +12,146 @@ import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
+import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
 /**
  * Created by Vihan on 1/10/2016.
  */
 public class PlayerSystem extends IteratingSystem {
-    private static final Family family = Family.all(PlayerComponent.class,
-            StateComponent.class,
-            TransformComponent.class,
-            MovementComponent.class,
-            BodyComponent.class).get();
 
-    private float accelX = 0.0f;
-    private Level level;
 
-    private ComponentMapper<PlayerComponent> rm;
-    private ComponentMapper<StateComponent> sm;
-    private ComponentMapper<TransformComponent> tm;
-    private ComponentMapper<MovementComponent> mm;
-    private ComponentMapper<BodyComponent> bm;
+	private static final Family family = Family.all(PlayerComponent.class,
+			StateComponent.class,
+			TransformComponent.class,
+			MovementComponent.class,
+			BodyComponent.class,
+			TextureComponent.class).get();
 
-    public PlayerSystem(Level level) {
-        super(family);
+	private float accelX = 0.0f;
+	private Level level;
 
-        this.level = level;
+	private ComponentMapper<PlayerComponent> rm;
+	private ComponentMapper<StateComponent> sm;
+	private ComponentMapper<TransformComponent> tm;
+	private ComponentMapper<MovementComponent> mm;
+	private ComponentMapper<BodyComponent> bm;
+	private ComponentMapper<TextureComponent> texm;
 
-        rm = ComponentMapper.getFor(PlayerComponent.class);
-        sm = ComponentMapper.getFor(StateComponent.class);
-        tm = ComponentMapper.getFor(TransformComponent.class);
-        mm = ComponentMapper.getFor(MovementComponent.class);
-        bm = ComponentMapper.getFor(BodyComponent.class);
-    }
+	public PlayerSystem(Level level) {
+		super(family);
 
-    public void setAccelX(float accelX) {
-        this.accelX = accelX;
-    }
+		this.level = level;
 
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
+		rm = ComponentMapper.getFor(PlayerComponent.class);
+		sm = ComponentMapper.getFor(StateComponent.class);
+		tm = ComponentMapper.getFor(TransformComponent.class);
+		mm = ComponentMapper.getFor(MovementComponent.class);
+		bm = ComponentMapper.getFor(BodyComponent.class);
+		texm=ComponentMapper.getFor(TextureComponent.class);
+	}
 
-        accelX = 0.0f;
-    }
+	public void setAccelX(float accelX) {
+		this.accelX = accelX;
+	}
 
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent t = tm.get(entity);
-        StateComponent state = sm.get(entity);
-        MovementComponent mov = mm.get(entity);
-        PlayerComponent player = rm.get(entity);
-        BodyComponent body = bm.get(entity);
+	@Override
+	public void update(float deltaTime) {
+		super.update(deltaTime);
 
-        int collisionCode = 0;
-        if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
-            collisionCode = (Integer) body.body.getUserData();
-        }
+		accelX = 0.0f;
+	}
 
-        body.body.setUserData(this);
+	@Override
+	protected void processEntity(Entity entity, float deltaTime) {
+		TransformComponent t = tm.get(entity);
+		StateComponent state = sm.get(entity);
+		MovementComponent mov = mm.get(entity);
+		PlayerComponent player = rm.get(entity);
+		BodyComponent body = bm.get(entity);
+		TextureComponent tex=texm.get(entity);
 
-        // Movement handling
-        if (state.get() == PlayerComponent.STATE_NORMAL) {
-            //goes from 1 to 2 as the level goes on, to make it challenging
-            float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
-            mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
-            mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
-        }
+		int collisionCode = 0;
+		if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
+			collisionCode = (Integer) body.body.getUserData();
+		}
 
-        // Bounds checking
-        if (t.pos.x - player.WIDTH / 2 < 0) {
-            t.pos.x = player.WIDTH / 2;
-        }
+		body.body.setUserData(this);
 
-        if (t.pos.x + player.WIDTH / 2 > Level.LEVEL_WIDTH) {
-            t.pos.x = Level.LEVEL_WIDTH - player.WIDTH / 2;
-        }
+		// Movement handling
+		{
+			mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
 
-        // Collision handling
-        if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
-            // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
-            player.currentHealth -= StructureComponent.DAMAGE;
-        } else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
-            // TODO: Do the same here
-            player.currentHealth -= EnemyComponent.DAMAGE;
-        }
+			float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
+			mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
 
-        // Tilting
-        if (mov.velocity.x >= 2f) {
-            t.rotation = -0.1f;
-        }
+			if(state.get() == PlayerComponent.STATE_KNOCKED_BACK ){
+				mov.velocity.y-= 
+						player.impactCooldown
+						/PlayerComponent.KNOCKBACK_DURATION 
+						* PlayerComponent.VELOCITY_Y
+						* 0.5;
+				
+				player.impactCooldown-=deltaTime;
+				if(player.impactCooldown < 0)
+					state.set(PlayerComponent.STATE_NORMAL);
+			}
+		}
 
-        if (mov.velocity.x <= -2f) {
-            t.rotation = 0.1f;
-        }
+		// Bounds checking
+		if (t.pos.x - PlayerComponent.WIDTH / 2 < 0) {
+			t.pos.x = PlayerComponent.WIDTH / 2;
+		}
 
-        if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
-            t.rotation = 0.0f;
-        }
+		if (t.pos.x + PlayerComponent.WIDTH / 2 > Level.LEVEL_WIDTH) {
+			t.pos.x = Level.LEVEL_WIDTH - PlayerComponent.WIDTH / 2;
+		}
 
-        player.heightSoFar = t.pos.y;
+		//Collision detection
+		if(state.get() != PlayerComponent.STATE_KNOCKED_BACK) {
+			if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
+				player.currentHealth -= StructureComponent.DAMAGE;
+				state.set(PlayerComponent.STATE_KNOCKED_BACK);
+				player.impactCooldown=PlayerComponent.KNOCKBACK_DURATION;
+			} else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
+				player.currentHealth -= EnemyComponent.DAMAGE;
+				state.set(PlayerComponent.STATE_KNOCKED_BACK);
+				player.impactCooldown=PlayerComponent.KNOCKBACK_DURATION;
+			}
+		}
+		
+		//Blink after being knocked back
+		if(state.get() == PlayerComponent.STATE_KNOCKED_BACK) {
+			tex.color=Color.RED;//.lerp(Color.WHITE, player.impactCooldown/PlayerComponent.KNOCKBACK_DURATION);
+		} else {
+			tex.color=Color.WHITE;
+		}
 
-        // Death
-        if (player.currentHealth <= 0f) {
-            level.state = Level.LEVEL_STATE_GAME_OVER;
-        }
+		// Tilting
+		if (mov.velocity.x >= 2f) {
+			t.rotation = -0.1f;
+		}
 
+		if (mov.velocity.x <= -2f) {
+			t.rotation = 0.1f;
+		}
+
+		if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
+			t.rotation = 0.0f;
+		}
+
+		player.heightSoFar = Math.max(t.pos.y, player.heightSoFar);
+
+		// Death
+		if (player.currentHealth <= 0f) {
+			level.state = Level.LEVEL_STATE_GAME_OVER;
+		}
         if (player.heightSoFar > 10f)
             level.state = Level.LEVEL_STATE_GAME_WON;
-        //Wgen
-        level.generateObstacles(player.heightSoFar, entity);
-    }
+
+		//Wgen
+		level.generateObstacles(player.heightSoFar, entity);
+
+	}
+
 }

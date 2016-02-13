@@ -12,7 +12,7 @@ public class EnemyComponent implements Component {
     public static final float VELOCITY_X = 100f;
     public static final float VELOCITY_Y = 50f;
     public static final float STARTING_HEALTH = 50f;
-    public static final float DAMAGE = 0.5f;
+    public static final float DAMAGE = 15f;
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
 

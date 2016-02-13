@@ -260,7 +260,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createBullet(float x, float y, World world, Entity target) {
+    public void createBullet(World world, Entity origin) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -269,7 +269,50 @@ public class Level {
         MovementComponent mov = engine.createComponent(MovementComponent.class);
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
-        
+        TransformComponent pos = engine.createComponent(TransformComponent.class);
+
+        bullet.origin = origin;
+
+        state.set(BulletComponent.STATE_NORMAL);
+
+        bounds.bounds.width = BulletComponent.WIDTH;
+        bounds.bounds.height = BulletComponent.HEIGHT;
+
+        texture.region = Assets.bulletRegion;
+
+        // Get origin position
+        float x = origin.getComponent(TransformComponent.class).pos.x;
+        float y = origin.getComponent(TransformComponent.class).pos.y;
+
+        pos.pos.set(x, y, 1f);
+
+        mov.velocity.y = BulletComponent.VELOCITY;
+
+        // Create player body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(pos.pos.x, pos.pos.y);
+        body.body.setBullet(true);
+        body.body = world.createBody(bodyDef);
+        body.body.setUserData(this);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(BulletComponent.WIDTH / 2.f, BulletComponent.HEIGHT / 2.f);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        //fixtureDef.density = 0.5f;
+        //fixtureDef.friction = 0.4f;
+        //fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
+
         entity.add(body);
         entity.add(bounds);
         entity.add(bullet);
