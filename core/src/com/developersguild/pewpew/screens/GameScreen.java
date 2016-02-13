@@ -44,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_RUNNING = 1;
     static final int GAME_PAUSED = 2;
     static final int GAME_OVER = 3;
+    static final int GAME_WON = 4;
 
     PewPew game;
     Level level;
@@ -109,7 +110,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void update(float deltaTime) {
-        if (deltaTime > 0.1f) deltaTime = 0.1f;
+        //if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
 
@@ -121,6 +122,9 @@ public class GameScreen extends ScreenAdapter {
                 updateRunning(deltaTime);
                 break;
             case GAME_OVER:
+                updateGameOver();
+                break;
+            case GAME_WON:
                 updateGameOver();
                 break;
         }
@@ -142,9 +146,9 @@ public class GameScreen extends ScreenAdapter {
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             accelX = Gdx.input.getAccelerometerX();
         } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) accelX = 2.0f;
-            if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) accelX = -2.0f;
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 // Create bullet
                 Entity origin = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
                 level.createBullet(world, origin);
@@ -155,6 +159,11 @@ public class GameScreen extends ScreenAdapter {
         
         if (level.state == Level.LEVEL_STATE_GAME_OVER) {
             state = GAME_OVER;
+            pauseSystems();
+        }
+
+        if (level.state == Level.LEVEL_STATE_GAME_WON) {
+            state = GAME_WON;
             pauseSystems();
         }
 
@@ -185,6 +194,9 @@ public class GameScreen extends ScreenAdapter {
             case GAME_OVER:
                 presentGameOver();
                 break;
+            case GAME_WON:
+                presentWin();
+                break;
         }
         game.batch.end();
     }
@@ -206,6 +218,15 @@ public class GameScreen extends ScreenAdapter {
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
     }
+
+    private void presentWin() {
+        String gameOver = "YOU WIN!";
+        layout.setText(Assets.font, gameOver);
+        float gameOverWidth = layout.width;
+        float gameOverHeight = layout.height;
+        Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+    }
+
 
     private void pauseSystems() {
         // RenderingSystem not included

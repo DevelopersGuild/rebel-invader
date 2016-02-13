@@ -38,6 +38,7 @@ public class Level {
 
     public static final int LEVEL_STATE_RUNNING = 1;
     public static final int LEVEL_STATE_GAME_OVER = 2;
+    public static final int LEVEL_STATE_GAME_WON = 3;
     public static float playerHeight;
     public final RandomXS128 rand;
     public int state;
@@ -162,8 +163,8 @@ public class Level {
         bounds.bounds.height = StructureComponent.HEIGHT;
 
         position.pos.set(x, y, 1.0f);
-
-        texture.region = Assets.roofRegion;
+        
+        texture.region = Assets.terrainRegions[rand.nextInt(Assets.TERRAIN_SPRITES)];
 
         // Create body
         BodyDef bodyDef = new BodyDef();
@@ -220,7 +221,7 @@ public class Level {
         position.pos.set(x, y, 1f);
         position.scale.set(2f, 2f);
 
-        texture.region = Assets.enemyRegions[rand.nextInt(15)];
+        texture.region = Assets.enemyRegions[rand.nextInt(Assets.ENEMY_SPRITES)];
 
         // Create player body
         BodyDef bodyDef = new BodyDef();

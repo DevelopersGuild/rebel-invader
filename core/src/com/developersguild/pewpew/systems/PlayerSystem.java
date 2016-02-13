@@ -19,6 +19,8 @@ import com.developersguild.pewpew.components.TransformComponent;
  * Created by Vihan on 1/10/2016.
  */
 public class PlayerSystem extends IteratingSystem {
+
+
 	private static final Family family = Family.all(PlayerComponent.class,
 			StateComponent.class,
 			TransformComponent.class,
@@ -144,8 +146,12 @@ public class PlayerSystem extends IteratingSystem {
 		if (player.currentHealth <= 0f) {
 			level.state = Level.LEVEL_STATE_GAME_OVER;
 		}
+        if (player.heightSoFar > 10f)
+            level.state = Level.LEVEL_STATE_GAME_WON;
 
 		//Wgen
 		level.generateObstacles(player.heightSoFar, entity);
+
 	}
+
 }
