@@ -151,7 +151,8 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 // Create bullet
                 Entity origin = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
-                level.createBullet(world, origin);
+                System.out.println("GameScreen sees player: " +System.identityHashCode(origin));
+                level.createBullet(origin);
             }
         }
 
