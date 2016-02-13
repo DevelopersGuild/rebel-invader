@@ -17,106 +17,116 @@ import com.developersguild.pewpew.components.TransformComponent;
  * Created by Vihan on 1/10/2016.
  */
 public class PlayerSystem extends IteratingSystem {
-    private static final Family family = Family.all(PlayerComponent.class,
-            StateComponent.class,
-            TransformComponent.class,
-            MovementComponent.class,
-            BodyComponent.class).get();
+	private static final Family family = Family.all(PlayerComponent.class,
+			StateComponent.class,
+			TransformComponent.class,
+			MovementComponent.class,
+			BodyComponent.class).get();
 
-    private float accelX = 0.0f;
-    private Level level;
+	private float accelX = 0.0f;
+	private Level level;
 
-    private ComponentMapper<PlayerComponent> rm;
-    private ComponentMapper<StateComponent> sm;
-    private ComponentMapper<TransformComponent> tm;
-    private ComponentMapper<MovementComponent> mm;
-    private ComponentMapper<BodyComponent> bm;
+	private ComponentMapper<PlayerComponent> rm;
+	private ComponentMapper<StateComponent> sm;
+	private ComponentMapper<TransformComponent> tm;
+	private ComponentMapper<MovementComponent> mm;
+	private ComponentMapper<BodyComponent> bm;
 
-    public PlayerSystem(Level level) {
-        super(family);
+	public PlayerSystem(Level level) {
+		super(family);
 
-        this.level = level;
+		this.level = level;
 
-        rm = ComponentMapper.getFor(PlayerComponent.class);
-        sm = ComponentMapper.getFor(StateComponent.class);
-        tm = ComponentMapper.getFor(TransformComponent.class);
-        mm = ComponentMapper.getFor(MovementComponent.class);
-        bm = ComponentMapper.getFor(BodyComponent.class);
-    }
+		rm = ComponentMapper.getFor(PlayerComponent.class);
+		sm = ComponentMapper.getFor(StateComponent.class);
+		tm = ComponentMapper.getFor(TransformComponent.class);
+		mm = ComponentMapper.getFor(MovementComponent.class);
+		bm = ComponentMapper.getFor(BodyComponent.class);
+	}
 
-    public void setAccelX(float accelX) {
-        this.accelX = accelX;
-    }
+	public void setAccelX(float accelX) {
+		this.accelX = accelX;
+	}
 
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
+	@Override
+	public void update(float deltaTime) {
+		super.update(deltaTime);
 
-        accelX = 0.0f;
-    }
+		accelX = 0.0f;
+	}
 
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent t = tm.get(entity);
-        StateComponent state = sm.get(entity);
-        MovementComponent mov = mm.get(entity);
-        PlayerComponent player = rm.get(entity);
-        BodyComponent body = bm.get(entity);
+	@Override
+	protected void processEntity(Entity entity, float deltaTime) {
+		TransformComponent t = tm.get(entity);
+		StateComponent state = sm.get(entity);
+		MovementComponent mov = mm.get(entity);
+		PlayerComponent player = rm.get(entity);
+		BodyComponent body = bm.get(entity);
 
-        int collisionCode = 0;
-        if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
-            collisionCode = (Integer) body.body.getUserData();
-        }
+		int collisionCode = 0;
+		if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
+			collisionCode = (Integer) body.body.getUserData();
+		}
 
-        body.body.setUserData(this);
+		body.body.setUserData(this);
 
-        // Movement handling
-        if (state.get() == PlayerComponent.STATE_NORMAL) {
-            //goes from 1 to 2 as the level goes on, to make it challenging
-            float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
-            mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
-            mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
-        }
+		// Movement handling
+		mov.velocity.x = -accelX / 10.0f * PlayerComponent.VELOCITY_X * deltaTime;
+		
+		if (state.get() == PlayerComponent.STATE_NORMAL) {
+			//goes from 1 to 2 as the level goes on, to make it challenging
+			float difficultyFactor = 1 + t.pos.y / Level.LEVEL_HEIGHT;
+			mov.velocity.y = PlayerComponent.VELOCITY_Y * deltaTime * difficultyFactor;
+		} else if(state.get() == PlayerComponent.STATE_KNOCKED_BACK ){
+			mov.velocity.y=PlayerComponent.VELOCITY_Y * deltaTime * (1-6*player.impactCooldown);
+			player.impactCooldown-=deltaTime;
+			if(player.impactCooldown < 0)
+				state.set(PlayerComponent.STATE_NORMAL);
+		}
 
-        // Bounds checking
-        if (t.pos.x - player.WIDTH / 2 < 0) {
-            t.pos.x = player.WIDTH / 2;
-        }
+		// Bounds checking
+		if (t.pos.x - PlayerComponent.WIDTH / 2 < 0) {
+			t.pos.x = PlayerComponent.WIDTH / 2;
+		}
 
-        if (t.pos.x + player.WIDTH / 2 > Level.LEVEL_WIDTH) {
-            t.pos.x = Level.LEVEL_WIDTH - player.WIDTH / 2;
-        }
+		if (t.pos.x + PlayerComponent.WIDTH / 2 > Level.LEVEL_WIDTH) {
+			t.pos.x = Level.LEVEL_WIDTH - PlayerComponent.WIDTH / 2;
+		}
 
-        // Collision handling
-        if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
-            // TODO: Give player ~1 second of invulnerability, and make the sprite blink for this duration
-            player.currentHealth -= StructureComponent.DAMAGE;
-        } else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
-            // TODO: Do the same here
-            player.currentHealth -= EnemyComponent.DAMAGE;
-        }
+		//Collision detection
+		if(state.get() != PlayerComponent.STATE_KNOCKED_BACK) {
+			if (collisionCode == BodyComponent.PLAYER_STRUCTURE_COLLISION) {
+				player.currentHealth -= StructureComponent.DAMAGE;
+				state.set(PlayerComponent.STATE_KNOCKED_BACK);
+				player.impactCooldown=0.4f;
+			} else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
+				player.currentHealth -= EnemyComponent.DAMAGE;
+				state.set(PlayerComponent.STATE_KNOCKED_BACK);
+				player.impactCooldown=0.4f;
+			}
+		}
 
-        // Tilting
-        if (mov.velocity.x >= 2f) {
-            t.rotation = -0.1f;
-        }
+		// Tilting
+		if (mov.velocity.x >= 2f) {
+			t.rotation = -0.1f;
+		}
 
-        if (mov.velocity.x <= -2f) {
-            t.rotation = 0.1f;
-        }
+		if (mov.velocity.x <= -2f) {
+			t.rotation = 0.1f;
+		}
 
-        if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
-            t.rotation = 0.0f;
-        }
+		if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
+			t.rotation = 0.0f;
+		}
 
-        player.heightSoFar = t.pos.y;
+		player.heightSoFar = t.pos.y;
 
-        // Death
-        if (player.currentHealth <= 0f) {
-            level.state = Level.LEVEL_STATE_GAME_OVER;
-        }
+		// Death
+		if (player.currentHealth <= 0f) {
+			level.state = Level.LEVEL_STATE_GAME_OVER;
+		}
 
-        //Wgen
-        level.generateObstacles(player.heightSoFar, entity);
-    }
+		//Wgen
+		level.generateObstacles(player.heightSoFar, entity);
+	}
 }
