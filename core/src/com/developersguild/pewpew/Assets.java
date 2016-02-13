@@ -15,6 +15,9 @@ public class Assets {
     public static Texture background;
     public static TextureRegion backgroundRegion;
 
+    public static Texture bullet;
+    public static TextureRegion bulletRegion;
+
     public static Texture roof;
     public static TextureRegion roofRegion;
 
@@ -36,6 +39,9 @@ public class Assets {
 
         background = loadTexture("background.png");
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
+
+        bullet = loadTexture("bullet.png");
+        bulletRegion = new TextureRegion(bullet, 0, 0, 8, 8);
 
         roof = loadTexture("roof.png");
         roofRegion = new TextureRegion(roof, 0, 0, 64, 64);
