@@ -17,6 +17,7 @@ import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.PewPew;
 import com.developersguild.pewpew.PhysicsListener;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
 import com.developersguild.pewpew.systems.BoundsSystem;
@@ -143,6 +144,11 @@ public class GameScreen extends ScreenAdapter {
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) accelX = -2.0f;
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                // Create bullet
+                Entity origin = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
+                level.createBullet(world, origin);
+            }
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
