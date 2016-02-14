@@ -265,7 +265,6 @@ public class Level {
     }
 
     public void createBullet(Entity origin) {
-    	Thread.dumpStack();
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -422,8 +421,6 @@ public class Level {
                 //Advance world generation
                 height += StructureComponent.HEIGHT;
                 
-                createBullet(player);
-
                 float restrictedArea =
                         PlayerComponent.WIDTH * 1.3f        //Generous width
                                 - height / LEVEL_HEIGHT * 0.4f//Minus a difficulty scaling term
