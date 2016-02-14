@@ -38,6 +38,8 @@ public class PlayerSystem extends IteratingSystem {
 	private ComponentMapper<BodyComponent> bm;
 	private ComponentMapper<TextureComponent> texm;
 
+	private boolean shouldFire;
+
 	public PlayerSystem(Level level) {
 		super(family);
 
@@ -53,6 +55,10 @@ public class PlayerSystem extends IteratingSystem {
 
 	public void setAccelX(float accelX) {
 		this.accelX = accelX;
+	}
+	
+	public void requestBullet(){
+		this.shouldFire=true;
 	}
 
 	@Override
@@ -151,5 +157,9 @@ public class PlayerSystem extends IteratingSystem {
 
 		//Wgen
 		level.generateObstacles(player.heightSoFar, entity);
+		
+		if(this.shouldFire)
+			level.createBullet(entity);
+		this.shouldFire=false;
 	}
 }

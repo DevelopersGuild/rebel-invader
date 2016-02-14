@@ -45,6 +45,7 @@ public class Level {
     public int score;
     private PooledEngine engine;
     private WorldGenerator generator;
+    private World world;
 
     public Level(PooledEngine engine) {
         this.engine = engine;
@@ -52,10 +53,13 @@ public class Level {
     }
 
     public void create(World world) {
-        Entity player = createPlayer(world);
+        this.world=world;
+        
+        Entity player = createPlayer();
         createCamera(player);
         createBackground();
-        generator = new WorldGenerator(world);
+        
+        generator = new WorldGenerator();
 
         generateObstacles(1.5f * SCREEN_HEIGHT, player);
 
@@ -75,7 +79,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private Entity createPlayer(World world) {
+    private Entity createPlayer() {
         Entity entity = engine.createEntity();
 
         AnimationComponent animation = engine.createComponent(AnimationComponent.class);
@@ -196,7 +200,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createEnemy(float x, float y, World world, Entity player) {
+    private void createEnemy(float x, float y, Entity player) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -260,7 +264,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    public void createBullet(World world, Entity origin) {
+    public void createBullet(Entity origin) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -397,7 +401,6 @@ public class Level {
 
     private class WorldGenerator {
 
-        private final World world;
         /**
          * How far up has been pre-generated
          */
@@ -411,10 +414,6 @@ public class Level {
          * Each step, path += lastDeltaPath. lastDeltaPath itself changes by a random walk.
          */
         private float lastDeltaPath = 0.0f;
-
-        public WorldGenerator(World world) {
-            this.world = world;
-        }
 
         public void provideWorld(float heightNeeded, Entity player) {
             //Make sure generation has made it off screen above the requested height
@@ -436,7 +435,7 @@ public class Level {
 
                 //Generate enemy
                 if (rand.nextFloat() < 0.1) {
-                    createEnemy(path, height, world, player);
+                    createEnemy(path, height, player);
                 }
 
                 //Move the clear path so you can't just fly in a straight line
