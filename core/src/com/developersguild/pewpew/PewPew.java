@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.developersguild.pewpew.screens.GameScreen;
+import com.developersguild.pewpew.screens.MainMenuScreen;
 
 public class PewPew extends Game {
     public SpriteBatch batch;
@@ -13,7 +14,7 @@ public class PewPew extends Game {
     public void create() {
         batch = new SpriteBatch();
         Assets.load();
-        setScreen(new GameScreen(this));
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
