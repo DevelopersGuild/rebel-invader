@@ -12,6 +12,7 @@ import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
+import com.developersguild.pewpew.screens.GameScreen;
 
 /**
  * Created by Thomas on 1/23/2016.
@@ -21,13 +22,16 @@ public class HealthSystem extends IteratingSystem {
             HealthComponent.class).get();
 
     private Engine engine;
+    private final GameScreen screen;
 
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
     private float healthLastFrame;
 
-    public HealthSystem() {
+    public HealthSystem(GameScreen screen) {
         super(Family.all(TransformComponent.class, HealthComponent.class).get());
+        this.screen = screen;
+
         tm = ComponentMapper.getFor(TransformComponent.class);
         hm = ComponentMapper.getFor(HealthComponent.class);
 
@@ -64,7 +68,8 @@ public class HealthSystem extends IteratingSystem {
         healthLastFrame = health.currentHealth;
 
         if (health.currentHealth <= 0) {
-            //engine.removeEntity(entity);
+            screen.markEntityForRemoval(health.target);
+            screen.markEntityForRemoval(entity);
         }
     }
 

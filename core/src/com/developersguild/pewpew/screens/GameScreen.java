@@ -90,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new EnemySystem());
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
-        engine.addSystem(new HealthSystem());
+        engine.addSystem(new HealthSystem(this));
         engine.addSystem(new HeightDisposableSystem(this));
         engine.addSystem(new BulletSystem());
 
