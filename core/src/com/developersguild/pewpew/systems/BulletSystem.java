@@ -55,8 +55,6 @@ public class BulletSystem extends IteratingSystem {
 
         body.body.setUserData(this);
 
-        Gdx.app.log(getClass().getSimpleName(), "STUFF");
-
         mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
     }
 }
