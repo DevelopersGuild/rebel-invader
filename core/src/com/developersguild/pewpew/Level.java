@@ -354,21 +354,21 @@ public class Level {
 
         // Determine type of entity
         if (target.getComponent(PlayerComponent.class) != null) {
-            health.maxHealth = PlayerComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.maxHealth = PlayerComponent.STARTING_HEALTH * HealthComponent.healthMultiplier;
             health.currentHealth = health.maxHealth;
             health.lengthRatio = 2.0f / 3.0f;
             health.widthRatio = 2.0f / 3.0f;
             health.belongsTo = HealthComponent.IS_PLAYER;
             position.scale.set(health.lengthRatio, health.widthRatio);
         } else if (target.getComponent(StructureComponent.class) != null) {
-            health.maxHealth = StructureComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.maxHealth = StructureComponent.STARTING_HEALTH * HealthComponent.healthMultiplier;
             health.currentHealth = health.maxHealth;
             health.lengthRatio = 1.0f / 3.0f;
             health.widthRatio = 2.0f / 3.0f;
             health.belongsTo = HealthComponent.IS_STRUCTURE;
             position.scale.set(health.lengthRatio, health.widthRatio);
         } else if (target.getComponent(EnemyComponent.class) != null) {
-            health.maxHealth = EnemyComponent.STARTING_HEALTH * health.healthMultiplier;
+            health.maxHealth = EnemyComponent.STARTING_HEALTH * HealthComponent.healthMultiplier;
             health.currentHealth = health.maxHealth;
             health.lengthRatio = 2.0f / 3.0f;
             health.widthRatio = 2.0f / 3.0f;

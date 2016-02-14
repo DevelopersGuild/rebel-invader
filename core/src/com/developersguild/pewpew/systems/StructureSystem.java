@@ -20,9 +20,6 @@ public class StructureSystem extends IteratingSystem {
             TransformComponent.class,
             BodyComponent.class).get();
 
-    private Engine engine;
-
-    private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<StructureComponent> sm;
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<StateComponent> stm;
@@ -30,7 +27,7 @@ public class StructureSystem extends IteratingSystem {
     public StructureSystem() {
         super(family);
 
-        tm = ComponentMapper.getFor(TransformComponent.class);
+        ComponentMapper.getFor(TransformComponent.class);
         sm = ComponentMapper.getFor(StructureComponent.class);
         bm = ComponentMapper.getFor(BodyComponent.class);
         stm = ComponentMapper.getFor(StateComponent.class);
@@ -39,12 +36,11 @@ public class StructureSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        this.engine = engine;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent t = tm.get(entity);
+        //TransformComponent t = tm.get(entity);
         BodyComponent body = bm.get(entity);
         StructureComponent structure = sm.get(entity);
         StateComponent state = stm.get(entity);

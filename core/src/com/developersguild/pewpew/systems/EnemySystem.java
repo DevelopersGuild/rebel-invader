@@ -91,10 +91,10 @@ public class EnemySystem extends IteratingSystem {
 
         // Bounds checking
         // Removes the enemy from the game if it goes off the left, right, or bottom of the screen
-        if (t.pos.x + enemy.WIDTH / 2 < 0) {
+        if (t.pos.x + EnemyComponent.WIDTH / 2 < 0) {
             state.set(EnemyComponent.STATE_DEAD);
         }
-        if (t.pos.x - enemy.WIDTH / 2 > Level.LEVEL_WIDTH) {
+        if (t.pos.x - EnemyComponent.WIDTH / 2 > Level.LEVEL_WIDTH) {
             state.set(EnemyComponent.STATE_DEAD);
         }
         if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT / 2 < -2.5f) {
@@ -128,7 +128,7 @@ public class EnemySystem extends IteratingSystem {
 
     private void shoot(Entity entity, EnemyComponent enemy) {
         if (enemy.shootTimer <= currentTime) {
-            enemy.shootTimer = currentTime + enemy.FIRE_RATE;
+            enemy.shootTimer = currentTime + EnemyComponent.FIRE_RATE;
             level.createBullet(entity);
         }
     }

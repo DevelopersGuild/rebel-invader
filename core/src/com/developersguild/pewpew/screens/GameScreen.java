@@ -183,7 +183,7 @@ public class GameScreen extends ScreenAdapter {
     private void playerShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.shootTimer <= currentTime) {
-            player.shootTimer = currentTime + player.FIRE_RATE;
+            player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
             engine.getSystem(PlayerSystem.class).requestBullet();
         }
     }

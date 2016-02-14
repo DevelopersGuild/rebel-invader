@@ -23,28 +23,26 @@ public class BulletSystem extends IteratingSystem {
             StateComponent.class,
             TransformComponent.class).get();
     private final GameScreen screen;
-    private Engine engine;
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<BulletComponent> blm;
     private ComponentMapper<MovementComponent> mm;
-    private ComponentMapper<StateComponent> sm;
-    private ComponentMapper<TransformComponent> tm;
+    //private ComponentMapper<StateComponent> sm;
+    //private ComponentMapper<TransformComponent> tm;
 
     public BulletSystem(GameScreen screen) {
-        super(Family.all(BulletComponent.class).get());
+        super(family);
         this.screen = screen;
 
         bm = ComponentMapper.getFor(BodyComponent.class);
         blm = ComponentMapper.getFor(BulletComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
-        sm = ComponentMapper.getFor(StateComponent.class);
-        tm = ComponentMapper.getFor(TransformComponent.class);
+        //sm = ComponentMapper.getFor(StateComponent.class);
+        //tm = ComponentMapper.getFor(TransformComponent.class);
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        this.engine = engine;
     }
 
     @Override
@@ -52,8 +50,8 @@ public class BulletSystem extends IteratingSystem {
         BodyComponent body = bm.get(entity);
         BulletComponent bullet = blm.get(entity);
         MovementComponent mov = mm.get(entity);
-        StateComponent state = sm.get(entity);
-        TransformComponent pos = tm.get(entity);
+        //StateComponent state = sm.get(entity);
+        //TransformComponent pos = tm.get(entity);
 
         int collisionCode = 0;
         if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {

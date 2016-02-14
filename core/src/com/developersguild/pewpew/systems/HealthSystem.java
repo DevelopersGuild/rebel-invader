@@ -20,13 +20,13 @@ public class HealthSystem extends IteratingSystem {
     private static final Family family = Family.all(TransformComponent.class,
             HealthComponent.class).get();
     private final GameScreen screen;
-    private Engine engine;
+    //private Engine engine;
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
     private float healthLastFrame;
 
     public HealthSystem(GameScreen screen) {
-        super(Family.all(TransformComponent.class, HealthComponent.class).get());
+        super(family);
         this.screen = screen;
 
         tm = ComponentMapper.getFor(TransformComponent.class);
@@ -38,7 +38,7 @@ public class HealthSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        this.engine = engine;
+        //this.engine = engine;
     }
 
     @Override
@@ -71,8 +71,6 @@ public class HealthSystem extends IteratingSystem {
     }
 
     public void updateHealthBar(Entity entity) {
-        if (!family.matches(entity)) return;
-
         HealthComponent health = hm.get(entity);
         TransformComponent pos = tm.get(entity);
 
@@ -106,11 +104,7 @@ public class HealthSystem extends IteratingSystem {
     }
 
     public void nextLevel(Entity entity) {
-        if (!family.matches(entity)) return;
-
-        HealthComponent health = hm.get(entity);
-
-        health.healthMultiplier += health.LEVEL_INC;
-        health.currentLvl++;
+        HealthComponent.healthMultiplier += HealthComponent.LEVEL_INC;
+        HealthComponent.currentLvl++;
     }
 }
