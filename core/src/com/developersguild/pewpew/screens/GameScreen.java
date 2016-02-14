@@ -58,6 +58,7 @@ public class GameScreen extends ScreenAdapter {
     private int state;
     private List<Entity> deadEntities;
     private List<Entity> entitiesSpawned;
+    private float currentTime = 0.0f;
 
     public GameScreen(PewPew game) {
         this.game = game;
@@ -139,6 +140,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateRunning(float deltaTime) {
         Application.ApplicationType appType = Gdx.app.getType();
+        currentTime += deltaTime;
 
         // should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
         float accelX = 0.0f;
@@ -150,7 +152,11 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 // Create bullet
-                engine.getSystem(PlayerSystem.class).requestBullet();
+                PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
+                if (player.shootTimer <= currentTime) {
+                    player.shootTimer = currentTime + player.FIRE_RATE;
+                    engine.getSystem(PlayerSystem.class).requestBullet();
+                }
             }
         }
 
