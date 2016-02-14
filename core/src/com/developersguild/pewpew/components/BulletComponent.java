@@ -9,7 +9,7 @@ import com.badlogic.ashley.core.Entity;
 public class BulletComponent implements Component {
     public static final float WIDTH = 0.25f;
     public static final float HEIGHT = 0.25f;
-    public static final float VELOCITY = 1000f;
+    public static final float VELOCITY = 200f;
     public static final int STATE_NORMAL = 0;
     public static final int STATE_HIT = 1;
 
