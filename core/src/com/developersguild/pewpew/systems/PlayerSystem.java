@@ -42,7 +42,6 @@ public class PlayerSystem extends IteratingSystem {
 
     public PlayerSystem(Level level) {
         super(family);
-
         this.level = level;
 
         rm = ComponentMapper.getFor(PlayerComponent.class);
@@ -64,7 +63,6 @@ public class PlayerSystem extends IteratingSystem {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
         accelX = 0.0f;
     }
 

@@ -2,6 +2,7 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -143,7 +144,7 @@ public class Level {
         return entity;
     }
 
-    private void createStructure(float x, float y, World world, Entity player) {
+    private void createStructure(float x, float y, Entity player) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -281,15 +282,24 @@ public class Level {
         bounds.bounds.height = BulletComponent.HEIGHT;
 
         texture.region = Assets.bulletRegion;
+        if (origin.getComponent(PlayerComponent.class) != null) { // If player fired
+            texture.color = Color.WHITE;
+        } else { // If enemy or anyone else fired
+            texture.color = Color.RED;
+        }
 
         // Get origin position
         float x = origin.getComponent(TransformComponent.class).pos.x;
-        float y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+        float y;
+
+        if (origin.getComponent(PlayerComponent.class) != null) { // If player fired
+            y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+        } else { // If enemy or anyone else fired
+            y = origin.getComponent(TransformComponent.class).pos.y - origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+        }
 
         pos.pos.set(x, y, 1f);
         pos.scale.set(1f, 1f);
-
-        //mov.velocity.y = BulletComponent.VELOCITY;
 
         // Create player body
         BodyDef bodyDef = new BodyDef();
@@ -427,7 +437,7 @@ public class Level {
                     //Check that we're not stomping the path
                     if ((x > path + restrictedArea || x < path - restrictedArea)) {
                         if (rand.nextFloat() < 0.2)
-                            createStructure(x, height, world, player);
+                            createStructure(x, height, player);
                     }
                 }
 

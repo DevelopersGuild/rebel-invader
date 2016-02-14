@@ -67,10 +67,6 @@ public class StructureSystem extends IteratingSystem {
         }
 
         checkHealthBounds(structure);
-
-        if (state.get() == StructureComponent.STATE_DEAD) {
-            //engine.removeEntity(entity);
-        }
     }
 
     private void checkHealthBounds(StructureComponent structure) {

@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;

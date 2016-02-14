@@ -8,6 +8,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.MovementComponent;
+import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.screens.GameScreen;
@@ -21,10 +22,8 @@ public class BulletSystem extends IteratingSystem {
             MovementComponent.class,
             StateComponent.class,
             TransformComponent.class).get();
-
-    private Engine engine;
     private final GameScreen screen;
-
+    private Engine engine;
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<BulletComponent> blm;
     private ComponentMapper<MovementComponent> mm;
@@ -61,9 +60,13 @@ public class BulletSystem extends IteratingSystem {
             collisionCode = (Integer) body.body.getUserData();
         }
 
-        body.body.setUserData(this);
+        body.body.setUserData(entity);
 
-        mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
+        if (bullet.origin.getComponent(PlayerComponent.class) != null) { // If player fired
+            mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
+        } else { // If anyone else fired
+            mov.velocity.y = -BulletComponent.VELOCITY * deltaTime;
+        }
 
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
                 collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||

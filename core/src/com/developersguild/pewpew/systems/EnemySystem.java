@@ -1,7 +1,6 @@
 package com.developersguild.pewpew.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -23,7 +22,8 @@ public class EnemySystem extends IteratingSystem {
             BodyComponent.class,
             StateComponent.class).get();
 
-    private Engine engine;
+    private float currentTime;
+    private Level level;
 
     private ComponentMapper<EnemyComponent> em;
     private ComponentMapper<TransformComponent> tm;
@@ -31,8 +31,10 @@ public class EnemySystem extends IteratingSystem {
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<StateComponent> sm;
 
-    public EnemySystem() {
+    public EnemySystem(Level level) {
         super(family);
+        currentTime = 0f;
+        this.level = level;
 
         em = ComponentMapper.getFor(EnemyComponent.class);
         tm = ComponentMapper.getFor(TransformComponent.class);
@@ -42,18 +44,14 @@ public class EnemySystem extends IteratingSystem {
     }
 
     @Override
-    public void addedToEngine(Engine engine) {
-        super.addedToEngine(engine);
-        this.engine = engine;
-    }
-
-    @Override
     protected void processEntity(Entity entity, float deltaTime) {
         EnemyComponent enemy = em.get(entity);
         TransformComponent t = tm.get(entity);
         MovementComponent mov = mm.get(entity);
         BodyComponent body = bm.get(entity);
         StateComponent state = sm.get(entity);
+
+        currentTime += deltaTime;
 
         int collisionCode = 0;
         if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
@@ -68,15 +66,27 @@ public class EnemySystem extends IteratingSystem {
             // Start moving down
             mov.velocity.y = -EnemyComponent.VELOCITY_Y * deltaTime;
         }
-        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < 6f) {
+        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < EnemyComponent.TARGETING_RADIUS) {
             // Start X-pathfinding
-            if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x < -EnemyComponent.WIDTH / 2) {
+            if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x < 0f) {
                 mov.velocity.x = EnemyComponent.VELOCITY_X * deltaTime;
-            } else if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x > EnemyComponent.WIDTH / 2) {
+            } else if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x > 0f) {
                 mov.velocity.x = -EnemyComponent.VELOCITY_X * deltaTime;
             } else {
                 mov.velocity.x = 0f;
             }
+
+            // Shooting
+            if (Math.abs(t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x) <
+                    EnemyComponent.WIDTH / 2f) {
+                shoot(entity, enemy);
+            }
+        }
+
+        // Turn off pathfinding after knockback
+        if (mov.velocity.x != 0f &&
+                (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT > EnemyComponent.TARGETING_RADIUS)) {
+            mov.velocity.x = 0f;
         }
 
         // Bounds checking
@@ -102,10 +112,6 @@ public class EnemySystem extends IteratingSystem {
         }
 
         checkHealthBounds(enemy);
-
-        if (state.get() == EnemyComponent.STATE_DEAD) {
-            //engine.removeEntity(entity);
-        }
     }
 
     private void checkHealthBounds(EnemyComponent enemy) {
@@ -117,6 +123,13 @@ public class EnemySystem extends IteratingSystem {
         // Prevent health increasing over maxHealth
         if (enemy.currentHealth > enemy.maxHealth) {
             enemy.currentHealth = enemy.maxHealth;
+        }
+    }
+
+    private void shoot(Entity entity, EnemyComponent enemy) {
+        if (enemy.shootTimer <= currentTime) {
+            enemy.shootTimer = currentTime + enemy.FIRE_RATE;
+            level.createBullet(entity);
         }
     }
 }

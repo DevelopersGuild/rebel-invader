@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.developersguild.pewpew.Assets;
 import com.developersguild.pewpew.Level;
@@ -58,8 +57,7 @@ public class GameScreen extends ScreenAdapter {
     private GlyphLayout layout;
     private int state;
     private List<Entity> deadEntities;
-    private List<Entity> entitiesSpawned;
-    private float currentTime = 0.0f;
+    private float currentTime;
 
     public GameScreen(PewPew game) {
         this.game = game;
@@ -78,6 +76,7 @@ public class GameScreen extends ScreenAdapter {
         touchPoint = new Vector3();
         layout = new GlyphLayout();
         deadEntities = new ArrayList<Entity>();
+        currentTime = 0f;
 
         // Add systems
         engine.addSystem(new PlayerSystem(level));
@@ -88,7 +87,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new StateSystem());
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new StructureSystem());
-        engine.addSystem(new EnemySystem());
+        engine.addSystem(new EnemySystem(level));
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem(this));
@@ -148,17 +147,11 @@ public class GameScreen extends ScreenAdapter {
 
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             accelX = Gdx.input.getAccelerometerX();
+            if (Gdx.input.justTouched()) playerShoot();
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                // Create bullet
-                PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
-                if (player.shootTimer <= currentTime) {
-                    player.shootTimer = currentTime + player.FIRE_RATE;
-                    engine.getSystem(PlayerSystem.class).requestBullet();
-                }
-            }
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
@@ -184,6 +177,14 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.justTouched()) {
             resumeSystems();
             game.setScreen(new GameScreen(game));
+        }
+    }
+
+    private void playerShoot() {
+        PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
+        if (player.shootTimer <= currentTime) {
+            player.shootTimer = currentTime + player.FIRE_RATE;
+            engine.getSystem(PlayerSystem.class).requestBullet();
         }
     }
 

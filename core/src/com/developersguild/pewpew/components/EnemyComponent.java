@@ -12,12 +12,16 @@ public class EnemyComponent implements Component {
     public static final float VELOCITY_X = 100f;
     public static final float VELOCITY_Y = 50f;
     public static final float STARTING_HEALTH = 50f;
-    public static final float TOUCH_DAMAGE = 15f;
-    public static final float BULLET_DAMAGE = 10f;
+    public static final float TOUCH_DAMAGE = 35f;
+    public static final float BULLET_DAMAGE = 15f;
+    public static final float TARGETING_RADIUS = 8f;
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
+    public static final float BULLETS_PER_SECOND = 0.5f;
+    public static final float FIRE_RATE = 1f / BULLETS_PER_SECOND;
 
+    public Entity target;
     public float maxHealth;
     public float currentHealth;
-    public Entity target;
+    public float shootTimer = 0f;
 }
