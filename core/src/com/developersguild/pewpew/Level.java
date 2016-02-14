@@ -355,7 +355,7 @@ public class Level {
         } else if (target.getComponent(StructureComponent.class) != null) {
             health.maxHealth = StructureComponent.STARTING_HEALTH * health.healthMultiplier;
             health.currentHealth = health.maxHealth;
-            health.lengthRatio = 96.0f / 95.0f;
+            health.lengthRatio = 1.0f / 3.0f;
             health.widthRatio = 2.0f / 3.0f;
             health.belongsTo = HealthComponent.IS_STRUCTURE;
             position.scale.set(health.lengthRatio, health.widthRatio);
