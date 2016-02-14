@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.ScreenAdapter;
 import com.developersguild.pewpew.components.BoundsComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.HealthComponent;
@@ -20,10 +19,8 @@ import com.developersguild.pewpew.screens.GameScreen;
 public class HealthSystem extends IteratingSystem {
     private static final Family family = Family.all(TransformComponent.class,
             HealthComponent.class).get();
-
-    private Engine engine;
     private final GameScreen screen;
-
+    private Engine engine;
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
     private float healthLastFrame;

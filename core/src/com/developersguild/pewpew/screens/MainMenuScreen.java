@@ -6,12 +6,12 @@ package com.developersguild.pewpew.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.developersguild.pewpew.PewPew;
-import com.developersguild.pewpew.Assets;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.developersguild.pewpew.Assets;
+import com.developersguild.pewpew.PewPew;
 
 
 public class MainMenuScreen extends ScreenAdapter {
@@ -32,7 +32,8 @@ public class MainMenuScreen extends ScreenAdapter {
         exitBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         touchPoint = new Vector3();
     }
-    public void update () {
+
+    public void update() {
         if (Gdx.input.justTouched()) {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 

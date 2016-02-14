@@ -5,12 +5,9 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
-import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.MovementComponent;
-import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 

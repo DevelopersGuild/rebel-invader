@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Created by Vihan on 1/10/2016.
  */
 public class Assets {
-	
-	public static final int ENEMY_SPRITES=15;
-	public static final int TERRAIN_SPRITES=7;
-	
+
+    public static final int ENEMY_SPRITES = 15;
+    public static final int TERRAIN_SPRITES = 7;
+
     public static BitmapFont font;
 
     public static Texture play;
@@ -63,7 +63,7 @@ public class Assets {
         terrains = new Texture[TERRAIN_SPRITES];
         terrainRegions = new TextureRegion[TERRAIN_SPRITES];
         for (int i = 0; i < TERRAIN_SPRITES; i++) {
-            terrains[i] = loadTexture("terrain"+(i + 1) + ".png");
+            terrains[i] = loadTexture("terrain" + (i + 1) + ".png");
             terrainRegions[i] = new TextureRegion(terrains[i], 0, 0, 32, 32);
         }
 

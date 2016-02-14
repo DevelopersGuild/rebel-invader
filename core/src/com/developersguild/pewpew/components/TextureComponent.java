@@ -9,6 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class TextureComponent implements Component {
     public TextureRegion region = null;
-    
-    public Color color=Color.WHITE;
+
+    public Color color = Color.WHITE;
 }

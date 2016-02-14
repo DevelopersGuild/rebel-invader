@@ -161,7 +161,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
-        
+
         if (level.state == Level.LEVEL_STATE_GAME_OVER) {
             state = GAME_OVER;
             pauseSystems();

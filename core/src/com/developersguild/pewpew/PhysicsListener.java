@@ -2,18 +2,13 @@ package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.utils.BooleanArray;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
-import com.developersguild.pewpew.components.EnemyComponent;
-import com.developersguild.pewpew.components.PlayerComponent;
-import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.systems.BulletSystem;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.PlayerSystem;

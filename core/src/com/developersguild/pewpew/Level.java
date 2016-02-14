@@ -1,9 +1,7 @@
 package com.developersguild.pewpew;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -53,12 +51,12 @@ public class Level {
     }
 
     public void create(World world) {
-        this.world=world;
-        
+        this.world = world;
+
         Entity player = createPlayer();
         createCamera(player);
         createBackground();
-        
+
         generator = new WorldGenerator();
 
         generateObstacles(1.5f * SCREEN_HEIGHT, player);
@@ -167,7 +165,7 @@ public class Level {
         bounds.bounds.height = StructureComponent.HEIGHT;
 
         position.pos.set(x, y, 1.0f);
-        
+
         texture.region = Assets.terrainRegions[rand.nextInt(Assets.TERRAIN_SPRITES)];
 
         // Create body
@@ -260,7 +258,7 @@ public class Level {
         entity.add(texture);
         entity.add(disposable);
         createHealthBar(entity, disposable);
-        
+
         engine.addEntity(entity);
     }
 
@@ -331,11 +329,11 @@ public class Level {
 
     private void createHealthBar(Entity target, HeightDisposableComponent disposable) {
         Entity entity = engine.createEntity();
-        
-        if(disposable != null){
-        	disposable.childEntity=entity;
+
+        if (disposable != null) {
+            disposable.childEntity = entity;
         }
-        
+
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         HealthComponent health = engine.createComponent(HealthComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
@@ -428,8 +426,8 @@ public class Level {
                     float x = i * StructureComponent.WIDTH;
                     //Check that we're not stomping the path
                     if ((x > path + restrictedArea || x < path - restrictedArea)) {
-                    	if(rand.nextFloat() < 0.2)
-                    		createStructure(x, height, world, player);
+                        if (rand.nextFloat() < 0.2)
+                            createStructure(x, height, world, player);
                     }
                 }
 
