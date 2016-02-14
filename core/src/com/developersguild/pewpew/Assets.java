@@ -16,6 +16,13 @@ public class Assets {
 	
     public static BitmapFont font;
 
+    public static Texture play;
+    public static TextureRegion playRegion;
+
+    public static Texture exit;
+    public static TextureRegion exitRegion;
+
+
     public static Texture background;
     public static TextureRegion backgroundRegion;
 
@@ -40,6 +47,12 @@ public class Assets {
 
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
+
+        play = loadTexture("play.png");
+        playRegion = new TextureRegion(play, 160 - 150, 200 + 18, 300, 36);
+
+        exit = loadTexture("exit.png");
+        exitRegion = new TextureRegion(exit, 160 - 150, 200 - 18 - 36, 300, 36);
 
         background = loadTexture("background.png");
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
