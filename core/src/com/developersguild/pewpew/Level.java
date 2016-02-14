@@ -428,13 +428,14 @@ public class Level {
                     float x = i * StructureComponent.WIDTH;
                     //Check that we're not stomping the path
                     if ((x > path + restrictedArea || x < path - restrictedArea)) {
-                        createStructure(x, height, world, player);
+                    	if(rand.nextFloat() < 0.2)
+                    		createStructure(x, height, world, player);
                     }
                 }
 
                 //Generate enemy
                 if (rand.nextFloat() < 0.1) {
-                    createEnemy(path, height, player);
+                    //createEnemy(path, height, player);
                 }
 
                 //Move the clear path so you can't just fly in a straight line
