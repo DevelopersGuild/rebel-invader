@@ -435,7 +435,7 @@ public class Level {
 
                 //Generate enemy
                 if (rand.nextFloat() < 0.1) {
-                    //createEnemy(path, height, player);
+                    createEnemy(path, height, player);
                 }
 
                 //Move the clear path so you can't just fly in a straight line
