@@ -43,5 +43,4 @@ public class HeightDisposableSystem extends IteratingSystem {
             }
         }
     }
-
 }

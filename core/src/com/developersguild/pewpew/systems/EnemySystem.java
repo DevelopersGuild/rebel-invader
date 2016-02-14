@@ -5,10 +5,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
+import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.MovementComponent;
+import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
@@ -54,6 +57,11 @@ public class EnemySystem extends IteratingSystem {
         BodyComponent body = bm.get(entity);
         StateComponent state = sm.get(entity);
 
+        int collisionCode = 0;
+        if (body.body.getUserData() != null && body.body.getUserData().getClass() == Integer.class) {
+            collisionCode = (Integer) body.body.getUserData();
+        }
+
         body.body.setUserData(this);
 
         // Movement handling
@@ -85,13 +93,32 @@ public class EnemySystem extends IteratingSystem {
             state.set(EnemyComponent.STATE_DEAD);
         }
 
+        // Collision handling
+        if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION) {
+            enemy.currentHealth -= PlayerComponent.BULLET_DAMAGE;
+        }
+
         // Death
         if (enemy.currentHealth <= 0f) {
             state.set(EnemyComponent.STATE_DEAD);
         }
 
+        checkHealthBounds(enemy);
+
         if (state.get() == EnemyComponent.STATE_DEAD) {
             //engine.removeEntity(entity);
+        }
+    }
+
+    private void checkHealthBounds(EnemyComponent enemy) {
+        // Prevent health decreasing below 0
+        if (enemy.currentHealth < 0) {
+            enemy.currentHealth = 0;
+        }
+
+        // Prevent health increasing over maxHealth
+        if (enemy.currentHealth > enemy.maxHealth) {
+            enemy.currentHealth = enemy.maxHealth;
         }
     }
 }

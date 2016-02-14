@@ -11,7 +11,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.BooleanArray;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
+import com.developersguild.pewpew.components.EnemyComponent;
+import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.TransformComponent;
+import com.developersguild.pewpew.systems.BulletSystem;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
@@ -28,6 +31,35 @@ public class PhysicsListener implements ContactListener, EntityListener {
     @Override
     public void beginContact(Contact contact) {
         //Gdx.app.log(this.getClass().getSimpleName(), "beginContact() called");
+
+        Body a = contact.getFixtureA().getBody();
+        Body b = contact.getFixtureB().getBody();
+
+        if (a.getUserData().getClass() == BulletSystem.class) {
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+                b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+            }
+
+            if (b.getUserData().getClass() == EnemySystem.class) {
+                a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+                b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+            }
+        }
+
+        if (a.getUserData().getClass() == EnemySystem.class) {
+            if (b.getUserData().getClass() == BulletSystem.class) {
+                a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+                b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+            }
+        }
+
+        if (a.getUserData().getClass() == StructureSystem.class) {
+            if (b.getUserData().getClass() == BulletSystem.class) {
+                a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+                b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+            }
+        }
     }
 
     /**

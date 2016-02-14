@@ -19,6 +19,8 @@ public class HealthSystem extends IteratingSystem {
     private static final Family family = Family.all(TransformComponent.class,
             HealthComponent.class).get();
 
+    private Engine engine;
+
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<HealthComponent> hm;
     private float healthLastFrame;
@@ -34,6 +36,7 @@ public class HealthSystem extends IteratingSystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
+        this.engine = engine;
     }
 
     @Override
@@ -58,6 +61,10 @@ public class HealthSystem extends IteratingSystem {
         }
 
         healthLastFrame = health.currentHealth;
+
+        if (health.currentHealth <= 0) {
+            //engine.removeEntity(entity);
+        }
     }
 
     public void updateHealthBar(Entity entity) {

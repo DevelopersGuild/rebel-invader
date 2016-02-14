@@ -24,6 +24,8 @@ public class BulletSystem extends IteratingSystem {
             StateComponent.class,
             TransformComponent.class).get();
 
+    private Engine engine;
+
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<BulletComponent> blm;
     private ComponentMapper<MovementComponent> mm;
@@ -41,6 +43,12 @@ public class BulletSystem extends IteratingSystem {
     }
 
     @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+        this.engine = engine;
+    }
+
+    @Override
     protected void processEntity(Entity entity, float deltaTime) {
         BodyComponent body = bm.get(entity);
         BulletComponent bullet = blm.get(entity);
@@ -55,8 +63,11 @@ public class BulletSystem extends IteratingSystem {
 
         body.body.setUserData(this);
 
-        Gdx.app.log(getClass().getSimpleName(), "STUFF");
-
         mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
+
+        if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
+                collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION) {
+            engine.removeEntity(entity);
+        }
     }
 }
