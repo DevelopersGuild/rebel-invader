@@ -8,7 +8,10 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.utils.BooleanArray;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.BulletComponent;
+import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
 import com.developersguild.pewpew.systems.StructureSystem;
@@ -108,6 +111,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      */
     @Override
     public void entityRemoved(Entity entity) {
-        //Gdx.app.log(this.getClass().getSimpleName(), "entityRemoved() called");
+        if (entity.getComponent(BulletComponent.class) != null) {
+        }
     }
 }

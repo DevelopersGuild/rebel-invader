@@ -168,7 +168,7 @@ public class GameScreen extends ScreenAdapter {
 
         //Kill off any dead entities
         for (Entity e : deadEntities) {
-            engine.removeEntity(e);
+            //engine.removeEntity(e);
         }
     }
 

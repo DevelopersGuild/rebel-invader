@@ -53,10 +53,10 @@ public class BulletSystem extends IteratingSystem {
             collisionCode = (Integer) body.body.getUserData();
         }
 
+        body.body.setUserData(this);
+
         Gdx.app.log(getClass().getSimpleName(), "STUFF");
 
         mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
-
-        body.body.setUserData(this);
     }
 }
