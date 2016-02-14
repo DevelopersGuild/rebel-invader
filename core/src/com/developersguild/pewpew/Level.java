@@ -420,7 +420,6 @@ public class Level {
             while (height < heightNeeded + 1.5f * SCREEN_HEIGHT) {
                 //Advance world generation
                 height += StructureComponent.HEIGHT;
-
                 float restrictedArea =
                         PlayerComponent.WIDTH * 1.3f        //Generous width
                                 - height / LEVEL_HEIGHT * 0.4f//Minus a difficulty scaling term
