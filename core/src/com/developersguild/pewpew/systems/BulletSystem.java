@@ -10,6 +10,7 @@ import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.TransformComponent;
+import com.developersguild.pewpew.screens.GameScreen;
 
 /**
  * Created by Vihan on 2/9/2016.
@@ -22,6 +23,7 @@ public class BulletSystem extends IteratingSystem {
             TransformComponent.class).get();
 
     private Engine engine;
+    private final GameScreen screen;
 
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<BulletComponent> blm;
@@ -29,8 +31,9 @@ public class BulletSystem extends IteratingSystem {
     private ComponentMapper<StateComponent> sm;
     private ComponentMapper<TransformComponent> tm;
 
-    public BulletSystem() {
+    public BulletSystem(GameScreen screen) {
         super(Family.all(BulletComponent.class).get());
+        this.screen = screen;
 
         bm = ComponentMapper.getFor(BodyComponent.class);
         blm = ComponentMapper.getFor(BulletComponent.class);
@@ -63,8 +66,9 @@ public class BulletSystem extends IteratingSystem {
         mov.velocity.y = BulletComponent.VELOCITY * deltaTime;
 
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
-                collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION) {
-            engine.removeEntity(entity);
+                collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||
+                collisionCode == BodyComponent.PLAYER_BULLET_COLLISION) {
+            screen.markEntityForRemoval(entity);
         }
     }
 }

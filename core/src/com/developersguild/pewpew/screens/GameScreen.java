@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.developersguild.pewpew.Assets;
 import com.developersguild.pewpew.Level;
@@ -92,7 +93,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
         engine.addSystem(new HealthSystem(this));
         engine.addSystem(new HeightDisposableSystem(this));
-        engine.addSystem(new BulletSystem());
+        engine.addSystem(new BulletSystem(this));
 
         // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -283,6 +284,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void markEntityForRemoval(Entity e) {
+        if (e.getComponent(BodyComponent.class) != null) {
+            world.destroyBody(e.getComponent(BodyComponent.class).body);
+        }
         deadEntities.add(e);
     }
 }
