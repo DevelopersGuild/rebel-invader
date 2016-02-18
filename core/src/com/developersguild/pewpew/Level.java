@@ -166,6 +166,7 @@ public class Level {
         bounds.bounds.height = StructureComponent.HEIGHT;
 
         position.pos.set(x, y, 1.0f);
+        position.scale.set(1f, 1f);
 
         texture.region = Assets.terrainRegions[rand.nextInt(Assets.TERRAIN_SPRITES)];
 
