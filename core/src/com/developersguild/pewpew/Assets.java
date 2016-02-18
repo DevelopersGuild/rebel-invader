@@ -16,12 +16,18 @@ public class Assets {
 
     public static BitmapFont font;
 
-    public static Texture play;
-    public static TextureRegion playRegion;
+    public static Texture playText;
+    public static TextureRegion playTextRegion;
 
-    public static Texture exit;
-    public static TextureRegion exitRegion;
+    public static Texture exitText;
+    public static TextureRegion exitTextRegion;
 
+    public static Texture uiButtons;
+    public static TextureRegion pauseButton;
+    //public static TextureRegion reloadButton;
+    //public static TextureRegion menuButton;
+    public static TextureRegion playButton;
+    //public static TextureRegion exitButton;
 
     public static Texture background;
     public static TextureRegion backgroundRegion;
@@ -48,11 +54,15 @@ public class Assets {
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
 
-        play = loadTexture("play.png");
-        playRegion = new TextureRegion(play, 160 - 150, 200 + 18, 300, 36);
+        playText = loadTexture("play.png");
+        playTextRegion = new TextureRegion(playText, 160 - 150, 200 + 18, 300, 36);
 
-        exit = loadTexture("exit.png");
-        exitRegion = new TextureRegion(exit, 160 - 150, 200 - 18 - 36, 300, 36);
+        exitText = loadTexture("exit.png");
+        exitTextRegion = new TextureRegion(exitText, 160 - 150, 200 - 18 - 36, 300, 36);
+
+        uiButtons = loadTexture("ui_buttons.png");
+        pauseButton = new TextureRegion(uiButtons, 0, 0, 40, 50);
+        playButton = new TextureRegion(uiButtons, 235 - 40 * 2, 0, 40, 50);
 
         background = loadTexture("background.png");
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);

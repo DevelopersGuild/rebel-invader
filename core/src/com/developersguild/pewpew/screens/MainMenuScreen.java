@@ -63,8 +63,8 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.enableBlending();
         game.batch.begin();
         //Draw 'Play' and 'Exit' buttons
-        game.batch.draw(Assets.play, 10, 218, 300, 36);
-        game.batch.draw(Assets.exit, 10, 156, 300, 36);
+        game.batch.draw(Assets.playText, 10, 218, 300, 36);
+        game.batch.draw(Assets.exitText, 10, 156, 300, 36);
 
         game.batch.end();
     }

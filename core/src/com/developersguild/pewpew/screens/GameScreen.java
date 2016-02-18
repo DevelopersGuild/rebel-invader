@@ -7,8 +7,10 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
@@ -40,11 +42,10 @@ import java.util.List;
  * Created by Vihan on 1/10/2016.
  */
 public class GameScreen extends ScreenAdapter {
-    static final int GAME_READY = 0;
-    static final int GAME_RUNNING = 1;
-    static final int GAME_PAUSED = 2;
-    static final int GAME_OVER = 3;
-    static final int GAME_WON = 4;
+    static final int GAME_RUNNING = 0;
+    static final int GAME_PAUSED = 1;
+    static final int GAME_OVER = 2;
+    static final int GAME_WON = 3;
 
     PewPew game;
     Level level;
@@ -53,6 +54,7 @@ public class GameScreen extends ScreenAdapter {
     PhysicsListener listener;
     OrthographicCamera guiCam;
     Vector3 touchPoint;
+    Rectangle pauseBounds;
 
     private GlyphLayout layout;
     private int state;
@@ -62,7 +64,6 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(PewPew game) {
         this.game = game;
 
-        // TODO: Change to ready when updateRunning() and updateReady() are both done
         state = GAME_RUNNING;
 
         engine = new PooledEngine();
@@ -106,7 +107,8 @@ public class GameScreen extends ScreenAdapter {
 
         level.create(world);
 
-        // TODO: Change to pauseSystems() once first state is READY
+        pauseBounds = new Rectangle(320 - 40 - 5, 480 - 50 - 5, 40, 50);
+
         resumeSystems();
     }
 
@@ -116,11 +118,11 @@ public class GameScreen extends ScreenAdapter {
         engine.update(deltaTime);
 
         switch (state) {
-            case GAME_READY:
-                updateReady();
-                break;
             case GAME_RUNNING:
                 updateRunning(deltaTime);
+                break;
+            case GAME_PAUSED:
+                updatePaused();
                 break;
             case GAME_OVER:
                 updateGameOver();
@@ -131,14 +133,17 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void updateReady() {
-        if (Gdx.input.justTouched()) {
-            state = GAME_RUNNING;
-            resumeSystems();
-        }
-    }
-
     private void updateRunning(float deltaTime) {
+        if (Gdx.input.justTouched()) {
+            guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+            if (pauseBounds.contains(touchPoint.x, touchPoint.y)) {
+                state = GAME_PAUSED;
+                pauseSystems();
+                return;
+            }
+        }
+
         Application.ApplicationType appType = Gdx.app.getType();
         currentTime += deltaTime;
 
@@ -173,6 +178,17 @@ public class GameScreen extends ScreenAdapter {
         deadEntities.clear();
     }
 
+    private void updatePaused() {
+        if (Gdx.input.justTouched()) {
+            guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+            if (pauseBounds.contains(touchPoint.x, touchPoint.y)) {
+                resume();
+                return;
+            }
+        }
+    }
+
     private void updateGameOver() {
         if (Gdx.input.justTouched()) {
             resumeSystems();
@@ -193,11 +209,11 @@ public class GameScreen extends ScreenAdapter {
         game.batch.setProjectionMatrix(guiCam.combined);
         game.batch.begin();
         switch (state) {
-            case GAME_READY:
-                presentReady();
-                break;
             case GAME_RUNNING:
                 presentRunning();
+                break;
+            case GAME_PAUSED:
+                presentPaused();
                 break;
             case GAME_OVER:
                 presentGameOver();
@@ -209,13 +225,12 @@ public class GameScreen extends ScreenAdapter {
         game.batch.end();
     }
 
-    private void presentReady() {
-        // In Super Jumper:
-        // game.batch.draw(Assets.ready, 160 - 192 / 2, 240 - 32 / 2, 192, 32);
+    private void presentRunning() {
+        game.batch.draw(Assets.pauseButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
     }
 
-    private void presentRunning() {
-        // nothing yet
+    private void presentPaused() {
+        game.batch.draw(Assets.playButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
     }
 
     private void presentGameOver() {
@@ -279,8 +294,15 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void pause() {
         if (state == GAME_RUNNING) {
-            state = GAME_PAUSED;
-            pauseSystems();
+            pause();
+        }
+    }
+
+    @Override
+    public void resume() {
+        if (state == GAME_PAUSED) {
+            state = GAME_RUNNING;
+            resumeSystems();
         }
     }
 
