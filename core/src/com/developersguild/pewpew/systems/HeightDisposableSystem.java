@@ -12,7 +12,7 @@ import com.developersguild.pewpew.screens.GameScreen;
 
 public class HeightDisposableSystem extends IteratingSystem {
 
-	/*
+    /*
     private static final Family family = Family.all(
             HeightDisposableComponent.class,
             TransformComponent.class).get();
