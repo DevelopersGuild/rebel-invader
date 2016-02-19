@@ -3,6 +3,7 @@ package com.developersguild.pewpew;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -145,7 +146,7 @@ public class Level {
         return entity;
     }
 
-    public void createStructure(float x, float y, Entity player, int textureIndex) {
+    public void createStructure(float x, float y, Entity player, TextureRegion region) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -169,7 +170,7 @@ public class Level {
         position.pos.set(x, y, 1.0f);
         position.scale.set(1f, 1f);
 
-        texture.region = Assets.terrainRegions[textureIndex];
+        texture.region = region;
 
         // Create body
         BodyDef bodyDef = new BodyDef();

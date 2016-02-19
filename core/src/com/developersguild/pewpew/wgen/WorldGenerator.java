@@ -11,9 +11,12 @@ import com.developersguild.pewpew.components.StructureComponent;
 public class WorldGenerator implements IRowProvider {
 
 	private final Level level;
+	
+	private final int seed;
 
 	public WorldGenerator(Level level) {
 		this.level = level;
+		seed=(int) (Math.random()*Integer.MAX_VALUE);
 	}
 
 	public void provideWorld(float heightNeeded, Entity player) {
@@ -27,7 +30,7 @@ public class WorldGenerator implements IRowProvider {
 	public float getSliding5Random(int row){
 		float sum=0;
 		for(int i=0; i<5; i++){
-			r.setSeed(row+i);
+			r.setSeed(row+i+seed);
 			sum += r.nextFloat();
 		}
 		return sum;
@@ -39,11 +42,29 @@ public class WorldGenerator implements IRowProvider {
 	}
 
 	public IRowProvider[] providers=new IRowProvider[]{
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderSpaceJunk(),
+			new RowProviderWall(),
+			new RowProviderAlienHabitat(),
+			new RowProviderAlienHabitat(),
+			new RowProviderAlienHabitat(),
+			new RowProviderAlienHabitat(),
+			new RowProviderAlienHabitat(),
 			//TODO order the world providers - this determines world generation
 	};
 	public IRowProvider getProvider(int height){
-		return this;
-		//return providers[(int) getDensity(height)];
+		int density=(int) getDensity(height);
+		//Bounds checking
+		if(density >= providers.length){
+			density=providers.length-1;
+		}
+		return providers[density];
 	}
 	int lastHeight=8;
 	public void provideWorldNew(float height, Entity player){
@@ -60,10 +81,6 @@ public class WorldGenerator implements IRowProvider {
 	private float path = 5.0f;
 	private float lastDeltaPath = 0.0f;
 
-	public void provideWorldOld(float heightNeeded, Entity player) {
-
-	}
-
 	@Override
 	public void createRow(Level level, int row, Entity player) {
 		float baseHeight=row*StructureComponent.HEIGHT;
@@ -75,7 +92,7 @@ public class WorldGenerator implements IRowProvider {
 			//Check that we're not stomping the path
 			if ((x > path + restrictedArea || x < path - restrictedArea)) {
 				if (this.level.rand.nextFloat() < 0.2)
-					this.level.createStructure(x, baseHeight, player, this.level.rand.nextInt(Assets.TERRAIN_SPRITES));
+					this.level.createStructure(x, baseHeight, player, Assets.cityRegions[0]);
 			}
 		}
 
