@@ -148,18 +148,18 @@ public class PlayerSystem extends IteratingSystem {
             t.rotation = 0.0f;
         }
 
-        player.heightSoFar = Math.max(t.pos.y, player.heightSoFar);
+        player.maxHeight = Math.max(t.pos.y, player.maxHeight);
 
         // Death
         if (player.currentHealth <= 0f) {
             level.state = Level.LEVEL_STATE_GAME_OVER;
         }
-        if (player.heightSoFar > Level.LEVEL_HEIGHT) {
+        if (player.maxHeight > Level.LEVEL_HEIGHT) {
             level.state = Level.LEVEL_STATE_GAME_WON;
         }
 
         //Wgen
-        level.generateObstacles(player.heightSoFar, entity);
+        level.generateObstacles(t.pos.y, entity);
 
         if (this.shouldFire)
             level.createBullet(entity);
