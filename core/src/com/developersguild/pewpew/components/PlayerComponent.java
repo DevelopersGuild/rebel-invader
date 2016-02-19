@@ -22,7 +22,7 @@ public class PlayerComponent implements Component {
     public float maxHealth;
     public float currentHealth;
 
-    public float maxHeight = 0f;
+    public float heightSoFar = 0f;
     public float impactCooldown = 0f;
     public float shootTimer = 0f;
 }

@@ -112,7 +112,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void update(float deltaTime) {
-        if (deltaTime > 0.02f) deltaTime = 0.02f;
+        //if (deltaTime > 0.1f) deltaTime = 0.1f;
 
         engine.update(deltaTime);
 
