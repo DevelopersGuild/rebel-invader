@@ -86,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new BoundsSystem());
         engine.addSystem(new StateSystem());
         engine.addSystem(new AnimationSystem());
-        engine.addSystem(new StructureSystem());
+        engine.addSystem(new StructureSystem(level));
         engine.addSystem(new EnemySystem(level));
         engine.addSystem(new RenderingSystem(game.batch));
         engine.addSystem(new PhysicsSystem(world, engine.getSystem(RenderingSystem.class).getCamera()));
@@ -207,6 +207,7 @@ public class GameScreen extends ScreenAdapter {
         guiCam.update();
         game.batch.setProjectionMatrix(guiCam.combined);
         game.batch.begin();
+        updateScore(level.score);
         switch (state) {
             case GAME_RUNNING:
                 presentRunning();
@@ -247,6 +248,18 @@ public class GameScreen extends ScreenAdapter {
         float gameOverWidth = layout.width;
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+    }
+
+    public void updateScore(int score){
+
+        System.out.println(score);
+
+        String scoreText;
+        scoreText = Integer.toString(score);
+        layout.setText(Assets.font, scoreText);
+        float scoreTextWidth = layout.width;
+        float scoreTextHeight = layout.height;
+        Assets.font.draw(game.batch, scoreText, 0, 480);
     }
 
 

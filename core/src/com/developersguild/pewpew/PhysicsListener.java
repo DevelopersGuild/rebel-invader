@@ -24,6 +24,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
      * @param contact
      */
     @Override
+
     public void beginContact(Contact contact) {
         //Gdx.app.log(this.getClass().getSimpleName(), "beginContact() called");
 

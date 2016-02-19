@@ -14,6 +14,7 @@ public class StructureComponent implements Component {
     public static final float DAMAGE = 25f;
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
+    public static final int POINT = 5;
 
     public float maxHealth;
     public float currentHealth;
