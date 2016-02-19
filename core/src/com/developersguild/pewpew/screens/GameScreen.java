@@ -293,7 +293,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void pause() {
         if (state == GAME_RUNNING) {
-            pause();
+            state = GAME_PAUSED;
+            pauseSystems();
         }
     }
 

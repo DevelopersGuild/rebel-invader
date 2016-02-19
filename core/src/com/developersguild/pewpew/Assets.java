@@ -65,6 +65,7 @@ public class Assets {
         playButton = new TextureRegion(uiButtons, 235 - 40 * 2, 0, 40, 50);
 
         background = loadTexture("background.png");
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 
         bullet = loadTexture("bullet.png");
