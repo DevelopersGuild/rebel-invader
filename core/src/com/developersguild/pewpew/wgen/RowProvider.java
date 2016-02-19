@@ -19,4 +19,5 @@ public abstract class RowProvider implements IRowProvider{
 	}
 	
 	protected abstract void makeRow(Level level, int row, Entity player);
+	
 }

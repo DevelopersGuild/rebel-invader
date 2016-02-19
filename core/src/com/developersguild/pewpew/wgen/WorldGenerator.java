@@ -8,7 +8,7 @@ import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 
-public class WorldGenerator implements IRowProvider {
+public class WorldGenerator {
 
 	private final Level level;
 	
@@ -54,6 +54,7 @@ public class WorldGenerator implements IRowProvider {
 			new RowProviderAlienHabitat(),
 			new RowProviderAlienHabitat(),
 			new RowProviderAlienHabitat(),
+			new RowProviderFleetDock(),
 			new RowProviderAlienHabitat(),
 			new RowProviderAlienHabitat(),
 			//TODO order the world providers - this determines world generation
@@ -72,48 +73,6 @@ public class WorldGenerator implements IRowProvider {
 		if(heightAsInt>=lastHeight+1){ //assumes we never miss more than one row
 			lastHeight++;
 			getProvider(heightAsInt).createRow(level, heightAsInt, player);
-		}
-	}
-
-
-
-	//Old-style wgen
-	private float path = 5.0f;
-	private float lastDeltaPath = 0.0f;
-
-	@Override
-	public void createRow(Level level, int row, Entity player) {
-		float baseHeight=row*StructureComponent.HEIGHT;
-		float restrictedArea =
-				PlayerComponent.WIDTH * 1.3f        //Generous width
-				+ lastDeltaPath / 2;            //Plus more if the path is changing sharply, so you can still get through
-		for (int i = 0; i <= Level.LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
-			float x = i * StructureComponent.WIDTH;
-			//Check that we're not stomping the path
-			if ((x > path + restrictedArea || x < path - restrictedArea)) {
-				if (this.level.rand.nextFloat() < 0.2)
-					this.level.createStructure(x, baseHeight, player, Assets.cityRegions[0]);
-			}
-		}
-
-		//Generate enemy
-		if (this.level.rand.nextFloat() < 0.1) {
-			this.level.createEnemy(path, baseHeight, player, this.level.rand.nextInt(Assets.ENEMY_SPRITES));
-		}
-
-		//Move the clear path so you can't just fly in a straight line
-		path += lastDeltaPath;
-
-		lastDeltaPath += (this.level.rand.nextFloat() - 0.5f)//random-walk term, evenly distributed in +-0.5
-				* (1 + baseHeight / Level.LEVEL_HEIGHT);            //plus a difficulty scaling term
-
-		//If the path is outside the world, move it back in, and make it go the other way
-		if (path < 0) {
-			path = 0.2f;
-			lastDeltaPath *= -1;
-		} else if (path > Level.LEVEL_WIDTH) {
-			path = Level.LEVEL_WIDTH - 0.2f;
-			lastDeltaPath *= -1;
 		}
 	}
 }

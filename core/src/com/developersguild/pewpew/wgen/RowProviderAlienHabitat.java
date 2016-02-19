@@ -9,9 +9,11 @@ public class RowProviderAlienHabitat extends RowProvider {
 
 	@Override
 	protected void makeRow(Level level, int row, Entity player) {
-		for(int x=0; x<Level.LEVEL_WIDTH; x+=StructureComponent.WIDTH) {
+		int x=0;
+		for(;x<Level.LEVEL_WIDTH; x+=StructureComponent.WIDTH) {
 			level.createStructure(x, row*StructureComponent.HEIGHT, player, pick(Assets.cityRegions));
 		}
+		level.createStructure(x, row*StructureComponent.HEIGHT, player, pick(Assets.cityRegions));
 	}
 
 }

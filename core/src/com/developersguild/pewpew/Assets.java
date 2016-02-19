@@ -13,8 +13,8 @@ public class Assets {
 
 	public static final int ENEMY_SPRITES = 15;
     public static final int TERRAIN_SPRITES = 3;
-    public static final int WALL_SPRITES = 3;
-    public static final int CITY_SPRITES = 3;
+    public static final int WALL_SPRITES = 4;
+    public static final int CITY_SPRITES = 4;
 
     
     public static BitmapFont font;
