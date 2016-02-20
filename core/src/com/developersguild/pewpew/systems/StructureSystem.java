@@ -65,7 +65,7 @@ public class StructureSystem extends IteratingSystem {
         if (structure.currentHealth <= 0f) {
             state.set(EnemyComponent.STATE_DEAD);
 
-            level.score += StructureComponent.POINT;
+            level.score += StructureComponent.SCORE_VALUE;
         }
 
         checkHealthBounds(structure);

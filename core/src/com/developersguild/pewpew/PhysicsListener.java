@@ -24,7 +24,6 @@ public class PhysicsListener implements ContactListener, EntityListener {
      * @param contact
      */
     @Override
-
     public void beginContact(Contact contact) {
         //Gdx.app.log(this.getClass().getSimpleName(), "beginContact() called");
 
@@ -77,35 +76,6 @@ public class PhysicsListener implements ContactListener, EntityListener {
                 }
             }
         }
-
-        /*
-        // If a is an enemy
-        if (a.getUserData().getClass() == EnemySystem.class) {
-            // If b is a bullet
-            if (b.getUserData() instanceof Entity) {
-                a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
-                b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
-            }
-        }
-
-        // If a is a structure
-        if (a.getUserData().getClass() == StructureSystem.class) {
-            // If b is a bullet
-            if (b.getUserData() instanceof Entity) {
-                a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
-                b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
-            }
-        }
-
-        // If a is a player
-        if (a.getUserData().getClass() == PlayerSystem.class) {
-            // If b is a bullet
-            if (b.getUserData() instanceof Entity) {
-                a.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
-                b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
-            }
-        }
-        */
     }
 
     /**

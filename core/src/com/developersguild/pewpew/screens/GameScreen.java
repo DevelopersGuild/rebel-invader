@@ -250,15 +250,10 @@ public class GameScreen extends ScreenAdapter {
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
     }
 
-    public void updateScore(int score){
-
-        System.out.println(score);
-
+    public void updateScore(int score) {
         String scoreText;
         scoreText = Integer.toString(score);
         layout.setText(Assets.font, scoreText);
-        float scoreTextWidth = layout.width;
-        float scoreTextHeight = layout.height;
         Assets.font.draw(game.batch, scoreText, 0, 480);
     }
 
