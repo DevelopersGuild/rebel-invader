@@ -58,7 +58,8 @@ public class Level {
 
         Entity player = createPlayer();
         createCamera(player);
-        createBackground();
+        createNebula();
+        createStars();
 
         generator = new WorldGenerator(this);
 
@@ -388,14 +389,34 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createBackground() {
+    private void createNebula() {
         Entity entity = engine.createEntity();
 
         BackgroundComponent background = engine.createComponent(BackgroundComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
 
-        texture.region = Assets.backgroundRegion;
+        background.type = BackgroundComponent.TYPE_NEBULA;
+
+        texture.region = Assets.bgNebulaRegion;
+
+        entity.add(background);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
+    }
+
+    private void createStars() {
+        Entity entity = engine.createEntity();
+
+        BackgroundComponent background = engine.createComponent(BackgroundComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+
+        background.type = BackgroundComponent.TYPE_STARS;
+
+        texture.region = Assets.bgStarsRegion;
 
         entity.add(background);
         entity.add(position);

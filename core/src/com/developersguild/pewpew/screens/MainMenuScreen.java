@@ -57,7 +57,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
         game.batch.disableBlending();
         game.batch.begin();
-        game.batch.draw(Assets.backgroundRegion, 0, 0, 320, 480);
+        game.batch.draw(Assets.bgNebulaRegion, 0, 0, 320, 1067);
         game.batch.end();
 
         game.batch.enableBlending();

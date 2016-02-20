@@ -32,8 +32,11 @@ public class Assets {
     public static TextureRegion playButton;
     //public static TextureRegion exitButton;
 
-    public static Texture background;
-    public static TextureRegion backgroundRegion;
+    public static Texture bgNebula;
+    public static TextureRegion bgNebulaRegion;
+
+    public static Texture bgStars;
+    public static TextureRegion bgStarsRegion;
 
     public static Texture bullet;
     public static TextureRegion bulletRegion;
@@ -73,9 +76,13 @@ public class Assets {
         pauseButton = new TextureRegion(uiButtons, 0, 0, 40, 50);
         playButton = new TextureRegion(uiButtons, 235 - 40 * 2, 0, 40, 50);
 
-        background = loadTexture("background.png");
-        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
+        bgNebula = loadTexture("bg_nebula.png");
+        bgNebula.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        bgNebulaRegion = new TextureRegion(bgNebula, 0, 0, 320, 1067);
+
+        bgStars = loadTexture("bg_stars.png");
+        bgStars.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        bgStarsRegion = new TextureRegion(bgStars, 0, 0, 320, 480);
 
         bullet = loadTexture("bullet.png");
         bulletRegion = new TextureRegion(bullet, 0, 0, 8, 8);

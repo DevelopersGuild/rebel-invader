@@ -17,17 +17,23 @@ import com.developersguild.pewpew.components.TransformComponent;
  */
 public class BackgroundSystem extends IteratingSystem {
     private OrthographicCamera camera;
+
+    private ComponentMapper<BackgroundComponent> bm;
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<TextureComponent> txm;
 
-    float bgStep;
+    float nebulaStep;
+    float starsStep;
 
     public BackgroundSystem() {
         super(Family.all(BackgroundComponent.class).get());
+
+        bm = ComponentMapper.getFor(BackgroundComponent.class);
         txm = ComponentMapper.getFor(TextureComponent.class);
         tm = ComponentMapper.getFor(TransformComponent.class);
 
-        bgStep = 0f;
+        nebulaStep = 0f;
+        starsStep = 0f;
     }
 
     public void setCamera(OrthographicCamera camera) {
@@ -35,18 +41,19 @@ public class BackgroundSystem extends IteratingSystem {
     }
 
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-
-        bgStep += deltaTime / 10f;
-    }
-
-    @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        BackgroundComponent bg = bm.get(entity);
         TextureComponent tx = txm.get(entity);
         TransformComponent t = tm.get(entity);
 
-        tx.region = new TextureRegion(Assets.background, 0, -bgStep, Level.LEVEL_WIDTH, Level.SCREEN_HEIGHT);
+        if (bg.type == BackgroundComponent.TYPE_NEBULA) {
+            nebulaStep += deltaTime * BackgroundComponent.NEBULA_VELOCITY_MULTIPLIER / 10f;
+            tx.region = new TextureRegion(Assets.bgNebula, 0, -nebulaStep, Level.LEVEL_WIDTH, Level.SCREEN_HEIGHT);
+        } else if (bg.type == BackgroundComponent.TYPE_STARS) {
+            starsStep += deltaTime * BackgroundComponent.STARS_VELOCITY_MULTIPLIER / 10f;
+            tx.region = new TextureRegion(Assets.bgStars, 0, -starsStep, Level.LEVEL_WIDTH, Level.SCREEN_HEIGHT);
+        }
+
         t.pos.set(camera.position.x, camera.position.y, 10.0f);
     }
 }
