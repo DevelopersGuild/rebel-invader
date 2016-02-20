@@ -109,6 +109,7 @@ public class EnemySystem extends IteratingSystem {
         // Death
         if (enemy.currentHealth <= 0f) {
             state.set(EnemyComponent.STATE_DEAD);
+            level.score += EnemyComponent.SCORE_VALUE;
         }
 
         checkHealthBounds(enemy);

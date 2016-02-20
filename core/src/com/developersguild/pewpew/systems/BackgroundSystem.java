@@ -16,11 +16,10 @@ import com.developersguild.pewpew.components.TransformComponent;
  * Created by Vihan on 1/10/2016.
  */
 public class BackgroundSystem extends IteratingSystem {
+    float bgStep;
     private OrthographicCamera camera;
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<TextureComponent> txm;
-
-    float bgStep;
 
     public BackgroundSystem() {
         super(Family.all(BackgroundComponent.class).get());

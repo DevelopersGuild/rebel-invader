@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
@@ -24,8 +25,11 @@ public class StructureSystem extends IteratingSystem {
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<StateComponent> stm;
 
-    public StructureSystem() {
+    private Level level;
+
+    public StructureSystem(Level level) {
         super(family);
+        this.level = level;
 
         ComponentMapper.getFor(TransformComponent.class);
         sm = ComponentMapper.getFor(StructureComponent.class);
@@ -60,6 +64,8 @@ public class StructureSystem extends IteratingSystem {
         // Death
         if (structure.currentHealth <= 0f) {
             state.set(EnemyComponent.STATE_DEAD);
+
+            level.score += StructureComponent.SCORE_VALUE;
         }
 
         checkHealthBounds(structure);
