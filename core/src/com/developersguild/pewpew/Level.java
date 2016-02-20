@@ -3,6 +3,7 @@ package com.developersguild.pewpew;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -24,6 +25,7 @@ import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 import com.developersguild.pewpew.systems.RenderingSystem;
+import com.developersguild.pewpew.wgen.WorldGenerator;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -56,9 +58,10 @@ public class Level {
 
         Entity player = createPlayer();
         createCamera(player);
-        createBackground();
+        createNebula();
+        createStars();
 
-        generator = new WorldGenerator();
+        generator = new WorldGenerator(this);
 
         generateObstacles(1.5f * SCREEN_HEIGHT, player);
 
@@ -144,7 +147,7 @@ public class Level {
         return entity;
     }
 
-    private void createStructure(float x, float y, Entity player) {
+    public void createStructure(float x, float y, Entity player, TextureRegion region) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -168,7 +171,7 @@ public class Level {
         position.pos.set(x, y, 1.0f);
         position.scale.set(1f, 1f);
 
-        texture.region = Assets.terrainRegions[rand.nextInt(Assets.TERRAIN_SPRITES)];
+        texture.region = region;
 
         // Create body
         BodyDef bodyDef = new BodyDef();
@@ -200,7 +203,7 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createEnemy(float x, float y, Entity player) {
+    public void createEnemy(float x, float y, Entity player, int textureIdx) {
         Entity entity = engine.createEntity();
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
@@ -225,7 +228,7 @@ public class Level {
         position.pos.set(x, y, 1f);
         position.scale.set(2f, 2f);
 
-        texture.region = Assets.enemyRegions[rand.nextInt(Assets.ENEMY_SPRITES)];
+        texture.region = Assets.enemyRegions[textureIdx];
 
         // Create player body
         BodyDef bodyDef = new BodyDef();
@@ -386,14 +389,34 @@ public class Level {
         engine.addEntity(entity);
     }
 
-    private void createBackground() {
+    private void createNebula() {
         Entity entity = engine.createEntity();
 
         BackgroundComponent background = engine.createComponent(BackgroundComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TransformComponent position = engine.createComponent(TransformComponent.class);
 
-        texture.region = Assets.backgroundRegion;
+        background.type = BackgroundComponent.TYPE_NEBULA;
+
+        texture.region = Assets.bgNebulaRegion;
+
+        entity.add(background);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
+    }
+
+    private void createStars() {
+        Entity entity = engine.createEntity();
+
+        BackgroundComponent background = engine.createComponent(BackgroundComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+
+        background.type = BackgroundComponent.TYPE_STARS;
+
+        texture.region = Assets.bgStarsRegion;
 
         entity.add(background);
         entity.add(position);
@@ -407,63 +430,4 @@ public class Level {
         generator.provideWorld(heightSoFar, player);
         playerHeight = heightSoFar;
     }
-
-    private class WorldGenerator {
-
-        /**
-         * How far up has been pre-generated
-         */
-        private float height = 8;
-        /**
-         * This is the X-coordinate of the path that the player can follow.
-         * The path is kept clear of all obstacles.
-         */
-        private float path = 5.0f;
-        /**
-         * Each step, path += lastDeltaPath. lastDeltaPath itself changes by a random walk.
-         */
-        private float lastDeltaPath = 0.0f;
-
-        public void provideWorld(float heightNeeded, Entity player) {
-            //Make sure generation has made it off screen above the requested height
-            while (height < heightNeeded + 1.5f * SCREEN_HEIGHT) {
-                //Advance world generation
-                height += StructureComponent.HEIGHT;
-                float restrictedArea =
-                        PlayerComponent.WIDTH * 1.3f        //Generous width
-                                - height / LEVEL_HEIGHT * 0.4f//Minus a difficulty scaling term
-                                + lastDeltaPath / 2;            //Plus more if the path is changing sharply, so you can still get through
-                for (int i = 0; i <= LEVEL_WIDTH / StructureComponent.WIDTH + 1; i++) {
-                    float x = i * StructureComponent.WIDTH;
-                    //Check that we're not stomping the path
-                    if ((x > path + restrictedArea || x < path - restrictedArea)) {
-                        if (rand.nextFloat() < 0.2)
-                            createStructure(x, height, player);
-                    }
-                }
-
-                //Generate enemy
-                if (rand.nextFloat() < 0.1) {
-                    createEnemy(path, height, player);
-                }
-
-                //Move the clear path so you can't just fly in a straight line
-                path += lastDeltaPath;
-
-                lastDeltaPath += (rand.nextFloat() - 0.5f)//random-walk term, evenly distributed in +-0.5
-                        * (1 + height / LEVEL_HEIGHT);            //plus a difficulty scaling term
-
-                //If the path is outside the world, move it back in, and make it go the other way
-                if (path < 0) {
-                    path = 0.2f;
-                    lastDeltaPath *= -1;
-                } else if (path > LEVEL_WIDTH) {
-                    path = LEVEL_WIDTH - 0.2f;
-                    lastDeltaPath *= -1;
-                }
-            }
-            // create enemies
-        }
-    }
-
 }
