@@ -150,7 +150,7 @@ public class GameScreen extends ScreenAdapter {
         float accelX = 0.0f;
 
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
-            accelX = Gdx.input.getAccelerometerX();
+            if (Math.abs(Gdx.input.getAccelerometerX()) > 0.8f) accelX = Gdx.input.getAccelerometerX();
             if (Gdx.input.justTouched()) playerShoot();
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;

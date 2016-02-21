@@ -10,7 +10,7 @@ public class PlayerComponent implements Component {
     public static final int STATE_NORMAL = 0;
     public static final int STATE_KNOCKED_BACK = 1;
     public static final float BULLET_DAMAGE = 15f;
-    public static final float VELOCITY_X = 2500f;
+    public static final float VELOCITY_X = 1500f;
     public static final float VELOCITY_Y = 80f;
     public static final float WIDTH = 2f;
     public static final float HEIGHT = 2f;

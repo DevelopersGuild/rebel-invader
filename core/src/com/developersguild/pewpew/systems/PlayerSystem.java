@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
@@ -136,16 +137,20 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         // Tilting
-        if (mov.velocity.x >= 2f) {
-            t.rotation = -0.1f;
+        if (Math.abs(mov.velocity.x) >= 1f ) {
+            t.rotation = t.rotation - 0.01f * mov.velocity.x;
+        } else if (Math.abs(mov.velocity.x) > 0f) {
+            t.rotation = t.rotation + 0.01f * mov.velocity.x;
+        } else {
+            t.rotation = 0f;
         }
 
-        if (mov.velocity.x <= -2f) {
+        if (t.rotation > 0.1f) {
             t.rotation = 0.1f;
         }
 
-        if (mov.velocity.x < 1f && mov.velocity.x > -1f) {
-            t.rotation = 0.0f;
+        if (t.rotation < -0.1f) {
+            t.rotation = -0.1f;
         }
 
         player.heightSoFar = Math.max(t.pos.y, player.heightSoFar);
