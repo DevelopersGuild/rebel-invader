@@ -48,10 +48,10 @@ public class BackgroundSystem extends IteratingSystem {
 
         if (bg.type == BackgroundComponent.TYPE_NEBULA) {
             nebulaStep += deltaTime * BackgroundComponent.NEBULA_VELOCITY_MULTIPLIER / 10f;
-            tx.region = new TextureRegion(Assets.bgNebula, 0, -nebulaStep, Level.LEVEL_WIDTH, Level.SCREEN_HEIGHT);
+            tx.region = new TextureRegion(Assets.bgNebula, 0, -nebulaStep, Level.LEVEL_WIDTH / 2, Level.SCREEN_HEIGHT);
         } else if (bg.type == BackgroundComponent.TYPE_STARS) {
             starsStep += deltaTime * BackgroundComponent.STARS_VELOCITY_MULTIPLIER / 10f;
-            tx.region = new TextureRegion(Assets.bgStars, 0, -starsStep, Level.LEVEL_WIDTH, Level.SCREEN_HEIGHT);
+            tx.region = new TextureRegion(Assets.bgStars, 0, -starsStep, Level.LEVEL_WIDTH / 2, Level.SCREEN_HEIGHT);
         }
 
         t.pos.set(camera.position.x, camera.position.y, 10.0f);
