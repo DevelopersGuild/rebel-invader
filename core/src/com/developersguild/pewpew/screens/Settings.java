@@ -30,7 +30,7 @@ public class Settings {
 			String[] strings = filehandle.readString().split("\n");
 
 			for (int i = 0; i < 10; i++) {
-				highscores[i] = Integer.parseInt(strings[i+1]);
+				highscores[i] = Integer.parseInt(strings[i]);
 			}
 		} catch (Throwable e) {
 			// :( It's ok we have defaults
@@ -40,6 +40,8 @@ public class Settings {
 	public static void save () {
 		try {
 			FileHandle filehandle = Gdx.files.external(file);
+
+			filehandle.delete();	// Deletes the old scores
 
 			for (int i = 0; i < 10; i++) {
 				filehandle.writeString(Integer.toString(highscores[i])+"\n", true);

@@ -28,6 +28,7 @@ import com.developersguild.pewpew.PewPew;
 
 public class HighscoresScreen extends ScreenAdapter {
 	PewPew game;
+	Settings settings;
 	OrthographicCamera guiCam;
 	String[] highScores;
 	float xOffset = 0;
@@ -35,6 +36,7 @@ public class HighscoresScreen extends ScreenAdapter {
 
 	public HighscoresScreen(PewPew game) {
 		this.game = game;
+		settings.load();
 
 		guiCam = new OrthographicCamera(320, 480);
 		guiCam.position.set(320 / 2, 480 / 2, 0);

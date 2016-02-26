@@ -17,7 +17,6 @@ import com.developersguild.pewpew.PewPew;
 public class MainMenuScreen extends ScreenAdapter {
 
     PewPew game;
-    Settings settings;
     OrthographicCamera guiCam;
     Rectangle playBounds;
     Rectangle scoreBounds;
@@ -34,8 +33,6 @@ public class MainMenuScreen extends ScreenAdapter {
         scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         exitBounds = new Rectangle(10, 94, 300, 36);
         touchPoint = new Vector3();
-
-        settings.load();
     }
 
     public void update() {
