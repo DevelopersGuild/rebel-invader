@@ -323,4 +323,8 @@ public class GameScreen extends ScreenAdapter {
         }
         deadEntities.add(e);
     }
+
+    public Level getLevel() {
+        return level;
+    }
 }

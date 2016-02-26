@@ -22,4 +22,6 @@ public class HealthComponent implements Component {
     public int belongsTo;
     public float lengthRatio;
     public float widthRatio;
+
+    public boolean doRender = true;
 }

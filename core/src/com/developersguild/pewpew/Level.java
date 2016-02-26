@@ -355,6 +355,7 @@ public class Level {
         health.target = target;
         health.targetPos = target.getComponent(TransformComponent.class).pos;
         health.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
+        health.doRender = false;
 
         // Determine type of entity
         if (target.getComponent(PlayerComponent.class) != null) {
