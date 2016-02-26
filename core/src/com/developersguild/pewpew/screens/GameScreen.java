@@ -48,6 +48,7 @@ public class GameScreen extends ScreenAdapter {
 
     PewPew game;
     Level level;
+    Settings settings;
     PooledEngine engine;
     World world;
     PhysicsListener listener;
@@ -192,6 +193,8 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.justTouched()) {
             resumeSystems();
             game.setScreen(new MainMenuScreen(game));
+            settings.addScore(level.score);
+            settings.save();
         }
     }
 
@@ -254,7 +257,7 @@ public class GameScreen extends ScreenAdapter {
         String scoreText;
         scoreText = Integer.toString(score);
         layout.setText(Assets.font, scoreText);
-        Assets.font.draw(game.batch, scoreText, 0, 480);
+        Assets.font.draw(game.batch, scoreText, 0 + 10, 480 - 10);
     }
 
 

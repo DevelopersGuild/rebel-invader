@@ -25,6 +25,9 @@ public class Assets {
     public static Texture exitText;
     public static TextureRegion exitTextRegion;
 
+    public static Texture scoreText;
+    public static TextureRegion scoreTextRegion;
+
     public static Texture uiButtons;
     public static TextureRegion pauseButton;
     //public static TextureRegion reloadButton;
@@ -71,6 +74,9 @@ public class Assets {
 
         exitText = loadTexture("exit.png");
         exitTextRegion = new TextureRegion(exitText, 160 - 150, 200 - 18 - 36, 300, 36);
+
+        scoreText = loadTexture("score.png");
+        scoreTextRegion = new TextureRegion(scoreText, 160 - 160, 200 - 18 - 36 * 2, 300, 36);
 
         uiButtons = loadTexture("ui_buttons.png");
         pauseButton = new TextureRegion(uiButtons, 0, 0, 40, 50);
