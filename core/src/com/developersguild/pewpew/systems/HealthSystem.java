@@ -51,6 +51,9 @@ public class HealthSystem extends IteratingSystem {
         pos.pos.x = health.targetPos.x;
         pos.pos.y = health.targetPos.y - health.target.getComponent(BoundsComponent.class).bounds.height / 2f - 0.1f;
 
+        // Fix(?) for blinking health bar
+        if(pos.pos.y - screen.getLevel().playerHeight <= 30) health.doRender = true;
+
         if (health.target.getComponent(PlayerComponent.class) != null) {
             health.currentHealth = health.target.getComponent(PlayerComponent.class).currentHealth;
             if (health.currentHealth != healthLastFrame) updateHealthBar(entity);
@@ -65,6 +68,7 @@ public class HealthSystem extends IteratingSystem {
         healthLastFrame = health.currentHealth;
 
         if (health.currentHealth <= 0) {
+            health.doRender = false;
             screen.markEntityForRemoval(health.target);
             screen.markEntityForRemoval(entity);
         }
@@ -77,7 +81,7 @@ public class HealthSystem extends IteratingSystem {
         // Update healthLength
         float healthLength = health.currentHealth / health.maxHealth * health.lengthRatio;
 
-        checkHealthBounds(health);
+//        checkHealthBounds(health);
 
         pos.scale.set(healthLength, health.widthRatio);
     }
@@ -96,10 +100,10 @@ public class HealthSystem extends IteratingSystem {
         // Do the same for the actual target entity too
         if (health.target.getComponent(PlayerComponent.class) != null) {
             health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
-        } else if (health.target.getComponent(PlayerComponent.class) != null) {
-            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
-        } else if (health.target.getComponent(PlayerComponent.class) != null) {
-            health.target.getComponent(PlayerComponent.class).currentHealth = health.currentHealth;
+        } else if (health.target.getComponent(StructureComponent.class) != null) {
+            health.target.getComponent(StructureComponent.class).currentHealth = health.currentHealth;
+        } else if (health.target.getComponent(EnemyComponent.class) != null) {
+            health.target.getComponent(EnemyComponent.class).currentHealth = health.currentHealth;
         }
     }
 

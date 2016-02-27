@@ -16,4 +16,9 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener getApplicationListener() {
         return new PewPew();
     }
+
+    @Override
+    public ApplicationListener createApplicationListener() {
+        return null;
+    }
 }
