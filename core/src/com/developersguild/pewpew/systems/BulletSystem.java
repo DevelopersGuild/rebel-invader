@@ -60,9 +60,6 @@ public class BulletSystem extends IteratingSystem {
 
         body.body.setUserData(entity);
 
-        // Fixes stray bullets
-        mov.velocity.x = 0f;
-
         if (bullet.origin.getComponent(PlayerComponent.class) != null) { // If player fired
             mov.velocity.y = BulletComponent.PLAYER_BULLET_VELOCITY * deltaTime;
         } else { // If anyone else fired

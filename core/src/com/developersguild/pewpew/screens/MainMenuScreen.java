@@ -4,7 +4,9 @@ package com.developersguild.pewpew.screens;
  * Created by Denny on 2/13/2016.
  */
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,9 +19,9 @@ import com.developersguild.pewpew.PewPew;
 public class MainMenuScreen extends ScreenAdapter {
 
     PewPew game;
-    Settings settings;
     OrthographicCamera guiCam;
     Rectangle playBounds;
+    Rectangle helpBounds;
     Rectangle scoreBounds;
     Rectangle exitBounds;
     Vector3 touchPoint;
@@ -30,12 +32,11 @@ public class MainMenuScreen extends ScreenAdapter {
 
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-        playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
+        playBounds = new Rectangle(160 - 150, 200 + 80, 300, 36);
+        helpBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
         scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         exitBounds = new Rectangle(10, 94, 300, 36);
         touchPoint = new Vector3();
-
-        settings.load();
     }
 
     public void update() {
@@ -53,6 +54,11 @@ public class MainMenuScreen extends ScreenAdapter {
 
             if (scoreBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new HighscoresScreen(game));
+                return;
+            }
+
+            if (helpBounds.contains(touchPoint.x, touchPoint.y)) {
+                game.setScreen(new HelpScreen(game));
                 return;
             }
         }
@@ -73,8 +79,9 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.enableBlending();
         game.batch.begin();
         //Draw 'Play' and 'Exit' buttons
-        game.batch.draw(Assets.playText, 10, 218, 300, 36);
-        game.batch.draw(Assets.scoreText, 10, 156, 300, 36);
+        game.batch.draw(Assets.playText, 10, 280, 300, 36);
+        game.batch.draw(Assets.helpText, 20, 218, 300, 36);
+        game.batch.draw(Assets.scoreText, 30, 156, 300, 36);
         game.batch.draw(Assets.exitText, 10, 94, 300, 36);
 
         game.batch.end();
