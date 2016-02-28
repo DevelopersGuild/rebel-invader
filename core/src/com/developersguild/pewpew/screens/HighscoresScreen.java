@@ -52,8 +52,9 @@ public class HighscoresScreen extends ScreenAdapter {
 		// Two digit wide rank
 		highScores[9] = 10 + ". " + Settings.highscores[9];
 		layout.setText(Assets.font, highScores[9]);
-
 		xOffset = Math.max(layout.width, xOffset);
+
+		// Center the string
 		xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
 	}
 
@@ -71,7 +72,7 @@ public class HighscoresScreen extends ScreenAdapter {
 		game.batch.setProjectionMatrix(guiCam.combined);
 		game.batch.disableBlending();
 		game.batch.begin();
-		game.batch.draw(Assets.bgNebula, 0, 0, 320, 480);
+		game.batch.draw(Assets.bgNebulaRegion, 0, 0, 320, 1067);
 		game.batch.end();
 
 		game.batch.enableBlending();

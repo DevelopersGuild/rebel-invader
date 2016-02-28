@@ -19,14 +19,9 @@ public class HelpScreen extends ScreenAdapter{
     PewPew game;
     OrthographicCamera guiCam;
     private GlyphLayout layout = new GlyphLayout();
-    String message = "Press 'A' to move left.";
-    String messageb = "Tilt device left to move left.";
-    String message2 = "Press 'D' to move right.";
-    String message2b = "Tilt device right to move right.";
-    String message3 = "Press 'W' to shoot.";
-    String message3b = "Tap screen to shoot.";
-    String message4 = "Kill enemies to win points.";
-    String message5 = "Reach the end to win!";
+    String[] message = {"Press 'A' to move left.", "Press 'D' to move right.", "Press 'W' to shoot.", "Kill enemies to win points.", "Reach the end to win!"};
+    String[] messageb = {"Tilt device left to move left.", "Tilt device right to move right.", "Tap screen to shoot.", "Kill enemies to win points.", "Reach the end to win!"};
+    float xOffset = 0;
 
 
 
@@ -48,35 +43,37 @@ public class HelpScreen extends ScreenAdapter{
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         guiCam.update();
         game.batch.begin();
-        game.batch.draw(Assets.bgNebula, 0, 0, 320, 480);
+        game.batch.draw(Assets.bgNebulaRegion, 0, 0, 320, 1067);
         game.batch.end();
 
         game.batch.begin();
         Application.ApplicationType appType = Gdx.app.getType();
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
-            layout.setText(Assets.font, messageb);
-            Assets.font.draw(game.batch, messageb, 80, 300);
-            layout.setText(Assets.font, message2b);
-            Assets.font.draw(game.batch, message2b, 80, 290);
-            layout.setText(Assets.font, message3b);
-            Assets.font.draw(game.batch, message3b, 80, 280);
-            layout.setText(Assets.font, message4);
-            Assets.font.draw(game.batch, message4, 80, 270);
-            layout.setText(Assets.font, message5);
-            Assets.font.draw(game.batch, message5, 80, 260);
-        } else {
-            layout.setText(Assets.font, message);
-            Assets.font.draw(game.batch, message, 80, 300);
-            layout.setText(Assets.font, message2);
-            Assets.font.draw(game.batch, message2, 80, 290);
-            layout.setText(Assets.font, message3);
-            Assets.font.draw(game.batch, message3, 80, 280);
-            layout.setText(Assets.font, message4);
-            Assets.font.draw(game.batch, message4, 80, 270);
-            layout.setText(Assets.font, message5);
-            Assets.font.draw(game.batch, message5, 80, 260);
-        }
+            // Get width of largest string
+            for (String element : messageb) {
+                layout.setText(Assets.font, element);
+                xOffset = Math.max(layout.width, xOffset);
+            }
+            // Center the Strings
+            xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
+            // Draw the Strings
+            for (int i = 0; i < 5; i++) {
+                Assets.font.draw(game.batch, messageb[i], xOffset, 300 + (i * -10));
+            }
 
+        } else {
+            // Get width of largest string
+            for (String element : message) {
+                layout.setText(Assets.font, element);
+                xOffset = Math.max(layout.width, xOffset);
+            }
+            // Center the Strings
+            xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
+            // Draw the Strings
+            for (int i = 0; i < 5; i++) {
+                Assets.font.draw(game.batch, message[i], xOffset, 300 + (i * -10));
+            }
+        }
 
         game.batch.end();
 

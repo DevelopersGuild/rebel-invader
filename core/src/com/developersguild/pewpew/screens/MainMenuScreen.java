@@ -80,8 +80,8 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.begin();
         //Draw 'Play' and 'Exit' buttons
         game.batch.draw(Assets.playText, 10, 280, 300, 36);
-        game.batch.draw(Assets.helpText, 20, 218, 300, 36);
-        game.batch.draw(Assets.scoreText, 30, 156, 300, 36);
+        game.batch.draw(Assets.helpText, 10, 218, 300, 36);
+        game.batch.draw(Assets.scoreText, 10, 156, 300, 36);
         game.batch.draw(Assets.exitText, 10, 94, 300, 36);
 
         game.batch.end();
