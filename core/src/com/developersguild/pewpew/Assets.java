@@ -1,6 +1,8 @@
 package com.developersguild.pewpew;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +17,11 @@ public class Assets {
     public static final int TERRAIN_SPRITES = 3;
     public static final int WALL_SPRITES = 4;
     public static final int CITY_SPRITES = 4;
+    public static Music musicMenu;
+    public static Music musicGame;
+    public static Sound click;
+    public static Sound shot;
+    public static Sound crash;
 
 
     public static BitmapFont font;
@@ -133,5 +140,19 @@ public class Assets {
             enemies[i] = loadTexture(i + 1 + ".png");
             enemyRegions[i] = new TextureRegion(enemies[i], 0, 0, 32, 32);
         }
+
+        musicMenu = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_01_-_RottenMage_SpaceJacked_OST_01.mp3"));
+        musicMenu.setVolume(0.1f);
+        musicMenu.setLooping(true);
+
+        musicGame = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_05_-_RottenMage_SpaceJacked_OST_05.mp3"));
+        musicGame.setVolume(0.1f);
+        musicGame.setLooping(true);
+
+        click = Gdx.audio.newSound(Gdx.files.internal("click.wav"));
+
+        shot = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
+
+        crash = Gdx.audio.newSound(Gdx.files.internal("crash.wav"));
     }
 }

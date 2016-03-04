@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.developersguild.pewpew.Assets;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
@@ -118,14 +119,17 @@ public class PlayerSystem extends IteratingSystem {
                 player.currentHealth -= StructureComponent.DAMAGE;
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
+                Assets.crash.play(0.2f);
             } else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
                 player.currentHealth -= EnemyComponent.TOUCH_DAMAGE;
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
+                Assets.crash.play(0.2f);
             } else if (collisionCode == BodyComponent.PLAYER_BULLET_COLLISION) {
                 player.currentHealth -= EnemyComponent.BULLET_DAMAGE;
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
+                Assets.crash.play(0.2f);
             }
         }
 

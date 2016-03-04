@@ -61,6 +61,7 @@ public class HighscoresScreen extends ScreenAdapter {
 	public void update () {
 		if (Gdx.input.justTouched()) {
 			game.setScreen(new MainMenuScreen(game));
+			Assets.click.play();
 		}
 	}
 

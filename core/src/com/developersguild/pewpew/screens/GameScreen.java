@@ -110,6 +110,9 @@ public class GameScreen extends ScreenAdapter {
         pauseBounds = new Rectangle(320 - 40 - 5, 480 - 50 - 5, 40, 50);
 
         resumeSystems();
+
+        Assets.musicMenu.stop();
+        Assets.musicGame.play();
     }
 
     public void update(float deltaTime) {
@@ -140,6 +143,7 @@ public class GameScreen extends ScreenAdapter {
             if (pauseBounds.contains(touchPoint.x, touchPoint.y)) {
                 state = GAME_PAUSED;
                 pauseSystems();
+                Assets.click.play();
                 return;
             }
         }
@@ -184,6 +188,7 @@ public class GameScreen extends ScreenAdapter {
 
             if (pauseBounds.contains(touchPoint.x, touchPoint.y)) {
                 resume();
+                Assets.click.play();
                 return;
             }
         }
@@ -203,6 +208,7 @@ public class GameScreen extends ScreenAdapter {
         if (player.shootTimer <= currentTime) {
             player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
             engine.getSystem(PlayerSystem.class).requestBullet();
+            Assets.shot.play(0.3f);
         }
     }
 
@@ -243,6 +249,7 @@ public class GameScreen extends ScreenAdapter {
         float gameOverWidth = layout.width;
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+        Assets.musicGame.stop();
     }
 
     private void presentWin() {
@@ -276,6 +283,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PhysicsSystem.class).setProcessing(false);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(false);
         engine.getSystem(BulletSystem.class).setProcessing(false);
+        Assets.musicGame.pause();
     }
 
     private void resumeSystems() {
@@ -293,6 +301,7 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(true);
         engine.getSystem(BulletSystem.class).setProcessing(true);
+        Assets.musicGame.play();
     }
 
     @Override

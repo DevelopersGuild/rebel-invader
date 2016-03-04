@@ -37,6 +37,7 @@ public class MainMenuScreen extends ScreenAdapter {
         scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         exitBounds = new Rectangle(10, 94, 300, 36);
         touchPoint = new Vector3();
+        Assets.musicMenu.play();
     }
 
     public void update() {
@@ -45,6 +46,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
             if (playBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new GameScreen(game));
+                Assets.click.play();
                 return;
             }
             if (exitBounds.contains(touchPoint.x, touchPoint.y)) {
@@ -54,11 +56,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
             if (scoreBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new HighscoresScreen(game));
+                Assets.click.play();
                 return;
             }
 
             if (helpBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new HelpScreen(game));
+                Assets.click.play();
                 return;
             }
         }
