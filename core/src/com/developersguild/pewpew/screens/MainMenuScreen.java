@@ -4,7 +4,9 @@ package com.developersguild.pewpew.screens;
  * Created by Denny on 2/13/2016.
  */
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +21,7 @@ public class MainMenuScreen extends ScreenAdapter {
     PewPew game;
     OrthographicCamera guiCam;
     Rectangle playBounds;
+    Rectangle helpBounds;
     Rectangle scoreBounds;
     Rectangle exitBounds;
     Vector3 touchPoint;
@@ -29,10 +32,12 @@ public class MainMenuScreen extends ScreenAdapter {
 
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-        playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
+        playBounds = new Rectangle(160 - 150, 200 + 80, 300, 36);
+        helpBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
         scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         exitBounds = new Rectangle(10, 94, 300, 36);
         touchPoint = new Vector3();
+        Assets.musicMenu.play();
     }
 
     public void update() {
@@ -41,6 +46,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
             if (playBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new GameScreen(game));
+                Assets.click.play();
                 return;
             }
             if (exitBounds.contains(touchPoint.x, touchPoint.y)) {
@@ -50,6 +56,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
             if (scoreBounds.contains(touchPoint.x, touchPoint.y)) {
                 game.setScreen(new HighscoresScreen(game));
+                Assets.click.play();
+                return;
+            }
+
+            if (helpBounds.contains(touchPoint.x, touchPoint.y)) {
+                game.setScreen(new HelpScreen(game));
+                Assets.click.play();
                 return;
             }
         }
@@ -70,7 +83,8 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.enableBlending();
         game.batch.begin();
         //Draw 'Play' and 'Exit' buttons
-        game.batch.draw(Assets.playText, 10, 218, 300, 36);
+        game.batch.draw(Assets.playText, 10, 280, 300, 36);
+        game.batch.draw(Assets.helpText, 10, 218, 300, 36);
         game.batch.draw(Assets.scoreText, 10, 156, 300, 36);
         game.batch.draw(Assets.exitText, 10, 94, 300, 36);
 
