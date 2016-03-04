@@ -157,6 +157,7 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) missileShoot();
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
@@ -203,6 +204,14 @@ public class GameScreen extends ScreenAdapter {
         if (player.shootTimer <= currentTime) {
             player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
             engine.getSystem(PlayerSystem.class).requestBullet();
+        }
+    }
+
+    private void missileShoot() {
+        PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
+        if (player.shootTimer <= currentTime) {
+            player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
+            engine.getSystem(PlayerSystem.class).requestMissile();
         }
     }
 

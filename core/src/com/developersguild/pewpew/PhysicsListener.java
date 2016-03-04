@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.developersguild.pewpew.components.BodyComponent;
 import com.developersguild.pewpew.components.BulletComponent;
+import com.developersguild.pewpew.components.MissileComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.systems.EnemySystem;
 import com.developersguild.pewpew.systems.PlayerSystem;
@@ -52,30 +53,36 @@ public class PhysicsListener implements ContactListener, EntityListener {
                     b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                 }
             }
+
+            if (((Entity) a.getUserData()).getComponent(MissileComponent.class).origin.getComponent(PlayerComponent.class) != null) {
+
+            }
         }
 
         if (b.getUserData() instanceof Entity) {
             // If bullet came from a player
             if (((Entity) b.getUserData()).getComponent(BulletComponent.class).origin.getComponent(PlayerComponent.class) != null) {
-                // If b is a structure
+                // If a is a structure
                 if (a.getUserData().getClass() == StructureSystem.class) {
                     a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
                     b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
                 }
 
-                // If b is an enemy
+                // If a is an enemy
                 if (a.getUserData().getClass() == EnemySystem.class) {
                     a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
                     b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
                 }
             } else { // If bullet came from anyone except player
-                // If b is a player
+                // If a is a player
                 if (a.getUserData().getClass() == PlayerSystem.class) {
                     a.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                     b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                 }
             }
         }
+
+
     }
 
     /**
