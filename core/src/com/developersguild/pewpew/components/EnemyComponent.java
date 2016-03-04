@@ -20,9 +20,11 @@ public class EnemyComponent implements Component {
     public static final float BULLETS_PER_SECOND = 0.5f;
     public static final float FIRE_RATE = 1f / BULLETS_PER_SECOND;
     public static final int SCORE_VALUE = 10;
+    public static final float POWER_VALUE = 10;
 
     public Entity target;
     public float maxHealth;
     public float currentHealth;
     public float shootTimer = 0f;
+    public boolean killedByPlayer = false;
 }
