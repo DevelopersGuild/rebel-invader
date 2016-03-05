@@ -53,10 +53,6 @@ public class PhysicsListener implements ContactListener, EntityListener {
                     b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                 }
             }
-
-            if (((Entity) a.getUserData()).getComponent(MissileComponent.class).origin.getComponent(PlayerComponent.class) != null) {
-
-            }
         }
 
         if (b.getUserData() instanceof Entity) {
