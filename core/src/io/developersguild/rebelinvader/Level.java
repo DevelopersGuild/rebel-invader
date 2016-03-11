@@ -389,7 +389,8 @@ public class Level {
             position.scale.set(health.lengthRatio, health.widthRatio);
         }
 
-        texture.region = Assets.healthRegion;
+        if(target.getComponent(PlayerComponent.class) != null) texture.region = Assets.healthRegionGreen;
+        else texture.region = Assets.healthRegionRed;
 
         entity.add(health);
         entity.add(position);
@@ -426,7 +427,7 @@ public class Level {
         power.targetPos.y -= power.widthRatio;
 
         // Need a different texture
-        texture.region = Assets.healthRegion;
+        texture.region = Assets.healthRegionBlue;
 
         entity.add(power);
         entity.add(position);

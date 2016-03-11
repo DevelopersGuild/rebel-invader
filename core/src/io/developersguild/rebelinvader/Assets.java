@@ -66,8 +66,14 @@ public class Assets {
     public static Texture ship;
     public static Animation shipNormal;
 
-    public static Texture healthBar;
-    public static TextureRegion healthRegion;
+    public static Texture healthBarRed;
+    public static TextureRegion healthRegionRed;
+
+    public static Texture healthBarGreen;
+    public static TextureRegion healthRegionGreen;
+
+    public static Texture healthBarBlue;
+    public static TextureRegion healthRegionBlue;
 
     public static Texture[] enemies;
     public static TextureRegion[] enemyRegions;
@@ -131,8 +137,14 @@ public class Assets {
         shipNormal = new Animation(0.02f, new TextureRegion(ship, 0, 0, 96, 96));
         shipNormal.setPlayMode(Animation.PlayMode.LOOP);
 
-        healthBar = loadTexture("health_bar.png");
-        healthRegion = new TextureRegion(healthBar, 0, 0, 95, 5);
+        healthBarRed = loadTexture("health_bar_red.png");
+        healthRegionRed = new TextureRegion(healthBarRed, 0, 0, 95, 5);
+
+        healthBarGreen = loadTexture("health_bar_green.png");
+        healthRegionGreen = new TextureRegion(healthBarGreen, 0, 0, 95, 5);
+
+        healthBarBlue = loadTexture("health_bar_blue.png");
+        healthRegionBlue = new TextureRegion(healthBarBlue, 0, 0, 95, 5);
 
         enemies = new Texture[ENEMY_SPRITES];
         enemyRegions = new TextureRegion[ENEMY_SPRITES];
