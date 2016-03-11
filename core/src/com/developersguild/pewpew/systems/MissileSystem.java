@@ -62,8 +62,6 @@ public class MissileSystem extends IteratingSystem {
 
 
         mov.velocity.y = MissileComponent.PLAYER_MISSILE_VELOCITY * deltaTime;
-        System.out.println(mov.velocity.y);
-
 
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
                 collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||

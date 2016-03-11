@@ -15,6 +15,9 @@ public class BodyComponent implements Component {
     public static final int BULLET_ENEMY_COLLISION = 5;
     public static final int EXPLOSION_ENEMY_COLLISION = 6;
     public static final int EXPLOSION_STRUCTURE_COLLISION = 7;
+    public static final int MISSILE_ENEMY_COLLISION = 8;
+    public static final int MISSILE_STRUCTURE_COLLISION = 8;
+
 
     public Body body;
 }

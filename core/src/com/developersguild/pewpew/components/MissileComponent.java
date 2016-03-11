@@ -8,10 +8,14 @@ import com.badlogic.ashley.core.Entity;
  */
 public class MissileComponent implements Component {
     public static final float WIDTH = 0.25f;
-    public static final float HEIGHT = 0.25f;
+    public static final float HEIGHT = 0.5f;
     public static final float PLAYER_MISSILE_VELOCITY = 250f;
     public static final int STATE_NORMAL = 0;
     public static final int STATE_HIT = 1;
+
+    public static final float COOLDOWN = 10f;
+    public static final float MISSILE_DAMAGE = 50f;
+    
 
     public Entity origin;
 }

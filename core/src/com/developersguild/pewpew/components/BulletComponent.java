@@ -14,5 +14,8 @@ public class BulletComponent implements Component {
     public static final int STATE_NORMAL = 0;
     public static final int STATE_HIT = 1;
 
+    public static final float BULLET_DAMAGE = 15f;
+    public static final float COOLDOWN = 0.25f;
+
     public Entity origin;
 }

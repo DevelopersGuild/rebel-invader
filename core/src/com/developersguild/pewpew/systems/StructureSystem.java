@@ -7,7 +7,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
+import com.developersguild.pewpew.components.MissileComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
@@ -58,7 +60,11 @@ public class StructureSystem extends IteratingSystem {
 
         // Collision handling
         if (collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION) {
-            structure.currentHealth -= PlayerComponent.BULLET_DAMAGE;
+            structure.currentHealth -= BulletComponent.BULLET_DAMAGE;
+        }
+
+        if (collisionCode == BodyComponent.MISSILE_STRUCTURE_COLLISION) {
+            structure.currentHealth -= MissileComponent.MISSILE_DAMAGE;
         }
 
         // Death

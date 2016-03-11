@@ -6,10 +6,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.BulletComponent;
 import com.developersguild.pewpew.components.EnemyComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.components.StateComponent;
+import com.developersguild.pewpew.components.MissileComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
 /**
@@ -103,7 +105,11 @@ public class EnemySystem extends IteratingSystem {
 
         // Collision handling
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION) {
-            enemy.currentHealth -= PlayerComponent.BULLET_DAMAGE;
+            enemy.currentHealth -= BulletComponent.BULLET_DAMAGE;
+        }
+
+        if (collisionCode == BodyComponent.MISSILE_ENEMY_COLLISION) {
+            enemy.currentHealth -= MissileComponent.MISSILE_DAMAGE;
         }
 
         // Death

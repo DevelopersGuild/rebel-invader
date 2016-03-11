@@ -110,7 +110,7 @@ public class Assets {
         bulletRegion = new TextureRegion(bullet, 0, 0, 8, 8);
 
         missile = loadTexture("missile.png");
-        missileRegion = new TextureRegion(missile, 0, 0, 16, 16);
+        missileRegion = new TextureRegion(missile, 0, 0, 16, 32);
 
         terrains = new Texture[TERRAIN_SPRITES];
         terrainRegions = new TextureRegion[TERRAIN_SPRITES];

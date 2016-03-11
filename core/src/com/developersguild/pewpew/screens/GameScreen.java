@@ -18,6 +18,8 @@ import com.developersguild.pewpew.Level;
 import com.developersguild.pewpew.PewPew;
 import com.developersguild.pewpew.PhysicsListener;
 import com.developersguild.pewpew.components.BodyComponent;
+import com.developersguild.pewpew.components.BulletComponent;
+import com.developersguild.pewpew.components.MissileComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
 import com.developersguild.pewpew.systems.AnimationSystem;
 import com.developersguild.pewpew.systems.BackgroundSystem;
@@ -163,7 +165,7 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) missileShoot();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) missileShoot();
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
@@ -208,8 +210,8 @@ public class GameScreen extends ScreenAdapter {
 
     private void playerShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
-        if (player.shootTimer <= currentTime) {
-            player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
+        if (player.bulletTimer <= currentTime) {
+            player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestBullet();
             Assets.shot.play(0.3f);
         }
@@ -217,8 +219,8 @@ public class GameScreen extends ScreenAdapter {
 
     private void missileShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
-        if (player.shootTimer <= currentTime) {
-            player.shootTimer = currentTime + PlayerComponent.FIRE_RATE;
+        if (player.missileTimer <= currentTime) {
+            player.missileTimer = currentTime + MissileComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestMissile();
         }
     }
