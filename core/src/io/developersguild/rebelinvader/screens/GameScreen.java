@@ -220,12 +220,8 @@ public class GameScreen extends ScreenAdapter {
     private void playerShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.bulletTimer <= currentTime) {
-            player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
-/*        if (player.shootTimer <= currentTime) {
-            float delay = PlayerComponent.FIRE_RATE;
-            if(powerTime >= 0) delay /= PowerComponent.BULLET_RATE_MULTIPLIER;
-            player.shootTimer = currentTime + delay;
->>>>>>> 3f465d22fb354bdce9eb09589e7679380e63c08f:core/src/io/developersguild/rebelinvader/screens/GameScreen.java*/
+            if (powerTime >= 0) player.bulletTimer = currentTime + BulletComponent.COOLDOWN / PowerComponent.BULLET_RATE_MULTIPLIER;
+            else player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestBullet();
             Assets.shot.play(0.3f);
         }
