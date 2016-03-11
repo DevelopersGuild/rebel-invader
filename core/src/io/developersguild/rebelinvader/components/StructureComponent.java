@@ -15,8 +15,10 @@ public class StructureComponent implements Component {
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
     public static final int SCORE_VALUE = 5;
+    public static final float POWER_VALUE = 5;
 
     public float maxHealth;
     public float currentHealth;
     public Entity target;
+    public boolean killedByPlayer = false;
 }

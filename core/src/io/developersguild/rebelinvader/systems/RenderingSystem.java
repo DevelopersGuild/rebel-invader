@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import io.developersguild.rebelinvader.components.HealthComponent;
 import io.developersguild.rebelinvader.components.TextureComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
+import io.developersguild.rebelinvader.components.PowerComponent;
 
 import java.util.Comparator;
 
@@ -62,6 +63,8 @@ public class RenderingSystem extends IteratingSystem {
         for (Entity entity : renderQueue) {
             if(entity.getComponent(HealthComponent.class) != null) {
                 if(!entity.getComponent(HealthComponent.class).doRender) continue;
+            } else if(entity.getComponent(PowerComponent.class) != null) {
+                if(!entity.getComponent(PowerComponent.class).doRender) continue;
             }
             TextureComponent tex = textureM.get(entity);
 
@@ -98,4 +101,3 @@ public class RenderingSystem extends IteratingSystem {
         return cam;
     }
 }
-

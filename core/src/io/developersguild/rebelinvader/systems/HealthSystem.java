@@ -69,6 +69,10 @@ public class HealthSystem extends IteratingSystem {
 
         if (health.currentHealth <= 0) {
             health.doRender = false;
+            if(health.target.getComponent(StructureComponent.class) != null)
+                health.target.getComponent(StructureComponent.class).killedByPlayer = true;
+            else if(health.target.getComponent(EnemyComponent.class) != null)
+                health.target.getComponent(EnemyComponent.class).killedByPlayer = true;
             screen.markEntityForRemoval(health.target);
             screen.markEntityForRemoval(entity);
         }
