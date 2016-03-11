@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.developersguild.pewpew.components.HealthComponent;
+import com.developersguild.pewpew.components.PowerComponent;
 import com.developersguild.pewpew.components.TextureComponent;
 import com.developersguild.pewpew.components.TransformComponent;
 
@@ -62,6 +63,8 @@ public class RenderingSystem extends IteratingSystem {
         for (Entity entity : renderQueue) {
             if(entity.getComponent(HealthComponent.class) != null) {
                 if(!entity.getComponent(HealthComponent.class).doRender) continue;
+            } else if(entity.getComponent(PowerComponent.class) != null) {
+                if(!entity.getComponent(PowerComponent.class).doRender) continue;
             }
             TextureComponent tex = textureM.get(entity);
 

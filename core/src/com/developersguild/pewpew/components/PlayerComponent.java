@@ -21,6 +21,7 @@ public class PlayerComponent implements Component {
 
     public float maxHealth;
     public float currentHealth;
+    public float currentPower;
 
     public float heightSoFar = 0f;
     public float impactCooldown = 0f;

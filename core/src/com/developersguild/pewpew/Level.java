@@ -20,6 +20,7 @@ import com.developersguild.pewpew.components.HealthComponent;
 import com.developersguild.pewpew.components.HeightDisposableComponent;
 import com.developersguild.pewpew.components.MovementComponent;
 import com.developersguild.pewpew.components.PlayerComponent;
+import com.developersguild.pewpew.components.PowerComponent;
 import com.developersguild.pewpew.components.StateComponent;
 import com.developersguild.pewpew.components.StructureComponent;
 import com.developersguild.pewpew.components.TextureComponent;
@@ -141,6 +142,7 @@ public class Level {
         entity.add(texture);
 
         createHealthBar(entity, null);
+        createPowerBar(entity, null);
 
         engine.addEntity(entity);
 
@@ -384,6 +386,43 @@ public class Level {
         texture.region = Assets.healthRegion;
 
         entity.add(health);
+        entity.add(position);
+        entity.add(texture);
+
+        engine.addEntity(entity);
+    }
+
+    private void createPowerBar(Entity target, HeightDisposableComponent disposable) {
+        Entity entity = engine.createEntity();
+
+        if (disposable != null) {
+            disposable.childEntity = entity;
+        }
+
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        PowerComponent power = engine.createComponent(PowerComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+
+        power.target = target;
+        power.targetPos = target.getComponent(TransformComponent.class).pos;
+        power.targetPos.y -= target.getComponent(BoundsComponent.class).bounds.height;
+
+        // Determine type of entity
+        if (target.getComponent(PlayerComponent.class) != null) {
+            power.maxPower = 100;
+            power.currentPower = 0;
+            power.lengthRatio = 2.0f / 3.0f;
+            power.widthRatio = 2.0f / 3.0f;
+            position.scale.set(power.lengthRatio, power.widthRatio);
+        }
+
+        // Prevent overlap with health bar
+        power.targetPos.y -= power.widthRatio;
+
+        // Need a different texture
+        texture.region = Assets.healthRegion;
+
+        entity.add(power);
         entity.add(position);
         entity.add(texture);
 
