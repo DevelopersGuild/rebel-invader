@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -22,13 +23,13 @@ import io.developersguild.rebelinvader.components.HeightDisposableComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
+import io.developersguild.rebelinvader.components.PowerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
 import io.developersguild.rebelinvader.components.StructureComponent;
 import io.developersguild.rebelinvader.components.TextureComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
 import io.developersguild.rebelinvader.systems.RenderingSystem;
 import io.developersguild.rebelinvader.wgen.WorldGenerator;
-import io.developersguild.rebelinvader.components.PowerComponent;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -302,6 +303,10 @@ public class Level {
 
         if (origin.getComponent(PlayerComponent.class) != null) { // If player fired
             y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+            // Add randomized horizontal velocity to the bullet
+            float randomDegree = MathUtils.random(-BulletComponent.HORIZONTAL_SHIFT_DEGREE, BulletComponent.HORIZONTAL_SHIFT_DEGREE);
+            float randomRadian = randomDegree * MathUtils.degreesToRadians;
+            bullet.HORIZONTAL_VELOCITY = BulletComponent.PLAYER_BULLET_VELOCITY * (float)Math.tan(randomRadian);
         } else { // If enemy or anyone else fired
             y = origin.getComponent(TransformComponent.class).pos.y - origin.getComponent(BoundsComponent.class).bounds.height / 2f;
         }

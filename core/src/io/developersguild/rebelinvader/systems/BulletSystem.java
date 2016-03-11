@@ -61,7 +61,8 @@ public class BulletSystem extends IteratingSystem {
         body.body.setUserData(entity);
 
         if (bullet.origin.getComponent(PlayerComponent.class) != null) { // If player fired
-            mov.velocity.y = BulletComponent.PLAYER_BULLET_VELOCITY * deltaTime;
+            mov.velocity.y = bullet.PLAYER_BULLET_VELOCITY * deltaTime;
+            mov.velocity.x = bullet.HORIZONTAL_VELOCITY * deltaTime;
         } else { // If anyone else fired
             mov.velocity.y = -BulletComponent.ENEMY_BULLET_VELOCITY * deltaTime;
         }
