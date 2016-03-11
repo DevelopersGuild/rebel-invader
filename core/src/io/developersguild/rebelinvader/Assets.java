@@ -54,6 +54,9 @@ public class Assets {
     public static Texture bullet;
     public static TextureRegion bulletRegion;
 
+    public static Texture missile;
+    public static TextureRegion missileRegion;
+
     public static Texture[] terrains;
     public static TextureRegion[] terrainRegions;
 
@@ -111,6 +114,9 @@ public class Assets {
 
         bullet = loadTexture("bullet.png");
         bulletRegion = new TextureRegion(bullet, 0, 0, 8, 8);
+
+        missile = loadTexture("missile.png");
+        missileRegion = new TextureRegion(missile, 0, 0, 16, 32);
 
         terrains = new Texture[TERRAIN_SPRITES];
         terrainRegions = new TextureRegion[TERRAIN_SPRITES];

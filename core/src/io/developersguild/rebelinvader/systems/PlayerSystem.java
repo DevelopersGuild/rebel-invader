@@ -40,6 +40,7 @@ public class PlayerSystem extends IteratingSystem {
     private ComponentMapper<TextureComponent> texm;
 
     private boolean shouldFire;
+    private boolean missileFire;
 
     public PlayerSystem(Level level) {
         super(family);
@@ -59,6 +60,9 @@ public class PlayerSystem extends IteratingSystem {
 
     public void requestBullet() {
         this.shouldFire = true;
+    }
+    public void requestMissile() {
+        this.missileFire = true;
     }
 
     @Override
@@ -172,5 +176,9 @@ public class PlayerSystem extends IteratingSystem {
         if (this.shouldFire)
             level.createBullet(entity);
         this.shouldFire = false;
+
+        if (this.missileFire)
+            level.createMissile(entity);
+        this.missileFire = false;
     }
 }
