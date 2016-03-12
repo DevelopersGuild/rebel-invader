@@ -4,9 +4,12 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.BodyComponent;
+import io.developersguild.rebelinvader.components.BulletComponent;
 import io.developersguild.rebelinvader.components.EnemyComponent;
+import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
@@ -103,7 +106,11 @@ public class EnemySystem extends IteratingSystem {
 
         // Collision handling
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION) {
-            enemy.currentHealth -= PlayerComponent.BULLET_DAMAGE;
+            enemy.currentHealth -= BulletComponent.BULLET_DAMAGE;
+        }
+
+        if (collisionCode == BodyComponent.MISSILE_ENEMY_COLLISION) {
+            enemy.currentHealth -= MissileComponent.MISSILE_DAMAGE;
         }
 
         // Death

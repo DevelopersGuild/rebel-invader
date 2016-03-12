@@ -21,6 +21,7 @@ import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.HealthComponent;
 import io.developersguild.rebelinvader.components.HeightDisposableComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
+import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.PowerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
@@ -347,6 +348,73 @@ public class Level {
         entity.add(pos);
 
         engine.addEntity(entity);
+    }
+
+    public void createMissile(Entity origin) {
+        Entity entity = engine.createEntity();
+
+        BodyComponent body = engine.createComponent(BodyComponent.class);
+        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        MissileComponent missile = engine.createComponent(MissileComponent.class);
+        MovementComponent mov = engine.createComponent(MovementComponent.class);
+        StateComponent state = engine.createComponent(StateComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent pos = engine.createComponent(TransformComponent.class);
+
+        missile.origin = origin;
+
+        state.set(MissileComponent.STATE_NORMAL);
+
+        bounds.bounds.width = MissileComponent.WIDTH;
+        bounds.bounds.height = MissileComponent.HEIGHT;
+
+        texture.region = Assets.missileRegion;
+        texture.color = Color.WHITE;
+
+        // Get origin position
+        float x = origin.getComponent(TransformComponent.class).pos.x;
+        float y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+
+        pos.pos.set(x, y, 1f);
+        pos.scale.set(1f, 1f);
+
+        // Create player body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(pos.pos.x, pos.pos.y);
+        body.body = world.createBody(bodyDef);
+        body.body.setBullet(true);
+        body.body.setUserData(this);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(MissileComponent.WIDTH / 2.f, MissileComponent.HEIGHT / 2.f);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
+
+        entity.add(body);
+        entity.add(bounds);
+        entity.add(missile);
+        entity.add(mov);
+        entity.add(state);
+        entity.add(texture);
+        entity.add(pos);
+
+        engine.addEntity(entity);
+
+
+
     }
 
     private void createHealthBar(Entity target, HeightDisposableComponent disposable) {

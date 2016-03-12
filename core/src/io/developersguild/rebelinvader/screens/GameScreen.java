@@ -13,10 +13,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.PhysicsListener;
@@ -26,6 +25,7 @@ import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.PowerComponent;
 import io.developersguild.rebelinvader.components.StructureComponent;
+import io.developersguild.rebelinvader.components.BulletComponent;
 import io.developersguild.rebelinvader.systems.AnimationSystem;
 import io.developersguild.rebelinvader.systems.BackgroundSystem;
 import io.developersguild.rebelinvader.systems.BoundsSystem;
@@ -34,6 +34,7 @@ import io.developersguild.rebelinvader.systems.CameraSystem;
 import io.developersguild.rebelinvader.systems.EnemySystem;
 import io.developersguild.rebelinvader.systems.HealthSystem;
 import io.developersguild.rebelinvader.systems.HeightDisposableSystem;
+import io.developersguild.rebelinvader.systems.MissileSystem;
 import io.developersguild.rebelinvader.systems.MovementSystem;
 import io.developersguild.rebelinvader.systems.PhysicsSystem;
 import io.developersguild.rebelinvader.systems.PlayerSystem;
@@ -102,6 +103,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PowerSystem(this));
         engine.addSystem(new HeightDisposableSystem(this));
         engine.addSystem(new BulletSystem(this));
+        engine.addSystem(new MissileSystem(this));
 
         // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -171,6 +173,7 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) missileShoot();
         }
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
@@ -216,12 +219,19 @@ public class GameScreen extends ScreenAdapter {
 
     private void playerShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
-        if (player.shootTimer <= currentTime) {
-            float delay = PlayerComponent.FIRE_RATE;
-            if(powerActivated) delay /= PowerComponent.BULLET_RATE_MULTIPLIER;
-            player.shootTimer = currentTime + delay;
+        if (player.bulletTimer <= currentTime) {
+            if (powerActivated) player.bulletTimer = currentTime + BulletComponent.COOLDOWN / PowerComponent.BULLET_RATE_MULTIPLIER;
+            else player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestBullet();
             Assets.shot.play(0.3f);
+        }
+    }
+
+    private void missileShoot() {
+        PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
+        if (player.missileTimer <= currentTime) {
+            player.missileTimer = currentTime + MissileComponent.COOLDOWN;
+            engine.getSystem(PlayerSystem.class).requestMissile();
         }
     }
 

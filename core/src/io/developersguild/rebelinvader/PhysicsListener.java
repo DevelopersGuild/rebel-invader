@@ -7,9 +7,12 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
+
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.BulletComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
+import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.systems.EnemySystem;
 import io.developersguild.rebelinvader.systems.PlayerSystem;
 import io.developersguild.rebelinvader.systems.StructureSystem;
@@ -30,52 +33,85 @@ public class PhysicsListener implements ContactListener, EntityListener {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
 
+        if (b.getUserData() instanceof Entity) {
+            if (((Entity) b.getUserData()).getComponent(BulletComponent.class) != null ||
+                    ((Entity) b.getUserData()).getComponent(MissileComponent.class) != null) {
+                Body c = a;
+                a = b;
+                b = c;
+            }
+        }
+
         // If a is a bullet
         if (a.getUserData() instanceof Entity) {
             // If bullet came from a player
-            if (((Entity) a.getUserData()).getComponent(BulletComponent.class).origin.getComponent(PlayerComponent.class) != null) {
-                // If b is a structure
-                if (b.getUserData().getClass() == StructureSystem.class) {
-                    a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
-                    b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
-                }
+            if (((Entity) a.getUserData()).getComponent(BulletComponent.class) != null) {
+                if (((Entity) a.getUserData()).getComponent(BulletComponent.class).origin.getComponent(PlayerComponent.class) != null) {
+                    // If b is a structure
+                    if (b.getUserData().getClass() == StructureSystem.class) {
+                        a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+                        b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
+                    }
 
-                // If b is an enemy
-                if (b.getUserData().getClass() == EnemySystem.class) {
-                    a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
-                    b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+                    // If b is an enemy
+                    if (b.getUserData().getClass() == EnemySystem.class) {
+                        a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+                        b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
+                    }
+                } else { // If bullet came from anyone except player
+                    // If b is a player
+                    if (b.getUserData().getClass() == PlayerSystem.class) {
+                        a.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
+                        b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
+                    }
                 }
-            } else { // If bullet came from anyone except player
-                // If b is a player
-                if (b.getUserData().getClass() == PlayerSystem.class) {
-                    a.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
-                    b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
+                return;
+            }
+
+            // If missile came from a player
+            if (((Entity) a.getUserData()).getComponent(MissileComponent.class) != null) {
+                if (((Entity) a.getUserData()).getComponent(MissileComponent.class).origin.getComponent(PlayerComponent.class) != null) {
+                    // If b is a structure
+                    if (b.getUserData().getClass() == StructureSystem.class) {
+                        a.setUserData(BodyComponent.MISSILE_STRUCTURE_COLLISION);
+                        b.setUserData(BodyComponent.MISSILE_STRUCTURE_COLLISION);
+                    }
+
+                    // If b is an enemy
+                    if (b.getUserData().getClass() == EnemySystem.class) {
+                        a.setUserData(BodyComponent.MISSILE_ENEMY_COLLISION);
+                        b.setUserData(BodyComponent.MISSILE_ENEMY_COLLISION);
+                    }
                 }
             }
         }
 
+        /*
         if (b.getUserData() instanceof Entity) {
             // If bullet came from a player
             if (((Entity) b.getUserData()).getComponent(BulletComponent.class).origin.getComponent(PlayerComponent.class) != null) {
-                // If b is a structure
+                // If a is a structure
                 if (a.getUserData().getClass() == StructureSystem.class) {
                     a.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
                     b.setUserData(BodyComponent.BULLET_STRUCTURE_COLLISION);
                 }
 
-                // If b is an enemy
+                // If a is an enemy
                 if (a.getUserData().getClass() == EnemySystem.class) {
                     a.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
                     b.setUserData(BodyComponent.BULLET_ENEMY_COLLISION);
                 }
             } else { // If bullet came from anyone except player
-                // If b is a player
+                // If a is a player
                 if (a.getUserData().getClass() == PlayerSystem.class) {
                     a.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                     b.setUserData(BodyComponent.PLAYER_BULLET_COLLISION);
                 }
             }
         }
+        */
+
+
     }
 
     /**

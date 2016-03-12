@@ -9,7 +9,7 @@ public class PlayerComponent implements Component {
     public static final float STARTING_HEALTH = 100f;
     public static final int STATE_NORMAL = 0;
     public static final int STATE_KNOCKED_BACK = 1;
-    public static final float BULLET_DAMAGE = 15f;
+
     public static final float VELOCITY_X = 1500f;
     public static final float VELOCITY_Y = 80f;
     public static final float WIDTH = 2f;
@@ -25,5 +25,6 @@ public class PlayerComponent implements Component {
 
     public float heightSoFar = 0f;
     public float impactCooldown = 0f;
-    public float shootTimer = 0f;
+    public float bulletTimer = 0f;
+    public float missileTimer = 0f;
 }
