@@ -28,6 +28,7 @@ import io.developersguild.rebelinvader.components.StateComponent;
 import io.developersguild.rebelinvader.components.StructureComponent;
 import io.developersguild.rebelinvader.components.TextureComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
+import io.developersguild.rebelinvader.screens.GameScreen;
 import io.developersguild.rebelinvader.systems.RenderingSystem;
 import io.developersguild.rebelinvader.wgen.WorldGenerator;
 
@@ -364,6 +365,8 @@ public class Level {
         missile.origin = origin;
 
         state.set(MissileComponent.STATE_NORMAL);
+
+        missile.accelerator = 0;
 
         bounds.bounds.width = MissileComponent.WIDTH;
         bounds.bounds.height = MissileComponent.HEIGHT;

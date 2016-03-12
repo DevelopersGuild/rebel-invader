@@ -23,17 +23,15 @@ public class MissileSystem extends IteratingSystem {
             TransformComponent.class).get();
     private final GameScreen screen;
     private ComponentMapper<BodyComponent> bm;
-    private ComponentMapper<MissileComponent> blm;
+    private ComponentMapper<MissileComponent> mim;
     private ComponentMapper<MovementComponent> mm;
-    //private ComponentMapper<StateComponent> sm;
-    //private ComponentMapper<TransformComponent> tm;
 
     public MissileSystem(GameScreen screen) {
         super(family);
         this.screen = screen;
 
         bm = ComponentMapper.getFor(BodyComponent.class);
-        blm = ComponentMapper.getFor(MissileComponent.class);
+        mim = ComponentMapper.getFor(MissileComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
         //sm = ComponentMapper.getFor(StateComponent.class);
         //tm = ComponentMapper.getFor(TransformComponent.class);
@@ -47,7 +45,7 @@ public class MissileSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         BodyComponent body = bm.get(entity);
-        MissileComponent missile = blm.get(entity);
+        MissileComponent missile = mim.get(entity);
         MovementComponent mov = mm.get(entity);
 
         mov.velocity.x = 0;
@@ -61,8 +59,9 @@ public class MissileSystem extends IteratingSystem {
 
         body.body.setUserData(entity);
 
-
-        mov.velocity.y = MissileComponent.PLAYER_MISSILE_VELOCITY * deltaTime;
+        // Velocity increases over time: doubles, triples, quadruples, etc
+        mov.velocity.y = (MissileComponent.PLAYER_MISSILE_VELOCITY + missile.accelerator) * deltaTime;
+        missile.accelerator += deltaTime * MissileComponent.PLAYER_MISSILE_VELOCITY;
 
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
                 collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||
