@@ -23,8 +23,6 @@ public class PowerSystem extends IteratingSystem {
     private ComponentMapper<PowerComponent> pm;
     private float powerLastFrame;
 
-    public boolean isActivated;
-
     public PowerSystem(GameScreen screen) {
         super(family);
         this.screen = screen;
@@ -33,7 +31,6 @@ public class PowerSystem extends IteratingSystem {
         pm = ComponentMapper.getFor(PowerComponent.class);
 
         powerLastFrame = 0f;
-        isActivated = false;
     }
 
     @Override
@@ -76,14 +73,13 @@ public class PowerSystem extends IteratingSystem {
 
     private void checkPowerBounds(PowerComponent power) {
         // Prevent power decreasing below 0
-        if (power.currentPower < 0) {
+        if (power.currentPower <= 0) {
             power.currentPower = 0;
         }
 
         // Prevent health increasing over maxHealth
         if (power.currentPower > power.maxPower) {
             screen.activatePower();
-            power.currentPower = 0;
         }
 
         // Do the same for the actual target entity too

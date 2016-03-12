@@ -484,7 +484,7 @@ public class Level {
 
         // Determine type of entity
         if (target.getComponent(PlayerComponent.class) != null) {
-            power.maxPower = 100;
+            power.maxPower = PowerComponent.MAX_POWER;
             power.currentPower = 0;
             power.lengthRatio = 2.0f / 3.0f;
             power.widthRatio = 2.0f / 3.0f;
