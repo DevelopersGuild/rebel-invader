@@ -13,13 +13,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.Level;
-import io.developersguild.rebelinvader.RebelInvader;
 import io.developersguild.rebelinvader.PhysicsListener;
+import io.developersguild.rebelinvader.RebelInvader;
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
+import io.developersguild.rebelinvader.components.PowerComponent;
 import io.developersguild.rebelinvader.components.StructureComponent;
 import io.developersguild.rebelinvader.systems.AnimationSystem;
 import io.developersguild.rebelinvader.systems.BackgroundSystem;
@@ -32,14 +37,10 @@ import io.developersguild.rebelinvader.systems.HeightDisposableSystem;
 import io.developersguild.rebelinvader.systems.MovementSystem;
 import io.developersguild.rebelinvader.systems.PhysicsSystem;
 import io.developersguild.rebelinvader.systems.PlayerSystem;
+import io.developersguild.rebelinvader.systems.PowerSystem;
 import io.developersguild.rebelinvader.systems.RenderingSystem;
 import io.developersguild.rebelinvader.systems.StateSystem;
 import io.developersguild.rebelinvader.systems.StructureSystem;
-import io.developersguild.rebelinvader.components.PowerComponent;
-import io.developersguild.rebelinvader.systems.PowerSystem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Vihan on 1/10/2016.
@@ -63,7 +64,8 @@ public class GameScreen extends ScreenAdapter {
     private GlyphLayout layout;
     private int state;
     private List<Entity> deadEntities;
-    private float currentTime, powerTime;
+    private float currentTime;
+    private boolean powerActivated;
 
     public GameScreen(RebelInvader game) {
         this.game = game;
@@ -82,7 +84,7 @@ public class GameScreen extends ScreenAdapter {
         layout = new GlyphLayout();
         deadEntities = new ArrayList<Entity>();
         currentTime = 0f;
-        powerTime = 0f;
+        powerActivated = false;
 
         // Add systems
         engine.addSystem(new PlayerSystem(level));
@@ -156,7 +158,8 @@ public class GameScreen extends ScreenAdapter {
 
         Application.ApplicationType appType = Gdx.app.getType();
         currentTime += deltaTime;
-        powerTime -= deltaTime;
+
+        reducePower(PowerComponent.MAX_POWER / PowerComponent.DURATION * deltaTime);
 
         // should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
         float accelX = 0.0f;
@@ -215,7 +218,7 @@ public class GameScreen extends ScreenAdapter {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.shootTimer <= currentTime) {
             float delay = PlayerComponent.FIRE_RATE;
-            if(powerTime >= 0) delay /= PowerComponent.BULLET_RATE_MULTIPLIER;
+            if(powerActivated) delay /= PowerComponent.BULLET_RATE_MULTIPLIER;
             player.shootTimer = currentTime + delay;
             engine.getSystem(PlayerSystem.class).requestBullet();
             Assets.shot.play(0.3f);
@@ -225,7 +228,9 @@ public class GameScreen extends ScreenAdapter {
     private void playerPowerup(Entity destroyedEntity) {
         if(level.state != level.LEVEL_STATE_RUNNING) return;
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
-        if(destroyedEntity.getComponent(StructureComponent.class) != null) {
+
+        if(powerActivated) return;
+        else if(destroyedEntity.getComponent(StructureComponent.class) != null) {
             if (destroyedEntity.getComponent(StructureComponent.class).killedByPlayer)
                 player.currentPower += StructureComponent.POWER_VALUE;
         }
@@ -235,8 +240,15 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void reducePower(float value) {
+        if(level.state != level.LEVEL_STATE_RUNNING) return;
+        PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
+        if(powerActivated) player.currentPower -= value;
+        if(player.currentPower <= 0.0f) powerActivated = false;
+    }
+
     public void activatePower() {
-        powerTime = PowerComponent.DURATION;
+        powerActivated = true;
     }
 
     public void draw() {
