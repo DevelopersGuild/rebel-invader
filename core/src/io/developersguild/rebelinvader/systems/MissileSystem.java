@@ -49,6 +49,8 @@ public class MissileSystem extends IteratingSystem {
         BodyComponent body = bm.get(entity);
         MissileComponent missile = blm.get(entity);
         MovementComponent mov = mm.get(entity);
+
+        mov.velocity.x = 0;
         //StateComponent state = sm.get(entity);
         //TransformComponent pos = tm.get(entity);
 

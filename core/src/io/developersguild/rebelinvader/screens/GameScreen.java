@@ -85,15 +85,10 @@ public class GameScreen extends ScreenAdapter {
         touchPoint = new Vector3();
         layout = new GlyphLayout();
         deadEntities = new ArrayList<Entity>();
-/*<<<<<<< HEAD
-        currentTime =0f;
-        powerTime = 0f;
-=======*/
+
         currentTime = 0f;
         powerActivated = false;
-//>>>>>>> 8f6a918c422b1e2fe72b73bff30446ad9c9b55bd
 
-        // Add systems
         engine.addSystem(new PlayerSystem(level));
         engine.addSystem(new CameraSystem());
         engine.addSystem(new BackgroundSystem());
