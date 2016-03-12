@@ -19,6 +19,7 @@ public class Assets {
     public static final int CITY_SPRITES = 4;
     public static Music musicMenu;
     public static Music musicGame;
+    public static Music musicWin;
     public static Sound click;
     public static Sound shot;
     public static Sound crash;
@@ -167,6 +168,9 @@ public class Assets {
         musicGame = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_05_-_RottenMage_SpaceJacked_OST_05.mp3"));
         musicGame.setVolume(0.1f);
         musicGame.setLooping(true);
+
+        musicWin = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_16_-_RottenMage_SpaceJacked_OST_JINGLE_01.mp3"));
+        musicWin.setVolume(0.1f);
 
         click = Gdx.audio.newSound(Gdx.files.internal("click.wav"));
 

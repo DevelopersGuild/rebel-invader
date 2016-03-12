@@ -248,7 +248,6 @@ public class GameScreen extends ScreenAdapter {
             missilex = player.missileTimer;
             engine.getSystem(PlayerSystem.class).requestMissile();
         }
-        System.out.println(player.missileTimer);
     }
 
     private void playerPowerup(Entity destroyedEntity) {
@@ -282,7 +281,6 @@ public class GameScreen extends ScreenAdapter {
         game.batch.setProjectionMatrix(guiCam.combined);
         game.batch.begin();
         updateScore(level.score);
-        //System.out.println(currentTime);
 
         if (missilex <= currentTime) {
             missileDrawn();
@@ -335,6 +333,7 @@ public class GameScreen extends ScreenAdapter {
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
         Assets.musicGame.stop();
+        Assets.musicWin.play();
     }
 
 
