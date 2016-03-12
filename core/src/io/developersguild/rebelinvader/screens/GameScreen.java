@@ -53,6 +53,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_PAUSED = 1;
     static final int GAME_OVER = 2;
     static final int GAME_WON = 3;
+    static float missilex = 0;
 
     RebelInvader game;
     Level level;
@@ -62,7 +63,7 @@ public class GameScreen extends ScreenAdapter {
     PhysicsListener listener;
     OrthographicCamera guiCam;
     Vector3 touchPoint;
-    Rectangle pauseBounds;
+    Rectangle pauseBounds, missileBounds;
 
     private GlyphLayout layout;
     private int state;
@@ -85,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
         touchPoint = new Vector3();
         layout = new GlyphLayout();
         deadEntities = new ArrayList<Entity>();
-        currentTime = 0f;
+        currentTime =0f;
         powerTime = 0f;
 
         // Add systems
@@ -119,6 +120,7 @@ public class GameScreen extends ScreenAdapter {
         level.create(world);
 
         pauseBounds = new Rectangle(320 - 40 - 5, 480 - 50 - 5, 40, 50);
+        missileBounds = new Rectangle(5, 9, 25, 50);
 
         resumeSystems();
 
@@ -168,13 +170,20 @@ public class GameScreen extends ScreenAdapter {
 
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             if (Math.abs(Gdx.input.getAccelerometerX()) > 0.8f) accelX = Gdx.input.getAccelerometerX();
-            if (Gdx.input.justTouched()) playerShoot();
+            if (Gdx.input.justTouched() && !(missileBounds.contains(touchPoint.x, touchPoint.y))) playerShoot();
+            if (missileBounds.contains(touchPoint.x, touchPoint.y) && missilex <= currentTime) {
+                missileShoot();
+            }
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) missileShoot();
         }
+
+
+
+
 
         engine.getSystem(PlayerSystem.class).setAccelX(accelX);
 
@@ -230,9 +239,12 @@ public class GameScreen extends ScreenAdapter {
     private void missileShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.missileTimer <= currentTime) {
+            Assets.launch.play(1f);
             player.missileTimer = currentTime + MissileComponent.COOLDOWN;
+            missilex = player.missileTimer;
             engine.getSystem(PlayerSystem.class).requestMissile();
         }
+        System.out.println(player.missileTimer);
     }
 
     private void playerPowerup(Entity destroyedEntity) {
@@ -257,6 +269,12 @@ public class GameScreen extends ScreenAdapter {
         game.batch.setProjectionMatrix(guiCam.combined);
         game.batch.begin();
         updateScore(level.score);
+        //System.out.println(currentTime);
+
+        if (missilex <= currentTime) {
+            missileDrawn();
+        }
+
         switch (state) {
             case GAME_RUNNING:
                 presentRunning();
@@ -276,10 +294,15 @@ public class GameScreen extends ScreenAdapter {
 
     private void presentRunning() {
         game.batch.draw(Assets.pauseButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
+
     }
 
     private void presentPaused() {
         game.batch.draw(Assets.playButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
+    }
+
+    private void missileDrawn() {
+        game.batch.draw(Assets.missile, 5,  9 , 25, 50);
     }
 
     private void presentGameOver() {
@@ -299,6 +322,7 @@ public class GameScreen extends ScreenAdapter {
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
     }
+
 
     public void updateScore(int score) {
         String scoreText;

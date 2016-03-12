@@ -17,8 +17,12 @@ public class HelpScreen extends ScreenAdapter{
     RebelInvader game;
     OrthographicCamera guiCam;
     private GlyphLayout layout = new GlyphLayout();
-    String[] message = {"Press 'A' to move left.", "Press 'D' to move right.", "Press 'W' to shoot.", "Kill enemies to win points.", "Reach the end to win!"};
-    String[] messageb = {"Tilt device left to move left.", "Tilt device right to move right.", "Tap screen to shoot.", "Kill enemies to win points.", "Reach the end to win!"};
+    String[] message = {"Press 'A' to move left.", "Press 'D' to move right.", "Press 'W' to shoot.",
+                        "Press 'SPACEBAR' to launch missile.", "Wait 10 seconds to reload missile.",
+                    "Kill enemies to win points.", "Reach the end to win!"};
+    String[] messageb = {"Tilt device left to move left.", "Tilt device right to move right.", "Tap screen to shoot.",
+                    "Tap missile icon to launch missile.", "Wait 10 seconds to reload missile.",
+            "Kill enemies to win points.", "Reach the end to win!"};
     float xOffset = 0;
 
 
@@ -56,7 +60,7 @@ public class HelpScreen extends ScreenAdapter{
             // Center the Strings
             xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
             // Draw the Strings
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < messageb.length; i++) {
                 Assets.font.draw(game.batch, messageb[i], xOffset, 300 + (i * -10));
             }
 
@@ -69,7 +73,7 @@ public class HelpScreen extends ScreenAdapter{
             // Center the Strings
             xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
             // Draw the Strings
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < message.length; i++) {
                 Assets.font.draw(game.batch, message[i], xOffset, 300 + (i * -10));
             }
         }
