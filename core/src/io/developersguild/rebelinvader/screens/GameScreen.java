@@ -334,6 +334,7 @@ public class GameScreen extends ScreenAdapter {
         float gameOverWidth = layout.width;
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
+        Assets.musicGame.stop();
     }
 
 
