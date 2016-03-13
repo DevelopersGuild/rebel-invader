@@ -36,6 +36,30 @@ public class PhysicsListener implements ContactListener, EntityListener {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
 
+        // If a is an explosion
+        if (a.getUserData().getClass() == ExplosionSystem.class) {
+            // If b is a structure
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                b.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
+            }
+            // If b is an enemy
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                b.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
+            }
+        }
+
+        // If b is an explosion
+        if (b.getUserData().getClass() == ExplosionSystem.class) {
+            // If b is a structure
+            if (a.getUserData().getClass() == StructureSystem.class) {
+                a.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
+            }
+            // If b is an enemy
+            if (a.getUserData().getClass() == EnemySystem.class) {
+                a.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
+            }
+        }
+
         if (b.getUserData() instanceof Entity) {
             if (((Entity) b.getUserData()).getComponent(BulletComponent.class) != null ||
                     ((Entity) b.getUserData()).getComponent(MissileComponent.class) != null) {
@@ -88,35 +112,6 @@ public class PhysicsListener implements ContactListener, EntityListener {
                 }
             }
         }
-
-        //**********************************
-        // NOT WORKING!!!!
-        //**********************************
-        // If a is an explosion
-        if (a.getUserData().getClass() == ExplosionSystem.class) {
-            // If b is a structure
-            if (b.getUserData().getClass() == StructureSystem.class) {
-                b.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
-            }
-            // If b is an enemy
-            if (b.getUserData().getClass() == StructureSystem.class) {
-                b.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
-            }
-        }
-
-        // If b is an explosion
-        if (b.getUserData().getClass() == ExplosionSystem.class) {
-            // If b is a structure
-            if (a.getUserData().getClass() == StructureSystem.class) {
-                a.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
-            }
-            // If b is an enemy
-            if (a.getUserData().getClass() == EnemySystem.class) {
-                a.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
-            }
-        }
-        System.out.println(a.getUserData().getClass());
-        System.out.println(b.getUserData().getClass());
 
         /*
         if (b.getUserData() instanceof Entity) {

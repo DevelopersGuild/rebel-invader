@@ -448,7 +448,7 @@ public class Level {
 
         // Create explosion body
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(pos.pos.x, pos.pos.y);
         body.body = world.createBody(bodyDef);
         //body.body.setBullet(true);

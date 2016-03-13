@@ -42,6 +42,8 @@ public class ExplosionSystem extends IteratingSystem {
         ExplosionComponent explosion = em.get(entity);
         BodyComponent body = bm.get(entity);
 
+        body.body.setUserData(this);
+
         if (explosion.currentTime >= explosion.REMOVAL_TIME)
         {
             screen.markEntityForRemoval(entity);
