@@ -254,7 +254,7 @@ public class GameScreen extends ScreenAdapter {
         else if (MissileComponent.hasLaunched)
         {
             engine.getSystem(MissileSystem.class).detonateMissile();
-            Assets.explosion.play(0.3f);
+            Assets.explosion.play(0.4f);
             MissileComponent.hasLaunched = false;
         }
     }
