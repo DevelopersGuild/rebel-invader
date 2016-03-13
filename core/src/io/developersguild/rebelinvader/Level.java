@@ -361,13 +361,13 @@ public class Level {
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TransformComponent pos = engine.createComponent(TransformComponent.class);
-        HeightDisposableComponent disposable = engine.createComponent(HeightDisposableComponent.class);
 
         missile.origin = origin;
 
         state.set(MissileComponent.STATE_NORMAL);
 
         missile.accelerator = 0;
+        missile.currentTime = 0;
 
         bounds.bounds.width = MissileComponent.WIDTH;
         bounds.bounds.height = MissileComponent.HEIGHT;
@@ -413,7 +413,6 @@ public class Level {
         entity.add(state);
         entity.add(texture);
         entity.add(pos);
-        entity.add(disposable);
 
         engine.addEntity(entity);
     }

@@ -188,7 +188,6 @@ public class GameScreen extends ScreenAdapter {
             pauseSystems();
 
             Assets.musicGame.stop();
-            Assets.lose.play(.5f);
         }
 
         if (level.state == Level.LEVEL_STATE_GAME_WON) {

@@ -84,5 +84,13 @@ public class MissileSystem extends IteratingSystem {
             this.shouldDetonate = false;
             //level.createExplosion(entity);
         }
+
+        if (missile.currentTime >= missile.REMOVAL_TIME)
+        {
+            MissileComponent.hasLaunched = false;
+            screen.markEntityForRemoval(entity);
+        }
+        missile.currentTime += deltaTime;
+        System.out.println(missile.currentTime);
     }
 }
