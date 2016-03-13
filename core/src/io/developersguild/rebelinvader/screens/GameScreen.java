@@ -186,11 +186,17 @@ public class GameScreen extends ScreenAdapter {
         if (level.state == Level.LEVEL_STATE_GAME_OVER) {
             state = GAME_OVER;
             pauseSystems();
+
+            Assets.musicGame.stop();
+            Assets.lose.play(.5f);
         }
 
         if (level.state == Level.LEVEL_STATE_GAME_WON) {
             state = GAME_WON;
             pauseSystems();
+
+            Assets.musicGame.stop();
+            Assets.musicWin.play();
         }
 
         //Kill off any dead entities
@@ -239,7 +245,7 @@ public class GameScreen extends ScreenAdapter {
     private void missileShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.missileTimer <= currentTime) {
-            Assets.launch.play();
+            Assets.launch.play(0.8f);
             player.missileTimer = currentTime + MissileComponent.COOLDOWN;
             missilex = player.missileTimer;
             engine.getSystem(PlayerSystem.class).requestMissile();
@@ -248,7 +254,7 @@ public class GameScreen extends ScreenAdapter {
         else if (MissileComponent.hasLaunched)
         {
             engine.getSystem(MissileSystem.class).detonateMissile();
-            Assets.explosion.play(0.8f);
+            Assets.explosion.play(0.3f);
             MissileComponent.hasLaunched = false;
         }
     }
@@ -326,7 +332,6 @@ public class GameScreen extends ScreenAdapter {
         float gameOverWidth = layout.width;
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
-        Assets.musicGame.stop();
     }
 
     private void presentWin() {
@@ -335,8 +340,6 @@ public class GameScreen extends ScreenAdapter {
         float gameOverWidth = layout.width;
         float gameOverHeight = layout.height;
         Assets.font.draw(game.batch, gameOver, 160 - gameOverWidth / 2, 240 - gameOverHeight / 2);
-        Assets.musicGame.stop();
-        Assets.musicWin.play();
     }
 
 
@@ -383,7 +386,9 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(true);
         engine.getSystem(BulletSystem.class).setProcessing(true);
-        Assets.musicGame.play();
+
+        if (state != GAME_OVER && state != GAME_WON)
+            Assets.musicGame.play();
     }
 
     @Override

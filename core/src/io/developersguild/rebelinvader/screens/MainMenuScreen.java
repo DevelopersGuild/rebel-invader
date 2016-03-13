@@ -35,6 +35,8 @@ public class MainMenuScreen extends ScreenAdapter {
         scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
         exitBounds = new Rectangle(10, 94, 300, 36);
         touchPoint = new Vector3();
+        Assets.musicWin.stop();
+        Assets.lose.stop();
         Assets.musicMenu.play();
     }
 
