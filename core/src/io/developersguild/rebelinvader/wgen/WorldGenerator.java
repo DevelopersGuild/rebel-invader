@@ -53,8 +53,8 @@ public class WorldGenerator {
     }
 
     //Gets a density, weighting towards higher as height goes up
-    public float getDensity(int height) {
-        return getSliding5Random(height) + height * 0.1f;
+    public double getDensity(int height) {
+        return getSliding5Random(height) + height * 0.1f+Math.sin(height/4)*height*0.1f;
     }
 
     public IRowProvider getProvider(int height) {
@@ -72,5 +72,15 @@ public class WorldGenerator {
             lastHeight++;
             getProvider(heightAsInt).createRow(level, heightAsInt, player);
         }
+    }
+    
+    public static void main(String[] args){
+    	WorldGenerator gen=new WorldGenerator(null);
+    	for(int height=0; height<100; height++){
+    		for(int i=0; i<gen.getDensity(height); i++){
+    			System.out.print('*');
+    		}
+    		System.out.println();
+    	}
     }
 }
