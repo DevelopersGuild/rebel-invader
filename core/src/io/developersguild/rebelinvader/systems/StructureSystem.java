@@ -10,6 +10,7 @@ import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.BulletComponent;
 import io.developersguild.rebelinvader.components.EnemyComponent;
+import io.developersguild.rebelinvader.components.ExplosionComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
@@ -66,6 +67,10 @@ public class StructureSystem extends IteratingSystem {
 
         if (collisionCode == BodyComponent.MISSILE_STRUCTURE_COLLISION) {
             structure.currentHealth -= MissileComponent.MISSILE_DAMAGE;
+        }
+
+        if (collisionCode == BodyComponent.EXPLOSION_STRUCTURE_COLLISION) {
+            structure.currentHealth -= ExplosionComponent.EXPLOSION_DAMAGE;
         }
 
         // Death

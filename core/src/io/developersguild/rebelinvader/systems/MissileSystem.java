@@ -23,11 +23,13 @@ public class MissileSystem extends IteratingSystem {
             MovementComponent.class,
             StateComponent.class,
             TransformComponent.class).get();
+
     private final GameScreen screen;
+    private Level level;
+
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<MissileComponent> mim;
     private ComponentMapper<MovementComponent> mm;
-    private Level level;
 
     private boolean shouldDetonate;
 
@@ -72,17 +74,17 @@ public class MissileSystem extends IteratingSystem {
         // Velocity increases over time: doubles, triples, quadruples, etc
         mov.velocity.y = (MissileComponent.PLAYER_MISSILE_VELOCITY + missile.accelerator) * deltaTime;
         missile.accelerator += deltaTime * MissileComponent.PLAYER_MISSILE_VELOCITY;
-
+/*
         if (collisionCode == BodyComponent.BULLET_ENEMY_COLLISION ||
                 collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||
                 collisionCode == BodyComponent.PLAYER_BULLET_COLLISION) {
             screen.markEntityForRemoval(entity);
         }
-
+*/
         if (this.shouldDetonate) {
             screen.markEntityForRemoval(entity);
             this.shouldDetonate = false;
-            //level.createExplosion(entity);
+            level.createExplosion(entity);
         }
 
         if (missile.currentTime >= missile.REMOVAL_TIME)
@@ -91,6 +93,5 @@ public class MissileSystem extends IteratingSystem {
             screen.markEntityForRemoval(entity);
         }
         missile.currentTime += deltaTime;
-        System.out.println(missile.currentTime);
     }
 }

@@ -32,6 +32,7 @@ import io.developersguild.rebelinvader.systems.BoundsSystem;
 import io.developersguild.rebelinvader.systems.BulletSystem;
 import io.developersguild.rebelinvader.systems.CameraSystem;
 import io.developersguild.rebelinvader.systems.EnemySystem;
+import io.developersguild.rebelinvader.systems.ExplosionSystem;
 import io.developersguild.rebelinvader.systems.HealthSystem;
 import io.developersguild.rebelinvader.systems.HeightDisposableSystem;
 import io.developersguild.rebelinvader.systems.MissileSystem;
@@ -87,6 +88,7 @@ public class GameScreen extends ScreenAdapter {
         deadEntities = new ArrayList<Entity>();
 
         currentTime = 0f;
+        missilex = 0f;
         powerActivated = false;
 
         engine.addSystem(new PlayerSystem(level));
@@ -105,6 +107,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new HeightDisposableSystem(this));
         engine.addSystem(new BulletSystem(this));
         engine.addSystem(new MissileSystem(this, level));
+        engine.addSystem(new ExplosionSystem(this));
 
         // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -366,6 +369,8 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PhysicsSystem.class).setProcessing(false);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(false);
         engine.getSystem(BulletSystem.class).setProcessing(false);
+        engine.getSystem(MissileSystem.class).setProcessing(false);
+        engine.getSystem(ExplosionSystem.class).setProcessing(false);
         Assets.musicGame.pause();
     }
 
@@ -385,6 +390,8 @@ public class GameScreen extends ScreenAdapter {
         engine.getSystem(PhysicsSystem.class).setProcessing(true);
         engine.getSystem(HeightDisposableSystem.class).setProcessing(true);
         engine.getSystem(BulletSystem.class).setProcessing(true);
+        engine.getSystem(MissileSystem.class).setProcessing(true);
+        engine.getSystem(ExplosionSystem.class).setProcessing(true);
 
         if (state != GAME_OVER && state != GAME_WON)
             Assets.musicGame.play();

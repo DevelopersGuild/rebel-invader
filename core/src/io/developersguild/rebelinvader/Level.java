@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -18,6 +19,7 @@ import io.developersguild.rebelinvader.components.BoundsComponent;
 import io.developersguild.rebelinvader.components.BulletComponent;
 import io.developersguild.rebelinvader.components.CameraComponent;
 import io.developersguild.rebelinvader.components.EnemyComponent;
+import io.developersguild.rebelinvader.components.ExplosionComponent;
 import io.developersguild.rebelinvader.components.HealthComponent;
 import io.developersguild.rebelinvader.components.HeightDisposableComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
@@ -315,7 +317,7 @@ public class Level {
         pos.pos.set(x, y, 1f);
         pos.scale.set(1f, 1f);
 
-        // Create player body
+        // Create bullet body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(pos.pos.x, pos.pos.y);
@@ -381,7 +383,7 @@ public class Level {
         pos.pos.set(x, y, 1f);
         pos.scale.set(1f, 1f);
 
-        // Create player body
+        // Create missile body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(pos.pos.x, pos.pos.y);
@@ -422,11 +424,56 @@ public class Level {
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        ExplosionComponent explosion = engine.createComponent(ExplosionComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TransformComponent pos = engine.createComponent(TransformComponent.class);
 
+        explosion.origin = origin;
+
+        explosion.currentTime = 0;
+
+        bounds.bounds.width = ExplosionComponent.WIDTH;
+        bounds.bounds.height = ExplosionComponent.HEIGHT;
+
+        texture.region = Assets.explosionTexRegion;
+
+        // Get origin position
+        float x = origin.getComponent(TransformComponent.class).pos.x;
+        float y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
+
+        float scaleRatio = 1.0f;
+
+        pos.pos.set(x, y, 1f);
+        pos.scale.set(scaleRatio, scaleRatio);
+
+        // Create explosion body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(pos.pos.x, pos.pos.y);
+        body.body = world.createBody(bodyDef);
+        //body.body.setBullet(true);
+        body.body.setUserData(this);
+
+        // Define a shape with the vertices
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(bounds.bounds.width / 2f * scaleRatio, bounds.bounds.height / 2f * scaleRatio);
+
+        // Create a fixture with the shape
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygon;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
+
+        // Assign shape to body
+        body.body.createFixture(fixtureDef);
+
+        // Clean up
+        polygon.dispose();
+
         entity.add(body);
         entity.add(bounds);
+        entity.add(explosion);
         entity.add(texture);
         entity.add(pos);
 

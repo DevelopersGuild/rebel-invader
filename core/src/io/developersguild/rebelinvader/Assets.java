@@ -84,6 +84,9 @@ public class Assets {
     public static Texture[] enemies;
     public static TextureRegion[] enemyRegions;
 
+    public static Texture explosionTex;
+    public static TextureRegion explosionTexRegion;
+
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
@@ -161,6 +164,9 @@ public class Assets {
             enemies[i] = loadTexture(i + 1 + ".png");
             enemyRegions[i] = new TextureRegion(enemies[i], 0, 0, 32, 32);
         }
+
+        explosionTex = loadTexture("explosion.png");
+        explosionTexRegion = new TextureRegion(explosionTex, 0, 0, 128, 128);
 
         musicMenu = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_01_-_RottenMage_SpaceJacked_OST_01.mp3"));
         musicMenu.setVolume(0.1f);

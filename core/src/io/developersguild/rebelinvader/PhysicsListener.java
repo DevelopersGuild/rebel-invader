@@ -11,9 +11,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.BulletComponent;
+import io.developersguild.rebelinvader.components.ExplosionComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
+import io.developersguild.rebelinvader.components.StructureComponent;
 import io.developersguild.rebelinvader.systems.EnemySystem;
+import io.developersguild.rebelinvader.systems.ExplosionSystem;
 import io.developersguild.rebelinvader.systems.PlayerSystem;
 import io.developersguild.rebelinvader.systems.StructureSystem;
 
@@ -85,6 +88,35 @@ public class PhysicsListener implements ContactListener, EntityListener {
                 }
             }
         }
+
+        //**********************************
+        // NOT WORKING!!!!
+        //**********************************
+        // If a is an explosion
+        if (a.getUserData().getClass() == ExplosionSystem.class) {
+            // If b is a structure
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                b.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
+            }
+            // If b is an enemy
+            if (b.getUserData().getClass() == StructureSystem.class) {
+                b.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
+            }
+        }
+
+        // If b is an explosion
+        if (b.getUserData().getClass() == ExplosionSystem.class) {
+            // If b is a structure
+            if (a.getUserData().getClass() == StructureSystem.class) {
+                a.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
+            }
+            // If b is an enemy
+            if (a.getUserData().getClass() == EnemySystem.class) {
+                a.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
+            }
+        }
+        System.out.println(a.getUserData().getClass());
+        System.out.println(b.getUserData().getClass());
 
         /*
         if (b.getUserData() instanceof Entity) {
@@ -170,8 +202,8 @@ public class PhysicsListener implements ContactListener, EntityListener {
                 b.setUserData(BodyComponent.PLAYER_STRUCTURE_COLLISION);
             }
             // If a is an enemy
-            if (b.getUserData().getClass() == EnemySystem.class) {
-                a.setUserData(BodyComponent.PLAYER_ENEMY_COLLISION);
+            if (a.getUserData().getClass() == EnemySystem.class) {
+                b.setUserData(BodyComponent.PLAYER_ENEMY_COLLISION);
             }
         }
     }
