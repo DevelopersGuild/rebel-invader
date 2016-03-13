@@ -17,6 +17,8 @@ public class WorldGenerator {
             new RowProviderSpaceJunk(),
             new RowProviderSpaceJunk(),
             new RowProviderSpaceJunk(),
+            new RowProviderFleetDock(),
+            new RowProviderFleetDock(),
             new RowProviderSpaceJunk(),
             new RowProviderSpaceJunk(),
             new RowProviderWall(),
@@ -52,7 +54,7 @@ public class WorldGenerator {
         return sum;
     }
 
-    //Gets a density, weighting towards higher as height goes up
+    //Gets a density. It's randomly fuzzed, with a sine term to make it start and stop.
     public double getDensity(int height) {
         return getSliding5Random(height) + height * 0.1f+Math.sin(height/4)*height*0.1f;
     }
