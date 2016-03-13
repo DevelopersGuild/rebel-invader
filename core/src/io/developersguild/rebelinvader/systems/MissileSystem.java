@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+
+import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
@@ -25,16 +27,24 @@ public class MissileSystem extends IteratingSystem {
     private ComponentMapper<BodyComponent> bm;
     private ComponentMapper<MissileComponent> mim;
     private ComponentMapper<MovementComponent> mm;
+    private Level level;
 
-    public MissileSystem(GameScreen screen) {
+    private boolean shouldDetonate;
+
+    public MissileSystem(GameScreen screen, Level level) {
         super(family);
         this.screen = screen;
+        this.level = level;
 
         bm = ComponentMapper.getFor(BodyComponent.class);
         mim = ComponentMapper.getFor(MissileComponent.class);
         mm = ComponentMapper.getFor(MovementComponent.class);
         //sm = ComponentMapper.getFor(StateComponent.class);
         //tm = ComponentMapper.getFor(TransformComponent.class);
+    }
+
+    public void detonateMissile() {
+        this.shouldDetonate = true;
     }
 
     @Override
@@ -67,6 +77,12 @@ public class MissileSystem extends IteratingSystem {
                 collisionCode == BodyComponent.BULLET_STRUCTURE_COLLISION ||
                 collisionCode == BodyComponent.PLAYER_BULLET_COLLISION) {
             screen.markEntityForRemoval(entity);
+        }
+
+        if (this.shouldDetonate) {
+            screen.markEntityForRemoval(entity);
+            this.shouldDetonate = false;
+            //level.createExplosion(entity);
         }
     }
 }

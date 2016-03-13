@@ -24,6 +24,7 @@ public class Assets {
     public static Sound shot;
     public static Sound crash;
     public static Sound launch;
+    public static Sound explosion;
 
 
     public static BitmapFont font;
@@ -179,5 +180,7 @@ public class Assets {
         crash = Gdx.audio.newSound(Gdx.files.internal("crash.wav"));
 
         launch = Gdx.audio.newSound(Gdx.files.internal("missilesound.wav"));
+
+        explosion = Gdx.audio.newSound((Gdx.files.internal("explosionsound.wav")));
     }
 }

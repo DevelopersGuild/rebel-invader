@@ -16,6 +16,8 @@ public class MissileComponent implements Component {
     public static final float COOLDOWN = 10f;
     public static final float MISSILE_DAMAGE = 50f;
 
+    public static boolean hasLaunched = false;
+
     public float accelerator = 0.0f;
 
     public Entity origin;

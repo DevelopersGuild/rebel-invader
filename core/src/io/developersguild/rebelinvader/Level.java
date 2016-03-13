@@ -361,6 +361,7 @@ public class Level {
         StateComponent state = engine.createComponent(StateComponent.class);
         TextureComponent texture = engine.createComponent(TextureComponent.class);
         TransformComponent pos = engine.createComponent(TransformComponent.class);
+        HeightDisposableComponent disposable = engine.createComponent(HeightDisposableComponent.class);
 
         missile.origin = origin;
 
@@ -372,7 +373,6 @@ public class Level {
         bounds.bounds.height = MissileComponent.HEIGHT;
 
         texture.region = Assets.missileRegion;
-        texture.color = Color.WHITE;
 
         // Get origin position
         float x = origin.getComponent(TransformComponent.class).pos.x;
@@ -413,11 +413,25 @@ public class Level {
         entity.add(state);
         entity.add(texture);
         entity.add(pos);
+        entity.add(disposable);
 
         engine.addEntity(entity);
+    }
 
+    public void createExplosion(Entity origin) {
+        Entity entity = engine.createEntity();
 
+        BodyComponent body = engine.createComponent(BodyComponent.class);
+        BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent pos = engine.createComponent(TransformComponent.class);
 
+        entity.add(body);
+        entity.add(bounds);
+        entity.add(texture);
+        entity.add(pos);
+
+        engine.addEntity(entity);
     }
 
     private void createHealthBar(Entity target, HeightDisposableComponent disposable) {

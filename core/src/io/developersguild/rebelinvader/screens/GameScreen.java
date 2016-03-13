@@ -104,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(new PowerSystem(this));
         engine.addSystem(new HeightDisposableSystem(this));
         engine.addSystem(new BulletSystem(this));
-        engine.addSystem(new MissileSystem(this));
+        engine.addSystem(new MissileSystem(this, level));
 
         // Set camera
         engine.getSystem(BackgroundSystem.class).setCamera(engine.getSystem(RenderingSystem.class).getCamera());
@@ -171,17 +171,13 @@ public class GameScreen extends ScreenAdapter {
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             if (Math.abs(Gdx.input.getAccelerometerX()) > 0.8f) accelX = Gdx.input.getAccelerometerX();
             if (Gdx.input.justTouched() && !(missileBounds.contains(touchPoint.x, touchPoint.y))) playerShoot();
-            if (missileBounds.contains(touchPoint.x, touchPoint.y) && missilex <= currentTime) {
-                missileShoot();
-            }
+            if (Gdx.input.justTouched() && (missileBounds.contains(touchPoint.x, touchPoint.y))) missileShoot();
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) accelX = 2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.D)) accelX = -2.0f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) playerShoot();
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) missileShoot();
         }
-
-
 
 
 
@@ -243,10 +239,17 @@ public class GameScreen extends ScreenAdapter {
     private void missileShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.missileTimer <= currentTime) {
-            Assets.launch.play(1f);
+            Assets.launch.play();
             player.missileTimer = currentTime + MissileComponent.COOLDOWN;
             missilex = player.missileTimer;
             engine.getSystem(PlayerSystem.class).requestMissile();
+            MissileComponent.hasLaunched = true;
+        }
+        else if (MissileComponent.hasLaunched)
+        {
+            engine.getSystem(MissileSystem.class).detonateMissile();
+            Assets.explosion.play(0.8f);
+            MissileComponent.hasLaunched = false;
         }
     }
 
