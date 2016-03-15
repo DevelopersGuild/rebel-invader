@@ -213,6 +213,8 @@ public class Level {
 
     public void createEnemy(float x, float y, Entity player, int textureIdx) {
         Entity entity = engine.createEntity();
+        
+        System.out.println("Enemy at "+x+", "+y);
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
