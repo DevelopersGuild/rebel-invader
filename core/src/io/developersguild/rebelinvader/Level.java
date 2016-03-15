@@ -443,7 +443,7 @@ public class Level {
         float x = origin.getComponent(TransformComponent.class).pos.x;
         float y = origin.getComponent(TransformComponent.class).pos.y + origin.getComponent(BoundsComponent.class).bounds.height / 2f;
 
-        float scaleRatio = 1.0f;
+        float scaleRatio = 2.0f;
 
         pos.pos.set(x, y, 1f);
         pos.scale.set(scaleRatio, scaleRatio);
