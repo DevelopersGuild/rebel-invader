@@ -122,7 +122,7 @@ public class GameScreen extends ScreenAdapter {
         level.create(world);
 
         pauseBounds = new Rectangle(320 - 40 - 5, 480 - 50 - 5, 40, 50);
-        missileBounds = new Rectangle(5, 9, 25, 50);
+        missileBounds = new Rectangle(10, 10, 50, 50);
 
         resumeSystems();
 
@@ -294,7 +294,11 @@ public class GameScreen extends ScreenAdapter {
         updateScore(level.score);
 
         if (missilex <= currentTime) {
-            missileDrawn();
+            game.batch.draw(Assets.missileIcon, 10,  10 , 50, 50);
+        }
+
+        if (missilex > currentTime && MissileComponent.hasLaunched) {
+            game.batch.draw(Assets.detonateIcon, 10, 10, 50, 50);
         }
 
         switch (state) {
@@ -316,7 +320,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void presentRunning() {
         game.batch.draw(Assets.pauseButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
-
+        game.batch.draw(Assets.missileButton, 10, 10, 50, 50);
     }
 
     private void presentPaused() {
@@ -324,7 +328,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void missileDrawn() {
-        game.batch.draw(Assets.missile, 5,  9 , 25, 50);
+        game.batch.draw(Assets.missile, 25,  15 , 20, 40);
     }
 
     private void presentGameOver() {

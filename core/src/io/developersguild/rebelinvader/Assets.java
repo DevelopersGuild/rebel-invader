@@ -87,6 +87,15 @@ public class Assets {
     public static Texture explosionTex;
     public static TextureRegion explosionTexRegion;
 
+    public static Texture missileButton;
+    public static TextureRegion missileButtonRegion;
+
+    public static Texture missileIcon;
+    public static TextureRegion missileIconRegion;
+
+    public static Texture detonateIcon;
+    public static TextureRegion detonateIconRegion;
+
     public static Texture loadTexture(String file) {
         return new Texture(Gdx.files.internal(file));
     }
@@ -167,6 +176,15 @@ public class Assets {
 
         explosionTex = loadTexture("explosion.png");
         explosionTexRegion = new TextureRegion(explosionTex, 0, 0, 128, 128);
+
+        missileButton = loadTexture("missilebutton.png");
+        missileButtonRegion = new TextureRegion(missileButton, 0, 0, 50, 50);
+
+        missileIcon = loadTexture("missileIcon.png");
+        missileIconRegion = new TextureRegion(missileIcon, 0, 0, 50, 50);
+
+        detonateIcon = loadTexture("detonate.png");
+        detonateIconRegion = new TextureRegion(detonateIcon, 0, 0, 50, 50);
 
         musicMenu = Gdx.audio.newMusic(Gdx.files.internal("sawsquarenoise_-_01_-_RottenMage_SpaceJacked_OST_01.mp3"));
         musicMenu.setVolume(0.5f);
