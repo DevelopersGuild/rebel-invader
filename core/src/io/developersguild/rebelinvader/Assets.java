@@ -29,6 +29,9 @@ public class Assets {
 
     public static BitmapFont font;
 
+    public static Texture riBanner;
+    public static TextureRegion riBannerRegion;
+
     public static Texture playText;
     public static TextureRegion playTextRegion;
 
