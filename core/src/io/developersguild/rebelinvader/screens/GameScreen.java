@@ -240,14 +240,14 @@ public class GameScreen extends ScreenAdapter {
 //>>>>>>> 8f6a918c422b1e2fe72b73bff30446ad9c9b55bd
             else player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestBullet();
-            Assets.shot.play(0.3f);
+            Assets.shot.play(0.7f);
         }
     }
 
     private void missileShoot() {
         PlayerComponent player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0).getComponent(PlayerComponent.class);
         if (player.missileTimer <= currentTime) {
-            Assets.launch.play(0.8f);
+            Assets.launch.play();
             player.missileTimer = currentTime + MissileComponent.COOLDOWN;
             missilex = player.missileTimer;
             engine.getSystem(PlayerSystem.class).requestMissile();
@@ -256,7 +256,7 @@ public class GameScreen extends ScreenAdapter {
         else if (MissileComponent.hasLaunched)
         {
             engine.getSystem(MissileSystem.class).detonateMissile();
-            Assets.explosion.play(0.4f);
+            Assets.explosion.play();
             MissileComponent.hasLaunched = false;
         }
     }
