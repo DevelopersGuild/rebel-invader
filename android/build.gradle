@@ -1,11 +1,5 @@
 android {
     signingConfigs {
-        config {
-            keyAlias 'RebelInvaderKey'
-            keyPassword 'ridg2016'
-            storeFile file('C:/Users/Vihan/keystores')
-            storePassword 'S#ntinel2'
-        }
     }
     buildToolsVersion "23.0.1"
     compileSdkVersion 20
@@ -29,7 +23,6 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.config
         }
     }
 }
