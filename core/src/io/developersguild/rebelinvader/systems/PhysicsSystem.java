@@ -7,11 +7,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
+
+// import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 /**
  * Created by Vihan on 1/22/2016.
@@ -24,8 +26,7 @@ public class PhysicsSystem extends IteratingSystem {
     private World world;
     private Array<Entity> bodiesQueue;
 
-    // TODO: Remove all instances of debugRenderer on release
-    private Box2DDebugRenderer debugRenderer;
+    // private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
 
     private ComponentMapper<BodyComponent> bm = ComponentMapper.getFor(BodyComponent.class);
@@ -34,7 +35,7 @@ public class PhysicsSystem extends IteratingSystem {
     public PhysicsSystem(World world, OrthographicCamera camera) {
         super(Family.all(BodyComponent.class, TransformComponent.class).get());
 
-        debugRenderer = new Box2DDebugRenderer();
+        // debugRenderer = new Box2DDebugRenderer();
         this.world = world;
         this.camera = camera;
         this.bodiesQueue = new Array<Entity>();
@@ -43,7 +44,7 @@ public class PhysicsSystem extends IteratingSystem {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        debugRenderer.render(world, camera.combined);
+        // debugRenderer.render(world, camera.combined);
         float frameTime = Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
         if (accumulator >= MAX_STEP_TIME) {

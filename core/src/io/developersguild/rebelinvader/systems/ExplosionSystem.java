@@ -44,8 +44,7 @@ public class ExplosionSystem extends IteratingSystem {
 
         body.body.setUserData(this);
 
-        if (explosion.currentTime >= explosion.REMOVAL_TIME)
-        {
+        if (explosion.currentTime >= explosion.REMOVAL_TIME) {
             screen.markEntityForRemoval(entity);
         }
         explosion.currentTime += deltaTime;

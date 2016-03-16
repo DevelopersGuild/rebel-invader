@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
+
 import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.BodyComponent;
@@ -61,6 +62,7 @@ public class PlayerSystem extends IteratingSystem {
     public void requestBullet() {
         this.shouldFire = true;
     }
+
     public void requestMissile() {
         this.missileFire = true;
     }
@@ -144,7 +146,7 @@ public class PlayerSystem extends IteratingSystem {
         }
 
         // Tilting
-        if (Math.abs(mov.velocity.x) >= 1f ) {
+        if (Math.abs(mov.velocity.x) >= 1f) {
             t.rotation = t.rotation - 0.01f * mov.velocity.x;
         } else if (Math.abs(mov.velocity.x) > 0f) {
             t.rotation = t.rotation + 0.01f * mov.velocity.x;

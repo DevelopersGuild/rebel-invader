@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.BodyComponent;
@@ -13,7 +12,6 @@ import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.ExplosionComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
 import io.developersguild.rebelinvader.components.MovementComponent;
-import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
 

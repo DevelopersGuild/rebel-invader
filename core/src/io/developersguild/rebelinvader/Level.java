@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -22,15 +21,14 @@ import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.ExplosionComponent;
 import io.developersguild.rebelinvader.components.HealthComponent;
 import io.developersguild.rebelinvader.components.HeightDisposableComponent;
-import io.developersguild.rebelinvader.components.MovementComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
+import io.developersguild.rebelinvader.components.MovementComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.PowerComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
 import io.developersguild.rebelinvader.components.StructureComponent;
 import io.developersguild.rebelinvader.components.TextureComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
-import io.developersguild.rebelinvader.screens.GameScreen;
 import io.developersguild.rebelinvader.systems.RenderingSystem;
 import io.developersguild.rebelinvader.wgen.WorldGenerator;
 
@@ -213,8 +211,8 @@ public class Level {
 
     public void createEnemy(float x, float y, Entity player, int textureIdx) {
         Entity entity = engine.createEntity();
-        
-        System.out.println("Enemy at "+x+", "+y);
+
+        System.out.println("Enemy at " + x + ", " + y);
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
@@ -311,7 +309,7 @@ public class Level {
             // Add randomized horizontal velocity to the bullet
             float randomDegree = MathUtils.random(-BulletComponent.HORIZONTAL_SHIFT_DEGREE, BulletComponent.HORIZONTAL_SHIFT_DEGREE);
             float randomRadian = randomDegree * MathUtils.degreesToRadians;
-            bullet.HORIZONTAL_VELOCITY = BulletComponent.PLAYER_BULLET_VELOCITY * (float)Math.tan(randomRadian);
+            bullet.HORIZONTAL_VELOCITY = BulletComponent.PLAYER_BULLET_VELOCITY * (float) Math.tan(randomRadian);
         } else { // If enemy or anyone else fired
             y = origin.getComponent(TransformComponent.class).pos.y - origin.getComponent(BoundsComponent.class).bounds.height / 2f;
         }
@@ -522,7 +520,8 @@ public class Level {
             position.scale.set(health.lengthRatio, health.widthRatio);
         }
 
-        if(target.getComponent(PlayerComponent.class) != null) texture.region = Assets.healthRegionGreen;
+        if (target.getComponent(PlayerComponent.class) != null)
+            texture.region = Assets.healthRegionGreen;
         else texture.region = Assets.healthRegionRed;
 
         entity.add(health);

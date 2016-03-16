@@ -2,6 +2,7 @@ package io.developersguild.rebelinvader.wgen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.RandomXS128;
+
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.StructureComponent;
 
@@ -40,6 +41,16 @@ public class WorldGenerator {
         seed = (int) (Math.random() * Integer.MAX_VALUE);
     }
 
+    public static void main(String[] args) {
+        WorldGenerator gen = new WorldGenerator(null);
+        for (int height = 0; height < 100; height++) {
+            for (int i = 0; i < gen.getDensity(height); i++) {
+                System.out.print('*');
+            }
+            System.out.println();
+        }
+    }
+
     public void provideWorld(float heightNeeded, Entity player) {
         provideWorldNew(heightNeeded, player);
     }
@@ -56,7 +67,7 @@ public class WorldGenerator {
 
     //Gets a density. It's randomly fuzzed, with a sine term to make it start and stop.
     public double getDensity(int height) {
-        return getSliding5Random(height) + height * 0.1f+Math.sin(height/4)*height*0.1f;
+        return getSliding5Random(height) + height * 0.1f + Math.sin(height / 4) * height * 0.1f;
     }
 
     public IRowProvider getProvider(int height) {
@@ -74,15 +85,5 @@ public class WorldGenerator {
             lastHeight++;
             getProvider(heightAsInt).createRow(level, heightAsInt, player);
         }
-    }
-    
-    public static void main(String[] args){
-    	WorldGenerator gen=new WorldGenerator(null);
-    	for(int height=0; height<100; height++){
-    		for(int i=0; i<gen.getDensity(height); i++){
-    			System.out.print('*');
-    		}
-    		System.out.println();
-    	}
     }
 }

@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import io.developersguild.rebelinvader.components.HealthComponent;
-import io.developersguild.rebelinvader.components.TextureComponent;
-import io.developersguild.rebelinvader.components.TransformComponent;
-import io.developersguild.rebelinvader.components.PowerComponent;
 
 import java.util.Comparator;
+
+import io.developersguild.rebelinvader.components.HealthComponent;
+import io.developersguild.rebelinvader.components.PowerComponent;
+import io.developersguild.rebelinvader.components.TextureComponent;
+import io.developersguild.rebelinvader.components.TransformComponent;
 
 public class RenderingSystem extends IteratingSystem {
     static final float FRUSTUM_WIDTH = 10;
@@ -61,10 +62,10 @@ public class RenderingSystem extends IteratingSystem {
         batch.begin();
 
         for (Entity entity : renderQueue) {
-            if(entity.getComponent(HealthComponent.class) != null) {
-                if(!entity.getComponent(HealthComponent.class).doRender) continue;
-            } else if(entity.getComponent(PowerComponent.class) != null) {
-                if(!entity.getComponent(PowerComponent.class).doRender) continue;
+            if (entity.getComponent(HealthComponent.class) != null) {
+                if (!entity.getComponent(HealthComponent.class).doRender) continue;
+            } else if (entity.getComponent(PowerComponent.class) != null) {
+                if (!entity.getComponent(PowerComponent.class).doRender) continue;
             }
             TextureComponent tex = textureM.get(entity);
 

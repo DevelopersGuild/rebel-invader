@@ -15,10 +15,8 @@ public class MissileComponent implements Component {
 
     public static final float COOLDOWN = 10.0f;
     public static final float MISSILE_DAMAGE = 50f;
-
-    public static boolean hasLaunched = false;
-
     public static final float REMOVAL_TIME = 3.0f;
+    public static boolean hasLaunched = false;
     public float currentTime = 0.0f;
 
     public float accelerator = 0.0f;

@@ -10,37 +10,37 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+
 import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.RebelInvader;
 
-public class HelpScreen extends ScreenAdapter{
+public class HelpScreen extends ScreenAdapter {
     RebelInvader game;
     OrthographicCamera guiCam;
-    private GlyphLayout layout = new GlyphLayout();
     String[] message = {"Press 'A' to move left.", "Press 'D' to move right.", "Press 'W' to shoot.",
-                        "Press 'SPACEBAR' to launch missile.", "Press 'SPACEBAR' again to detonate",
-                        "Wait 10 seconds to reload missile.", "Kill enemies to win points.", "Reach the end to win!"};
+            "Press 'SPACEBAR' to launch missile.", "Press 'SPACEBAR' again to detonate",
+            "Wait 10 seconds to reload missile.", "Kill enemies to win points.", "Reach the end to win!"};
     String[] messageb = {"Tilt device left to move left.", "Tilt device right to move right.", "Tap screen to shoot.",
-                        "Tap missile icon to launch missile.", "Press icon again to detonate",
-                        "Wait 10 seconds to reload missile.", "Kill enemies to win points.", "Reach the end to win!"};
+            "Tap missile icon to launch missile.", "Press icon again to detonate",
+            "Wait 10 seconds to reload missile.", "Kill enemies to win points.", "Reach the end to win!"};
     float xOffset = 0;
+    private GlyphLayout layout = new GlyphLayout();
 
 
-
-    public HelpScreen(RebelInvader game){
+    public HelpScreen(RebelInvader game) {
         this.game = game;
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
     }
 
-    public void update () {
+    public void update() {
         if (Gdx.input.justTouched()) {
             game.setScreen(new MainMenuScreen(game));
             Assets.click.play();
         }
     }
 
-    public void draw () {
+    public void draw() {
         //draw things on gimp.
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -83,7 +83,7 @@ public class HelpScreen extends ScreenAdapter{
     }
 
     @Override
-    public void render (float delta) {
+    public void render(float delta) {
         update();
         draw();
     }
