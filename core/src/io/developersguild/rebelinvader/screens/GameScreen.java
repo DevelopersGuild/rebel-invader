@@ -293,11 +293,11 @@ public class GameScreen extends ScreenAdapter {
         game.batch.begin();
         updateScore(level.score);
 
-        if (missilex <= currentTime) {
+        if (missilex <= currentTime && state != GAME_OVER) {
             game.batch.draw(Assets.missileIcon, 10,  10 , 50, 50);
         }
 
-        if (missilex > currentTime && MissileComponent.hasLaunched) {
+        if (missilex > currentTime && MissileComponent.hasLaunched && state != GAME_OVER) {
             game.batch.draw(Assets.detonateIcon, 10, 10, 50, 50);
         }
 
@@ -325,10 +325,6 @@ public class GameScreen extends ScreenAdapter {
 
     private void presentPaused() {
         game.batch.draw(Assets.playButton, 320 - 40 - 5, 480 - 50 - 5, 40, 50);
-    }
-
-    private void missileDrawn() {
-        game.batch.draw(Assets.missile, 25,  15 , 20, 40);
     }
 
     private void presentGameOver() {
