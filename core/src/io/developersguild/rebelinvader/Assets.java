@@ -180,7 +180,7 @@ public class Assets {
         missileButton = loadTexture("missilebutton.png");
         missileButtonRegion = new TextureRegion(missileButton, 0, 0, 50, 50);
 
-        missileIcon = loadTexture("missileIcon.png");
+        missileIcon = loadTexture("missileicon.png");
         missileIconRegion = new TextureRegion(missileIcon, 0, 0, 50, 50);
 
         detonateIcon = loadTexture("detonate.png");
