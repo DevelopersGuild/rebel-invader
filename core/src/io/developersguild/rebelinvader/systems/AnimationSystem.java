@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
+
 import io.developersguild.rebelinvader.components.AnimationComponent;
 import io.developersguild.rebelinvader.components.StateComponent;
 import io.developersguild.rebelinvader.components.TextureComponent;

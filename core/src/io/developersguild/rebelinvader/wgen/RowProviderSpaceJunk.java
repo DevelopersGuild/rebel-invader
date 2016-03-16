@@ -1,6 +1,7 @@
 package io.developersguild.rebelinvader.wgen;
 
 import com.badlogic.ashley.core.Entity;
+
 import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.Level;
 import io.developersguild.rebelinvader.components.StructureComponent;

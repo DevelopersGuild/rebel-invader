@@ -14,11 +14,8 @@ public class BulletComponent implements Component {
     public static final int STATE_NORMAL = 0;
     public static final int STATE_HIT = 1;
     public static final float HORIZONTAL_SHIFT_DEGREE = 5;
-
-    public float HORIZONTAL_VELOCITY = 0f;
-
     public static final float BULLET_DAMAGE = 15f;
     public static final float COOLDOWN = 0.25f;
-
+    public float HORIZONTAL_VELOCITY = 0f;
     public Entity origin;
 }

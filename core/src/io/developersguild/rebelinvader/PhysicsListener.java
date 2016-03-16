@@ -8,13 +8,10 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.BulletComponent;
-import io.developersguild.rebelinvader.components.ExplosionComponent;
-import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.MissileComponent;
-import io.developersguild.rebelinvader.components.StructureComponent;
+import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.systems.EnemySystem;
 import io.developersguild.rebelinvader.systems.ExplosionSystem;
 import io.developersguild.rebelinvader.systems.PlayerSystem;

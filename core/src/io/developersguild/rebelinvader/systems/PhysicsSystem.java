@@ -7,11 +7,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-// import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+
 import io.developersguild.rebelinvader.components.BodyComponent;
 import io.developersguild.rebelinvader.components.TransformComponent;
+
+// import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 /**
  * Created by Vihan on 1/22/2016.

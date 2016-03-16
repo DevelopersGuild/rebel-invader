@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+
 import io.developersguild.rebelinvader.components.BoundsComponent;
 import io.developersguild.rebelinvader.components.EnemyComponent;
 import io.developersguild.rebelinvader.components.HealthComponent;
@@ -52,7 +53,7 @@ public class HealthSystem extends IteratingSystem {
         pos.pos.y = health.targetPos.y - health.target.getComponent(BoundsComponent.class).bounds.height / 2f - 0.1f;
 
         // Fix(?) for blinking health bar
-        if(pos.pos.y - screen.getLevel().playerHeight <= 30) health.doRender = true;
+        if (pos.pos.y - screen.getLevel().playerHeight <= 30) health.doRender = true;
 
         if (health.target.getComponent(PlayerComponent.class) != null) {
             health.currentHealth = health.target.getComponent(PlayerComponent.class).currentHealth;
@@ -69,9 +70,9 @@ public class HealthSystem extends IteratingSystem {
 
         if (health.currentHealth <= 0) {
             health.doRender = false;
-            if(health.target.getComponent(StructureComponent.class) != null)
+            if (health.target.getComponent(StructureComponent.class) != null)
                 health.target.getComponent(StructureComponent.class).killedByPlayer = true;
-            else if(health.target.getComponent(EnemyComponent.class) != null)
+            else if (health.target.getComponent(EnemyComponent.class) != null)
                 health.target.getComponent(EnemyComponent.class).killedByPlayer = true;
             screen.markEntityForRemoval(health.target);
             screen.markEntityForRemoval(entity);

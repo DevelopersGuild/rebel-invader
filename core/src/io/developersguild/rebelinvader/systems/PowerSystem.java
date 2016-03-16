@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+
 import io.developersguild.rebelinvader.components.BoundsComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.PowerComponent;
@@ -53,7 +54,7 @@ public class PowerSystem extends IteratingSystem {
         }
 
         // Prevent power bar being rendered when it's empty
-        if(power.currentPower <= 0.1) power.doRender = false;
+        if (power.currentPower <= 0.1) power.doRender = false;
         else power.doRender = true;
 
         powerLastFrame = power.currentPower;
