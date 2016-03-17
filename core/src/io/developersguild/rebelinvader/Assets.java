@@ -106,6 +106,9 @@ public class Assets {
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
 
+        riBanner = loadTexture("rebelinvader-banner.png");
+        riBannerRegion = new TextureRegion(riBanner, 0, 0, 320, 160);
+
         playText = loadTexture("play.png");
         playTextRegion = new TextureRegion(playText, 160 - 150, 200 + 18, 300, 36);
 
