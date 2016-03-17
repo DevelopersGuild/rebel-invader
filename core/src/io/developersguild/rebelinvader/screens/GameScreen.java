@@ -71,6 +71,8 @@ public class GameScreen extends ScreenAdapter {
     private List<Entity> deadEntities;
     private float currentTime;
     private boolean powerActivated;
+    private float gameOverTimer = 0.0f;
+    private static final float GAME_OVER_COOLDOWN = 1.0f;
 
     public GameScreen(RebelInvader game) {
         this.game = game;
@@ -145,10 +147,10 @@ public class GameScreen extends ScreenAdapter {
                 updatePaused();
                 break;
             case GAME_OVER:
-                updateGameOver();
+                updateGameOver(deltaTime);
                 break;
             case GAME_WON:
-                updateGameOver();
+                updateGameOver(deltaTime);
                 break;
         }
     }
@@ -225,13 +227,14 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void updateGameOver() {
-        if (Gdx.input.justTouched()) {
+    private void updateGameOver(float deltatime) {
+        if (Gdx.input.justTouched() && gameOverTimer >= GAME_OVER_COOLDOWN) {
             resumeSystems();
             game.setScreen(new MainMenuScreen(game));
             settings.addScore(level.score);
             settings.save();
         }
+        gameOverTimer += deltatime;
     }
 
     private void playerShoot() {
