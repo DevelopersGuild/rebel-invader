@@ -50,6 +50,7 @@ public class HelpScreen extends ScreenAdapter {
         game.batch.end();
 
         game.batch.begin();
+        Assets.font.draw(game.batch, "Help", 320/2 - 15, 390);
         Application.ApplicationType appType = Gdx.app.getType();
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             // Get width of largest string
@@ -61,7 +62,7 @@ public class HelpScreen extends ScreenAdapter {
             xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
             // Draw the Strings
             for (int i = 0; i < messageb.length; i++) {
-                Assets.font.draw(game.batch, messageb[i], xOffset, 300 + (i * -10));
+                Assets.font.draw(game.batch, messageb[i], xOffset, 350 + (i * -30));
             }
 
         } else {
@@ -74,7 +75,7 @@ public class HelpScreen extends ScreenAdapter {
             xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
             // Draw the Strings
             for (int i = 0; i < message.length; i++) {
-                Assets.font.draw(game.batch, message[i], xOffset, 300 + (i * -10));
+                Assets.font.draw(game.batch, message[i], xOffset, 350 + (i * -30));
             }
         }
 
