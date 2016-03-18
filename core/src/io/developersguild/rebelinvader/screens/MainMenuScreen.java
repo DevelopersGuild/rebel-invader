@@ -85,6 +85,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
         //Draw 'Play' and 'Exit' buttons
         game.batch.draw(Assets.riBanner, 0, 310, 320, 160);
+        game.batch.draw(Assets.dgLogo, 320 - 64 - 5, 5, 64, 53);
         game.batch.draw(Assets.playText, 10, 255, 300, 36);
         game.batch.draw(Assets.helpText, 10, 195, 300, 36);
         game.batch.draw(Assets.scoreText, 10, 135, 300, 36);

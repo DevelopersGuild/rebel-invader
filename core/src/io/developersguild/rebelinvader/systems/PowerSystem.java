@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
+import io.developersguild.rebelinvader.Assets;
 import io.developersguild.rebelinvader.components.BoundsComponent;
 import io.developersguild.rebelinvader.components.PlayerComponent;
 import io.developersguild.rebelinvader.components.PowerComponent;
@@ -23,6 +24,7 @@ public class PowerSystem extends IteratingSystem {
     private ComponentMapper<TransformComponent> tm;
     private ComponentMapper<PowerComponent> pm;
     private float powerLastFrame;
+    private boolean isPowerup;
 
     public PowerSystem(GameScreen screen) {
         super(family);
@@ -32,6 +34,7 @@ public class PowerSystem extends IteratingSystem {
         pm = ComponentMapper.getFor(PowerComponent.class);
 
         powerLastFrame = 0f;
+        isPowerup = false;
     }
 
     @Override
@@ -76,12 +79,15 @@ public class PowerSystem extends IteratingSystem {
         // Prevent power decreasing below 0
         if (power.currentPower <= 0) {
             power.currentPower = 0;
+            isPowerup = false;
         }
 
         // Prevent health increasing over maxHealth
-        if (power.currentPower > power.maxPower) {
+        if (power.currentPower >= power.maxPower && !isPowerup) {
             power.currentPower = power.maxPower;
             screen.activatePower();
+            Assets.powerup.play(0.4f);
+            isPowerup = true;
         }
 
         // Do the same for the actual target entity too
