@@ -54,7 +54,7 @@ public class HighscoresScreen extends ScreenAdapter {
         xOffset = Math.max(layout.width, xOffset);
 
         // Center the string
-        xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
+        xOffset = 150 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
     }
 
     public void update() {
@@ -77,7 +77,6 @@ public class HighscoresScreen extends ScreenAdapter {
 
         game.batch.enableBlending();
         game.batch.begin();
-        //game.batch.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);
 
         // This draws bottom to top
         float y = 130;
@@ -88,7 +87,6 @@ public class HighscoresScreen extends ScreenAdapter {
         y += Assets.font.getLineHeight();
         Assets.font.draw(game.batch, "Highscores", xOffset, y);
 
-        //game.batch.draw(Assets.arrow, 0, 0, 64, 64);
         game.batch.end();
     }
 

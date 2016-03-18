@@ -31,10 +31,10 @@ public class MainMenuScreen extends ScreenAdapter {
 
         guiCam = new OrthographicCamera(320, 480);
         guiCam.position.set(320 / 2, 480 / 2, 0);
-        playBounds = new Rectangle(160 - 150, 200 + 80, 300, 36);
-        helpBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
-        scoreBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
-        exitBounds = new Rectangle(10, 94, 300, 36);
+        playBounds = new Rectangle(10, 255, 300, 36);
+        helpBounds = new Rectangle(10, 195, 300, 36);
+        scoreBounds = new Rectangle(10, 135, 300, 36);
+        exitBounds = new Rectangle(10, 75, 300, 36);
         touchPoint = new Vector3();
         Assets.musicWin.stop();
         Assets.musicMenu.play();
@@ -84,11 +84,11 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batch.begin();
 
         //Draw 'Play' and 'Exit' buttons
-        game.batch.draw(Assets.riBanner, 0, 480 - 160, 320, 160);
-        game.batch.draw(Assets.playText, 10, 280, 300, 36);
-        game.batch.draw(Assets.helpText, 10, 218, 300, 36);
-        game.batch.draw(Assets.scoreText, 10, 156, 300, 36);
-        game.batch.draw(Assets.exitText, 10, 94, 300, 36);
+        game.batch.draw(Assets.riBanner, 0, 310, 320, 160);
+        game.batch.draw(Assets.playText, 10, 255, 300, 36);
+        game.batch.draw(Assets.helpText, 10, 195, 300, 36);
+        game.batch.draw(Assets.scoreText, 10, 135, 300, 36);
+        game.batch.draw(Assets.exitText, 10, 75, 300, 36);
 
         game.batch.end();
     }
