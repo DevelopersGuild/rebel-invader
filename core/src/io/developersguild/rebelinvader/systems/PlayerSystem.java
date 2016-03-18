@@ -125,16 +125,19 @@ public class PlayerSystem extends IteratingSystem {
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
                 Assets.crash.play(0.2f);
+                level.score *= 0.85f;
             } else if (collisionCode == BodyComponent.PLAYER_ENEMY_COLLISION) {
                 player.currentHealth -= EnemyComponent.TOUCH_DAMAGE;
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
                 Assets.crash.play(0.2f);
+                level.score *= 0.85f;
             } else if (collisionCode == BodyComponent.PLAYER_BULLET_COLLISION) {
                 player.currentHealth -= EnemyComponent.BULLET_DAMAGE;
                 state.set(PlayerComponent.STATE_KNOCKED_BACK);
                 player.impactCooldown = PlayerComponent.KNOCKBACK_DURATION;
                 Assets.crash.play(0.2f);
+                level.score *= 0.85f;
             }
         }
 

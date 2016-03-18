@@ -246,7 +246,7 @@ public class GameScreen extends ScreenAdapter {
 //>>>>>>> 8f6a918c422b1e2fe72b73bff30446ad9c9b55bd
             else player.bulletTimer = currentTime + BulletComponent.COOLDOWN;
             engine.getSystem(PlayerSystem.class).requestBullet();
-            Assets.shot.play(0.7f);
+            Assets.shot.play(0.5f);
         }
     }
 
