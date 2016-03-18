@@ -83,7 +83,7 @@ public class PowerSystem extends IteratingSystem {
         }
 
         // Prevent health increasing over maxHealth
-        if (power.currentPower > power.maxPower && !isPowerup) {
+        if (power.currentPower >= power.maxPower && !isPowerup) {
             screen.activatePower();
             Assets.powerup.play(0.4f);
             isPowerup = true;
