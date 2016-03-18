@@ -12,8 +12,8 @@ public class EnemyComponent implements Component {
     public static final float VELOCITY_X = 100f;
     public static final float VELOCITY_Y = 50f;
     public static final float STARTING_HEALTH = 50f;
-    public static final float TOUCH_DAMAGE = 35f;
-    public static final float BULLET_DAMAGE = 15f;
+    public static final float TOUCH_DAMAGE = 20f;
+    public static final float BULLET_DAMAGE = 20f;
     public static final float TARGETING_RADIUS = 8f;
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
