@@ -54,7 +54,7 @@ public class HighscoresScreen extends ScreenAdapter {
         xOffset = Math.max(layout.width, xOffset);
 
         // Center the string
-        xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
+        xOffset = 150 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
     }
 
     public void update() {
