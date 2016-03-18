@@ -80,6 +80,7 @@ public class PowerSystem extends IteratingSystem {
 
         // Prevent health increasing over maxHealth
         if (power.currentPower > power.maxPower) {
+            power.currentPower = power.maxPower;
             screen.activatePower();
         }
 
