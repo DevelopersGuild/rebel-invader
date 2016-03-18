@@ -1,0 +1,46 @@
+MUSIC:
+---------------
+Music by sawsquarenoise from his album RottenMage SpaceJacked OST
+http://freemusicarchive.org/music/sawsquarenoise/RottenMage_SpaceJacked/
+
+
+SOUNDS:
+---------------
+Click sound by GameAudio
+https://www.freesound.org/people/GameAudio/sounds/220206/
+
+Laser sound by lezaarth
+https://www.freesound.org/people/lezaarth/sounds/232817/
+
+Crash sound by Taira Komori
+https://www.freesound.org/people/Taira%20Komori/sounds/214214/
+
+Powerup sound by Mark McCorkle
+http://opengameart.org/content/8-bit-platformer-sfx
+
+explosionsound sound by timgormly, edited
+https://www.freesound.org/people/timgormly/sounds/170144/
+
+missilesound sound by baefild, edited
+https://www.freesound.org/people/baefild/sounds/91293/
+
+
+TEXTURES:
+---------------
+bg_nebula texture by freedohm
+http://opengameart.org/content/nebulus
+
+colored enemy spaceships textures by Atrus
+http://opengameart.org/content/colorize-enemies
+
+explosion texture by GameProgrammingSlave
+http://opengameart.org/content/explosions
+
+ui_buttons texture by Cookie
+http://opengameart.org/content/ui-buttons-0
+
+
+FONT:
+---------------
+font by Clint Bellanger
+http://opengameart.org/content/bitmap-font
