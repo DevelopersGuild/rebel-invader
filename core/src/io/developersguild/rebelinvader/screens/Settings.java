@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 public class Settings {
-    public final static int[] highscores = new int[]{5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 500};
+    public final static int[] highscores = new int[]{3000, 2700, 2400, 2100, 1800, 1500, 1200, 900, 600, 300};
     public final static String file = ".risettings";
 
     public static void load() {

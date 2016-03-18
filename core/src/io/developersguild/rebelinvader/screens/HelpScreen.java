@@ -19,10 +19,10 @@ public class HelpScreen extends ScreenAdapter {
     OrthographicCamera guiCam;
     String[] message = {"Press 'A' to move left.", "Press 'D' to move right.", "Press 'W' to shoot.",
             "Press 'SPACEBAR' to launch missile.", "Press 'SPACEBAR' again to detonate", "Wait 10 seconds to reload missile.",
-            "Kill enemies to win points.", "Avoid damage (15% score penalty)", "Reach the end to win!"};
+            "Kill enemies to win points.", "Avoid damage (10% score penalty)", "Reach the end to win!"};
     String[] messageb = {"Tilt device left to move left.", "Tilt device right to move right.", "Tap screen to shoot.",
             "Tap missile icon to launch missile.", "Press icon again to detonate", "Wait 10 seconds to reload missile.",
-            "Kill enemies to win points.", "Avoid damage (15% score penalty)", "Reach the end to win!"};
+            "Kill enemies to win points.", "Avoid damage (10% score penalty)", "Reach the end to win!"};
     float xOffset = 0;
     private GlyphLayout layout = new GlyphLayout();
 
