@@ -34,7 +34,6 @@ public class PowerSystem extends IteratingSystem {
         pm = ComponentMapper.getFor(PowerComponent.class);
 
         powerLastFrame = 0f;
-        isPowerup = false;
     }
 
     @Override
@@ -79,15 +78,13 @@ public class PowerSystem extends IteratingSystem {
         // Prevent power decreasing below 0
         if (power.currentPower <= 0) {
             power.currentPower = 0;
-            isPowerup = false;
         }
 
         // Prevent health increasing over maxHealth
-        if (power.currentPower >= power.maxPower && !isPowerup) {
+        if (power.currentPower >= power.maxPower) {
             power.currentPower = power.maxPower;
             screen.activatePower();
             Assets.powerup.play(0.4f);
-            isPowerup = true;
         }
 
         // Do the same for the actual target entity too
