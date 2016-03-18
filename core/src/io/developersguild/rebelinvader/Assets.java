@@ -30,13 +30,12 @@ public class Assets {
     public static BitmapFont font;
 
     public static Texture riBanner;
-    public static TextureRegion riBannerRegion;
+
+    public static Texture dgLogo;
 
     public static Texture playText;
-    public static TextureRegion playTextRegion;
 
     public static Texture exitText;
-    public static TextureRegion exitTextRegion;
 
     public static Texture helpText;
     public static TextureRegion helpTextRegion;
@@ -107,13 +106,12 @@ public class Assets {
         font = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
 
         riBanner = loadTexture("rebelinvader-banner.png");
-        riBannerRegion = new TextureRegion(riBanner, 0, 0, 320, 160);
+
+        dgLogo = loadTexture("dglogo.png");
 
         playText = loadTexture("play.png");
-        playTextRegion = new TextureRegion(playText, 160 - 150, 200 + 18, 300, 36);
 
         exitText = loadTexture("exit.png");
-        exitTextRegion = new TextureRegion(exitText, 160 - 150, 200 - 18 - 36, 300, 36);
 
         helpText = loadTexture("help.png");
         helpTextRegion = new TextureRegion(helpText, 160 - 150, 200 - 18 - 36 * 2, 300, 36);
