@@ -64,12 +64,9 @@ public class EnemySystem extends IteratingSystem {
         body.body.setUserData(this);
 
         // Movement handling
-        // If on screen
-        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < 12.5f) {
-            // Start moving down
-            mov.velocity.y = -EnemyComponent.VELOCITY_Y * deltaTime;
-        }
-        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT < EnemyComponent.TARGETING_RADIUS) {
+        // Start moving down
+        mov.velocity.y = -EnemyComponent.VELOCITY_Y * deltaTime;
+        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y < EnemyComponent.TARGETING_RADIUS) {
             // Start X-pathfinding
             if (t.pos.x - enemy.target.getComponent(TransformComponent.class).pos.x < 0f) {
                 mov.velocity.x = EnemyComponent.VELOCITY_X * deltaTime;
@@ -100,7 +97,7 @@ public class EnemySystem extends IteratingSystem {
         if (t.pos.x - EnemyComponent.WIDTH / 2 > Level.LEVEL_WIDTH) {
             state.set(EnemyComponent.STATE_DEAD);
         }
-        if (t.pos.y - enemy.target.getComponent(TransformComponent.class).pos.y - EnemyComponent.HEIGHT / 2 < -2.5f) {
+        if (t.pos.y < enemy.target.getComponent(TransformComponent.class).pos.y) {
             state.set(EnemyComponent.STATE_DEAD);
         }
 

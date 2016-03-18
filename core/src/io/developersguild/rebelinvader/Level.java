@@ -212,7 +212,11 @@ public class Level {
     public void createEnemy(float x, float y, Entity player, int textureIdx) {
         Entity entity = engine.createEntity();
 
-        System.out.println("Enemy at " + x + ", " + y);
+        // Clamp x so the enemy doesn't get spawned off-screen
+        if(x < 1.0f) x = 1.0f;
+        else if(x > 9.0f) x = 9.0f;
+
+//        System.out.println("Enemy at " + x + ", " + y);
 
         BodyComponent body = engine.createComponent(BodyComponent.class);
         BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
