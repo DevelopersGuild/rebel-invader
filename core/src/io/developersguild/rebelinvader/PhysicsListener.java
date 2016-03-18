@@ -40,7 +40,7 @@ public class PhysicsListener implements ContactListener, EntityListener {
                 b.setUserData(BodyComponent.EXPLOSION_STRUCTURE_COLLISION);
             }
             // If b is an enemy
-            if (b.getUserData().getClass() == StructureSystem.class) {
+            if (b.getUserData().getClass() == EnemySystem.class) {
                 b.setUserData(BodyComponent.EXPLOSION_ENEMY_COLLISION);
             }
         }

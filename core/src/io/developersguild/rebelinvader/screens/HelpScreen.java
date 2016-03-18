@@ -50,7 +50,7 @@ public class HelpScreen extends ScreenAdapter {
         game.batch.end();
 
         game.batch.begin();
-        Assets.font.draw(game.batch, "Help", 320/2 - 15, 390);
+        Assets.font.draw(game.batch, "Help", 320 / 2 - 15, 390);
         Application.ApplicationType appType = Gdx.app.getType();
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             // Get width of largest string

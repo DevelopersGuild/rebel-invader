@@ -54,8 +54,8 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_PAUSED = 1;
     static final int GAME_OVER = 2;
     static final int GAME_WON = 3;
+    private static final float GAME_OVER_COOLDOWN = 1.0f;
     static float missilex = 0;
-
     RebelInvader game;
     Level level;
     Settings settings;
@@ -65,14 +65,12 @@ public class GameScreen extends ScreenAdapter {
     OrthographicCamera guiCam;
     Vector3 touchPoint;
     Rectangle pauseBounds, missileBounds;
-
     private GlyphLayout layout;
     private int state;
     private List<Entity> deadEntities;
     private float currentTime;
     private boolean powerActivated;
     private float gameOverTimer = 0.0f;
-    private static final float GAME_OVER_COOLDOWN = 1.0f;
 
     public GameScreen(RebelInvader game) {
         this.game = game;

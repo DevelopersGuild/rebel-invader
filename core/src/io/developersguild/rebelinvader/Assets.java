@@ -26,7 +26,6 @@ public class Assets {
     public static Sound launch;
     public static Sound explosion;
 
-
     public static BitmapFont font;
 
     public static Texture riBanner;
