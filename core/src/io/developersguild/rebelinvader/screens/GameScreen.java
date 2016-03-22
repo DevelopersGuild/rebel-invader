@@ -176,7 +176,7 @@ public class GameScreen extends ScreenAdapter {
         if (appType == Application.ApplicationType.Android || appType == Application.ApplicationType.iOS) {
             if (Math.abs(Gdx.input.getAccelerometerX()) > 0.8f)
                 accelX = Gdx.input.getAccelerometerX();
-            if (Gdx.input.justTouched() && !(missileBounds.contains(touchPoint.x, touchPoint.y)))
+            if (Gdx.input.isTouched() && !(missileBounds.contains(touchPoint.x, touchPoint.y)))
                 playerShoot();
             if (Gdx.input.justTouched() && (missileBounds.contains(touchPoint.x, touchPoint.y)))
                 missileShoot();
